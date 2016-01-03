@@ -1,0 +1,158 @@
+===============================================================================
+H323plus 1.28 - 1.28.x
+===============================================================================
+Major code restructering. Changed precompiled header to h323.h. Compiles 5x faster.
+Added etc directory to better match and manage the various PTLIB versions 
+Added support for encrypted local datastore (sqlcipher)
+Added support for extra video encodings notably NV21 (YUV420SP)
+
+===============================================================================
+H323plus 1.26.6 - 1.26.6
+===============================================================================
+Added Allow implementers to supply thier own DH Parameters for Signaling Encryption (TLS)
+Added Allow implementers to supply thier own DH parameters for media encryption
+NEW Add H.450.7 Support (WIP) (1.26.6)
+
+
+===============================================================================
+H323plus 1.26.0 - 1.26.5
+===============================================================================
+NEW Add H.323 Annex G T.140. Disabled by default (WIP)
+BUG Full memory management audit with VLD (1.26.3)
+NEW Support for different URI schema call routing
+BUG DynamicPayloadType and MediaPacketization support in ExternalRTPChannel
+BUG H.239 Support both presentation and live modes
+BUG Better handle TCP connection timeout or non H.323 messages sent to listener port, 
+NEW H323EndPoint::H46023NatMethodSelection to better co-ordinate when to use NAT method. 
+BUG fixes to H.460.17 especially when using TLS transport. 
+NEW AEC Implementation using fixed size ring buffer (1.26.2)
+BUG correct possible memory corruption when creating silence frame
+BUG ensure empty DH tokens are not created if not supported due to keylength setting
+Added H323Connection::EnableCallMediaEncryption() is allow encryption to be disabled on a call-by-call basis
+new switch H323_JITTER_ANALYSER and disabled jitter buffer logging by default.
+BUG fixes for encyption support in H323_ExternalRTPChannel
+Added H460.25 Location information support (req Expat support in PTLIB) (1.26.1)
+
+===============================================================================
+H323plus 1.25.0 - 1.25.5
+===============================================================================
+Added H323_MEDIAENCODED compile directive to support external media decode/encode
+Added Encryption support to the H.224 Channel and H323_ExternalRTPChannel
+Performance Memory management Improvement in audio/video processing.
+Updated to compile with PTLIB Head (1.25.5)
+Added Language assignment and routing support
+Added TLS signalling support
+Added DH6144 and DH8192 H.235 Support (support for keylength up to 8192 bits)
+Added H.460.22 Support
+Added vs2012 Build environment
+Fixed vs2010 Build environment
+Added H.461 Asset Support. (1.25.4)
+Update and fixes for H.460.26 (1.25.3)
+Update Presence System to Version 3. (1.25.2)
+Update Alternate and Assigned Gatekeeper code. Removing buggy pointers
+Added H.224 Factory loader moved to H224 subdirectory
+Added T.140 Support
+Added H.284 <New> far end motor control
+add support for <ip>##<room>#<pass> dialing
+
+
+===============================================================================
+H323plus 1.24.0 - 1.24.2
+===============================================================================
+Added H.460 Compatibility Feature
+Added H.460.26 Support (depreciated nonstandard H.460.17a) [Work in Progress]
+Updated ASN.1 to H.323v7 (H.225v7, H.245v15)
+Added H.460.4 Baseline
+FIX Change FastStart to be default FALSE to bring into line with other video equipment
+Added Language support to Setup and Connect messages
+Added interoperable H.235.6 [Work in progress]
+FIX Try reconnecting signalling channel if goes down unexpectedly and not drop call
+FIX Check Alternate gatekeepers are valid
+FIX Added KeepAlives to H.460.19 signalling channel
+Added AEC Support directly into the library
+FIX Statically loading codecs. Can now be set from OpenH323buildopts.h
+Added H.460.17 Integration into H323Endpoint and Added To Simple example
+FIX Enumeration through H460_Feature Parameters
+FIX Memory allocation of RTP Frames (G.722 on Windows)
+Added UPnP Standalone support (without H.460.23/.24)
+Major rehashing of UPnP code
+Added EmphasisSpeed and MaxPayloadSize support to plugins
+Added vs2010 Build files
+Added Baseline Windows X64 Support
+FIX MediaEncryption so it compiles dynamically with OpenSSL 
+FIX H.460.24 Annex A and B tweaks
+Added RTP Multiplexing support to H.460.23/.24
+FIX IPv6 Support and checks
+
+
+===============================================================================
+H323plus 1.23.0 - 1.23.1
+===============================================================================
+Added MediaChannelCapability to OLC
+Added H.235.6 Support (Experimental)
+Updated H323List for depreciation warnings with ptlib 2.11
+Added RTP multiplexing (with H.460.19)
+
+
+
+===============================================================================
+H323plus 1.22 - 1.23
+===============================================================================
+(Fixed) Deadlock in NAT Method when locking H323Connection
+(Fixed) Encoded audio/video input and output support
+Added H.460.17 support
+(Fixed) PNatMethod changes in ptlib 2.11
+Added of H323Dictionary/H323List for depreciation warnings with ptlib 2.11
+Use fastStart element in CallProceeding again, set enableMERAHack in H323Connection to disable
+(Fixed) H.460.9 support and fine tune where H.460 messages go in PDU
+(Fixed) H.239 support so the correct capability is selected in OLC
+(Fixed) H.224 Stability by fixing initialisation and removing nested mutexes
+Improved H.264 decoder with better initialisation and support for send FPU's
+
+
+
+===============================================================================
+H323plus 1.21 - 1.22
+===============================================================================
+Fixed H.239 Support and now support H.239 only plugins
+G.711 now 20ms sample rate by default
+Added H.264 support (tested with polycom,lifesize,tandberg)
+(fixed) Video frames now on fixed 90k clock timestamp
+Added Video decoder can handle multiple frames to decode
+Added A/V sync support
+Added Audio Packet Loss detection
+Added Video Flow Control signaling
+(fixed) Generic Audio Capability processing
+(fixed) Support for Wideband codecs
+(fixed) H.239 fields not populated in TCS causing error with Tandberg
+Added support for call transfer with routeCallToMC
+Added application access to the received H.245 TCS
+Added support for 16CIF
+Provide timestamp with DTMF tones
+(fixed) Attempt reregistration after being unregistered
+(fixed) Sending and receiving different framesizes
+Added Called/CallingpartySubAddress Q.931
+(Fixed) Tandberg MXP issue with video size
+(Fixed) Tandberg T1000 master/slave issue
+Added Major overhaul of presence system
+Added H.460.24 Annex B
+Added H.460.9 support
+(fixed) compile issue on windows with Platform SDK and "codecs.h"
+Added H.460.23/.24 support
+Added H.460.18/.19 support (Disabled by default)
+(fixed) Slow start being accidently activated when FastStart being acknowledged.
+
+
+
+===============================================================================
+H323plus 1.20 - 1.21
+===============================================================================
+Updated to compile with Ptlib 2.2.x and 2.3.x (PBoolean etc.)
+(Fixed) Early Media Fixed as the FastStartState is now checked if acknowledged prior to sending connect message.
+(Fixed) RTP Payload Types not read from the audio plugin codecs (standard and non-standard)
+(Fixed) External RTP Channel: Added new virtual functions to avoid compiling errors when using old OpenH323 code.
+Added callback for the ability to set the Maximum bandwidth for Video Call H323Connection::OnSetInitialBandwidth()
+Corrected FileTransfer Capability OID to avoid conflict with other OID usage
+Added Callback for H.460 Instancing so can disable/remove H.460 Features at runtime.
+Added support for H.450 Non-call supplementary services (like H.450.7)
+(Fixed) Typos with H323_GnuGK directive
