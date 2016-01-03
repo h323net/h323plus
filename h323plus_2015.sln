@@ -17,7 +17,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "plugins", "plugins", "{6A2D
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Vic H.261 Video Codec", "plugins\video\H.261-vic\h261vic_2015.vcxproj", "{4A1B92CB-CA8E-4511-A1D5-B0A322FDE67C}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PTLib", "..\PTLIB\src\ptlib\msos\Console_2015.vcxproj", "{D11E1C9D-406C-4D7C-8F37-913C0BFD9E0D}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PTLib Static", "..\ptlib\src\ptlib\msos\Console_2015.vcxproj", "{D11E1C9D-406C-4D7C-8F37-913C0BFD9E0D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -34,6 +34,7 @@ Global
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{71C46EAF-48C9-47BA-9532-27B51744548D}.Debug|Win32.ActiveCfg = Debug|Win32
+		{71C46EAF-48C9-47BA-9532-27B51744548D}.Debug|Win32.Build.0 = Debug|Win32
 		{71C46EAF-48C9-47BA-9532-27B51744548D}.Debug|x64.ActiveCfg = Debug|x64
 		{71C46EAF-48C9-47BA-9532-27B51744548D}.Debug|x64.Build.0 = Debug|x64
 		{71C46EAF-48C9-47BA-9532-27B51744548D}.No Trace|Win32.ActiveCfg = No Trace|Win32
@@ -88,6 +89,7 @@ Global
 		{4A1B92CB-CA8E-4511-A1D5-B0A322FDE67C}.Release|Win32.Build.0 = Release|Win32
 		{4A1B92CB-CA8E-4511-A1D5-B0A322FDE67C}.Release|x64.ActiveCfg = Release|Win32
 		{D11E1C9D-406C-4D7C-8F37-913C0BFD9E0D}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D11E1C9D-406C-4D7C-8F37-913C0BFD9E0D}.Debug|Win32.Build.0 = Debug|Win32
 		{D11E1C9D-406C-4D7C-8F37-913C0BFD9E0D}.Debug|x64.ActiveCfg = Debug|Win32
 		{D11E1C9D-406C-4D7C-8F37-913C0BFD9E0D}.No Trace|Win32.ActiveCfg = No Trace|Win32
 		{D11E1C9D-406C-4D7C-8F37-913C0BFD9E0D}.No Trace|Win32.Build.0 = No Trace|Win32
