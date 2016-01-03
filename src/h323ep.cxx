@@ -26,21 +26,15 @@
  *
  * Contributor(s): ______________________________________.
  *
- * $Id: h323ep.cxx,v 1.168.2.5 2016/01/03 10:35:42 shorne Exp $
+ * $Id: h323ep.cxx,v 1.168.2.6 2016/01/03 12:40:42 shorne Exp $
  *
  */
-
-#include <ptlib.h>
-#include <ptlib/sound.h>
 
 #ifdef __GNUC__
 #pragma implementation "h323ep.h"
 #endif
 
-#include "openh323buildopts.h"
-
-#include "h323ep.h"
-#include "h323pdu.h"
+#include <h323.h>
 
 #ifdef H323_H235
 #include "h235/h2356.h"
@@ -107,13 +101,7 @@
 #include "t38proto.h"
 #endif
 
-#include "../version.h"
-#include "h323pluginmgr.h"
-
-#include <ptlib/sound.h>
-#include <ptclib/random.h>
 #include <ptclib/pstun.h>
-#include <ptclib/url.h>
 #include <ptclib/pils.h>
 #include <ptclib/enum.h>
 
@@ -519,29 +507,25 @@ class H323ConnectionsCleaner : public PThread
 
 /////////////////////////////////////////////////////////////////////////////
 
-PString OpalGetVersion()
+PString H323PlusGetVersion()
 {
-#define AlphaCode   "alpha"
-#define BetaCode    "beta"
-#define ReleaseCode "."
-
-  return psprintf("%u.%u%s%u", MAJOR_VERSION, MINOR_VERSION, BUILD_TYPE, BUILD_NUMBER);
+  return psprintf("%u.%u.%u", OPENH323_MAJOR, OPENH323_MINOR, OPENH323_BUILD);
 }
 
 
-unsigned OpalGetMajorVersion()
+unsigned H323PlusGetMajorVersion()
 {
-  return MAJOR_VERSION;
+  return OPENH323_MAJOR;
 }
 
-unsigned OpalGetMinorVersion()
+unsigned H323PlusGetMinorVersion()
 {
-  return MINOR_VERSION;
+  return OPENH323_MINOR;
 }
 
-unsigned OpalGetBuildNumber()
+unsigned H323PlusGetBuildNumber()
 {
-  return BUILD_NUMBER;
+  return OPENH323_BUILD;
 }
 
 
@@ -1065,7 +1049,7 @@ void H323EndPoint::SetVendorIdentifierInfo(H225_VendorIdentifier & info) const
   info.m_productId.SetSize(info.m_productId.GetSize()+2);
 
   info.IncludeOptionalField(H225_VendorIdentifier::e_versionId);
-  info.m_versionId = PProcess::Current().GetVersion(TRUE) + " (H323plus v" + OpalGetVersion() + ')';
+  info.m_versionId = PProcess::Current().GetVersion(TRUE) + " (H323plus v" + H323PlusGetVersion() + ')';
   info.m_versionId.SetSize(info.m_versionId.GetSize()+2);
 }
 
