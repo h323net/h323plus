@@ -229,27 +229,45 @@ void H235_DiffieHellman::Decode_P(const PASN_BitString & p)
 
 PBoolean H235_DiffieHellman::Encode_G(PASN_BitString & g) const
 {
-  if (!m_toSend)
-    return false;
+    if (!m_toSend)
+        return false;
 
-  PWaitAndSignal m(vbMutex);
-  int len_p = BN_num_bytes(dh->p);
-  int len_g = BN_num_bytes(dh->g);
-  int bits_p = BN_num_bits(dh->p);
+    PWaitAndSignal m(vbMutex);
+    int len_p = BN_num_bytes(dh->p);
+    int len_g = BN_num_bytes(dh->g);
+    int bits_p = BN_num_bits(dh->p);
+    int bits_g = BN_num_bits(dh->g);
 
-  // G is padded out to the length of P
-  unsigned char * data = (unsigned char *)OPENSSL_malloc(len_p);
-  if (data != NULL) {
-    memset(data, 0, len_p);
-    if (BN_bn2bin(dh->g, data + len_p - len_g) > 0) {
-       g.SetData(bits_p, data);
-    } else {
-      PTRACE(1, "H235_DH\tFailed to encode G");
-      OPENSSL_free(data);
-      return false;
-    }
-  }
-  OPENSSL_free(data);
+    if (len_p <= 128) { // Key lengths <= 1024 bits
+        // Backwards compatibility G is padded out to the length of P
+        unsigned char * data = (unsigned char *)OPENSSL_malloc(len_p);
+        if (data != NULL) {
+            memset(data, 0, len_p);
+            if (BN_bn2bin(dh->g, data + len_p - len_g) > 0) {
+                g.SetData(bits_p, data);
+            }
+            else {
+                PTRACE(1, "H235_DH\tFailed to encode G");
+                OPENSSL_free(data);
+                return false;
+            }
+        }
+        OPENSSL_free(data);
+   } else {
+        unsigned char * data = (unsigned char *)OPENSSL_malloc(len_g);
+        if (data != NULL) {
+            memset(data, 0, len_g);
+            if (BN_bn2bin(dh->g, data) > 0) {
+                g.SetData(8, data);
+            }
+            else {
+                PTRACE(1, "H235_DH\tFailed to encode P");
+                OPENSSL_free(data);
+                return false;
+            }
+        }
+        OPENSSL_free(data);
+    }  
   return true;
 }
 
@@ -480,6 +498,50 @@ bignum_st * H235_DiffieHellman::GetPublicKey() const
 int H235_DiffieHellman::GetKeyLength() const
 {
   return m_keySize;
+}
+
+void H235_DiffieHellman::Generate(PINDEX  keyLength, PINDEX  keyGenerator, PStringToString & parameters)
+{
+    PString lOID;
+    for (PINDEX i = 0; i < PARRAYSIZE(H235_DHCustom); ++i) {
+        if (H235_DHCustom[i].sz == keyLength) {
+            lOID = H235_DHCustom[i].parameterOID;
+            break;
+        }
+    }
+
+    if (lOID.IsEmpty())
+        return;
+
+    dh_st * vdh = DH_new();
+    if (!DH_generate_parameters_ex(vdh, keyLength, keyGenerator, NULL)) {
+        cout << "Error generating Key Pair\n";
+        DH_free(vdh);
+        vdh = NULL;
+        return;
+    }
+
+    parameters.SetAt("OID", lOID);
+
+    PString str = PString();
+    int len = BN_num_bytes(vdh->p);
+    unsigned char * data = (unsigned char *)OPENSSL_malloc(len);
+
+    if (data != NULL && BN_bn2bin(vdh->p, data) > 0) {
+        str = PBase64::Encode(data, len, "");
+        parameters.SetAt("PRIME", str);
+    }
+    OPENSSL_free(data);
+
+    len = BN_num_bytes(vdh->g);
+    data = (unsigned char *)OPENSSL_malloc(len);
+    if (data != NULL && BN_bn2bin(vdh->g, data) > 0) {
+        str = PBase64::Encode(data, len, "");
+        parameters.SetAt("GENERATOR", str);
+    }
+    OPENSSL_free(data);
+
+    DH_free(vdh);
 }
 
 
