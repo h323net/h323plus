@@ -45,28 +45,28 @@ PString StmtSections =
 "SELECT section from '%t' WHERE id = '%i' order by section;";
 
 PString StmtSectionDel =
-"DELETE from '%t' WHERE id = '%i' and section = '%s';";
+"DELETE from '%t' WHERE (id = '%i' and section = '%s');";
 
 PString StmtKeyValues =
-"SELECT key, value from '%t' WHERE id = '%i' and section = '%s' order by key;";
+"SELECT key, value from '%t' WHERE (id = '%i' and section = '%s') order by key;";
 
 PString StmtValue =
-"SELECT value from '%t' WHERE id = '%i' and section = '%s' and key = '%k';";
+"SELECT value from '%t' WHERE (id = '%i' and section = '%s' and key = '%k');";
 
 PString StmtKey =
-"SELECT key from '%t' WHERE id = '%i' and section = '%s' order by key;";
+"SELECT key from '%t' WHERE (id = '%i' and section = '%s') order by key;";
 
 PString StmtHasKey =
-"SELECT key from '%t' WHERE id = '%i' and section = '%s' and key = '%k';";
+"SELECT value from '%t' WHERE (id = '%i' and section = '%s' and key = '%k');";
 
 PString StmtKeyDel =
-"DELETE from '%t' WHERE id = '%i' and section = '%s' and key = '%k';";
+"DELETE from '%t' WHERE (id = '%i' and section = '%s' and key = '%k');";
 
 PString StmtNewValue =
 "INSERT INTO '%t' (id,section,key,value) VALUES ('%i','%s','%k','%v');";
 
 PString StmtSetValue =
-"UPDATE '%t' SET value = '%v' WHERE id = '%i' and section = '%s' and key = '%k';";
+"UPDATE '%t' SET value = '%v' WHERE (id = '%i' and section = '%s' and key = '%k');";
 
 
 /////////////////////////////////////////////////////////////////////////////////////////
