@@ -60,7 +60,6 @@ public:
 
 /**@name Constructor/Destructor */
 //@{
-
     /**Create a set of Diffie-Hellman parameters.
       */
     H235_DiffieHellman(
@@ -151,6 +150,9 @@ public:
       const PFilePath & keyFile,                 ///< Diffie-Hellman parameter file
       const PString & oid                        ///< OID section
     );
+
+    /**Generate Diffie-Hellman Prime and Generator */
+    static void Generate(PINDEX  keyLength, PINDEX  keyGenerator, PStringToString & parameters);
 
 //@}
 

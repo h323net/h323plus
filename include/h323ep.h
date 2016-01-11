@@ -1211,6 +1211,7 @@ class H323EndPoint : public PObject
 
        Default Parameters are replaced if OID is one of
             1024bit "0.0.8.235.0.3.43"
+            1536bit "0.0.8.235.0.3.44"
             2048bit "0.0.8.235.0.3.45"
             4096bit "0.0.8.235.0.3.47"
             6144bit "0.0.8.235.0.4.77"
@@ -1230,6 +1231,7 @@ class H323EndPoint : public PObject
 
        Default Parameters are replaced if OID is one of
             1024bit "0.0.8.235.0.3.43"
+            1536bit "0.0.8.235.0.3.44"
             2048bit "0.0.8.235.0.3.45"
             4096bit "0.0.8.235.0.3.47"
             6144bit "0.0.8.235.0.4.77"
@@ -1248,6 +1250,7 @@ class H323EndPoint : public PObject
 
        Default Parameters are replaced if OID is one of
             1024bit "0.0.8.235.0.3.43"
+            1536bit "0.0.8.235.0.3.44"
             2048bit "0.0.8.235.0.3.45"
             4096bit "0.0.8.235.0.3.47"
             6144bit "0.0.8.235.0.4.77"

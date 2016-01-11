@@ -125,6 +125,9 @@ void SimpleH323Process::Main()
             "-tls-passphrase:"
             "-tls-listenport:"
 #endif
+#ifdef H323_H235_AES256
+            "-dhfile:"
+#endif
 #ifdef P_HAS_IPV6
              "-ipv6."
 #endif
@@ -179,6 +182,9 @@ void SimpleH323Process::Main()
             "     --tls-privkey        : TLS Private Key File.\n"
             "     --tls-passphrase     : TLS Private Key PassPhrase.\n"
             "     --tls-listenport     : TLS listen port (default: 1300).\n"
+#endif
+#ifdef H323_H235_AES256
+            "     --dhfile             : DiffieHellman Import File.\n"
 #endif
 #ifdef H323_AEC
             "     --aecdisable         : Disable AEC.\n"
@@ -539,6 +545,11 @@ PBoolean SimpleH323EndPoint::Initialise(PArgList & args)
       if (args.HasOption('m'))  {
         H235MediaCipher ncipher = encypt128;
 #ifdef H323_H235_AES256
+        if (args.HasOption("dhfile")) {
+            PFilePath dhFilePath(args.GetOptionString("dhfile"));
+            if (PFile::Exists(dhFilePath))
+                H235SetDiffieHellmanFiles(dhFilePath);
+        }
         unsigned maxtoken = 2048;
         unsigned cipher = args.GetOptionString('m').AsInteger();
         if (cipher >= encypt192) ncipher = encypt192;

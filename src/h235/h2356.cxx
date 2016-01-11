@@ -68,6 +68,20 @@ inline void DeleteObjectsInMap(M & m)
 	m.clear(); // delete pointers to deleted objects
 }
 
+PBoolean IsSupportedOID(const PString & oid, unsigned cipherlength)
+{
+    // Check key length
+    for (PINDEX i = 0; i < PARRAYSIZE(H235_DHCustom); ++i) {
+        if (H235_DHCustom[i].parameterOID == oid) {
+            if (H235_DHCustom[i].sz <= (cipherlength * 8))
+                return true;
+            else
+                return false;
+        }
+    }
+    return false;
+}
+
 void LoadH235_DHMap(H235_DHMap & dhmap, H235_DHMap & dhcache, H235Authenticators::DH_DataList & customData, const PString & filePath = PString(), PINDEX cipherlength = P_MAX_INDEX, PINDEX maxTokenLength = 1024)
 {
     if (dhcache.size() > 0) {
@@ -82,20 +96,23 @@ void LoadH235_DHMap(H235_DHMap & dhmap, H235_DHMap & dhcache, H235Authenticators
         return;
     }
 
-    PStringArray FilePaths;
-    dhmap.insert(pair<PString, H235_DiffieHellman*>(OID_H235V3, (H235_DiffieHellman*)NULL));
-
     // Load from memory vendor supplied keys
     if (customData.size() > 0) {
         H235Authenticators::DH_DataList::iterator r;
         for (r = customData.begin(); r != customData.end(); ++r) {
-            dhmap.insert(pair<PString, H235_DiffieHellman*>(r->m_OID,
-            new H235_DiffieHellman(r->m_pData.GetPointer(), r->m_pData.GetSize(),
-                                   r->m_gData, r->m_gData.GetSize(), true)));
+            if (IsSupportedOID(r->m_OID, cipherlength)) {
+                dhmap.insert(pair<PString, H235_DiffieHellman*>(r->m_OID,
+                    new H235_DiffieHellman(r->m_pData.GetPointer(), r->m_pData.GetSize(),
+                        r->m_gData, r->m_gData.GetSize(), true)));
+                PTRACE(6, "H2356\tMemory KeyPair " << r->m_OID << " loaded.");
+            } else {
+                PTRACE(6, "H2356\tMemory KeyPair " << r->m_OID << " ignored.");
+            }
         }
     }
 
     // Load from vendor supplied filePath
+    PStringArray FilePaths;
     if (!filePath.IsEmpty()) {
       PStringArray temp = filePath.Tokenise(';');
       for (PINDEX k = 0; k < temp.GetSize(); ++k) {
@@ -105,20 +122,23 @@ void LoadH235_DHMap(H235_DHMap & dhmap, H235_DHMap & dhcache, H235Authenticators
         }
       }
     }
-  
+
     // Load default DH keypairs
-    int i = 0;
     for (PINDEX k = 0; k < FilePaths.GetSize(); ++k) {
         PConfig cfg(FilePaths[k], PString());
         PStringArray oidList(cfg.GetSections());
-        for (PINDEX j = 0; j < oidList.GetSize(); ++j) {  
-            H235_DiffieHellman * dh = new H235_DiffieHellman(cfg, oidList[j]);
-            if (dh->LoadedFromFile()) {
-                dhmap.insert(pair<PString, H235_DiffieHellman*>(oidList[j], dh));
-                i++;
+        for (PINDEX j = 0; j < oidList.GetSize(); ++j) {
+            if (IsSupportedOID(oidList[j], cipherlength)) {
+                H235_DiffieHellman * dh = new H235_DiffieHellman(cfg, oidList[j]);
+                if (dh->LoadedFromFile()) {
+                    dhmap.insert(pair<PString, H235_DiffieHellman*>(oidList[j], dh));
+                    PTRACE(6, "H2356\tFile KeyPair " << oidList[j] << " loaded.");
+                } else {
+                    PTRACE(1, "H2356\tError: Loading DH key file failed");
+                    delete dh;
+                }
             } else {
-                PTRACE(1, "Error: Loading DH key file failed");
-                delete dh;
+                PTRACE(6, "H2356\tFile KeyPair " << oidList[j] << " ignored.");
             }
         }
     }
@@ -132,9 +152,12 @@ void LoadH235_DHMap(H235_DHMap & dhmap, H235_DHMap & dhcache, H235Authenticators
                   new H235_DiffieHellman(H235_DHParameters[i].dh_p, H235_DHParameters[i].sz,
                                          H235_DHParameters[i].dh_g, H235_DHParameters[i].sz,
                                          H235_DHParameters[i].send)) );
+           PTRACE(6, "H2356\tStd KeyPair " << H235_DHParameters[i].parameterOID << " loaded.");
         } else if (H235_DHParameters[i].cipher == 0) {
            dhmap.insert(pair<PString, H235_DiffieHellman*>(H235_DHParameters[i].parameterOID, (H235_DiffieHellman*)NULL));
+           PTRACE(6, "H2356\tStd KeyPair " << H235_DHParameters[i].parameterOID << " loaded.");
         } else
+           PTRACE(6, "H2356\tStd KeyPair " << H235_DHParameters[i].parameterOID << " ignored.");
            continue;  // Ignore ciphers greater that cipherlength
       }
     }
@@ -297,14 +320,14 @@ H235Authenticator::ValidationResult H2356_Authenticator::ValidateTokens(const PA
         return e_Disabled; 
     }
 
-    PBoolean paramSet = false; // We only want to find the first matched.
-    H235_DHMap::iterator it = m_dhLocalMap.begin();
-    while (it != m_dhLocalMap.end()) {
-        for (PINDEX i = 0; i < tokens.GetSize(); ++i) {
+    PString selectOID;
+    H235_DHMap::iterator it;
+    for (PINDEX i = 0; i < tokens.GetSize(); ++i) {
+        for (it = m_dhLocalMap.begin(); it != m_dhLocalMap.end(); ++it) {
             const H235_ClearToken & token = tokens[i];
             PString tokenOID = token.m_tokenOID.AsString();
             if (it->first == tokenOID) {
-                if (it->second != NULL ) {
+                if (it->second != NULL) {
                     if (token.HasOptionalField(H235_ClearToken::e_dhkey)) {  // For keysize up to and including 2048
                         const H235_DHset & dh = token.m_dhkey;
                         it->second->SetRemoteHalfKey(dh.m_halfkey);
@@ -322,20 +345,20 @@ H235Authenticator::ValidationResult H2356_Authenticator::ValidateTokens(const PA
                         PTRACE(2, "H2356\tERROR DH Parameters missing " << it->first << " skipping.");
                         continue;
                     }
-                    PTRACE(4, "H2356\tSetting Encryption Algorithm for call " << it->first);
-                    paramSet = true;
+                    selectOID = it->first;
+                    PTRACE(4, "H2356\tSetting Encryption Algorithm for call " << selectOID);
                 }
             }
-            if (paramSet) break;
+            if (!selectOID) break;
         }
-        if (paramSet) break;
+        if (!selectOID) break;
     }
 
-    if (paramSet) {
+    if (!selectOID) {
         // Remove unmatched authenticators
         it = m_dhLocalMap.begin();
         while (it != m_dhLocalMap.end()) {
-            if (!it->second->ReceivedFromRemote()) {
+            if (it->second && selectOID != it->first) {
                 PTRACE(4, "H2356\tRemoving unmatched Encryption Algorithm " << it->first);
                 delete it->second;
                 m_dhLocalMap.erase(it++);
