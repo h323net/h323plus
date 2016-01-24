@@ -2692,6 +2692,7 @@ void H323PluginCodecManager::OnShutdown()
 
 #ifdef H323_VIDEO
 #ifdef H323_H239
+  // Unregister the Extended capabilites
   H323ExtendedVideoFactory::UnregisterAll();
 #endif
 #endif
