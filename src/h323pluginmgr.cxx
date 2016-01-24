@@ -36,7 +36,6 @@
 #define _FACTORY_LOAD  1
 #include "h323pluginmgr.h"
 #include <opalwavfile.h>
-//#include <h323caps.h>
 #include <h245.h>
 #include <rtp.h>
 #include <mediafmt.h>

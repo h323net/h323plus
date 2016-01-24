@@ -1645,8 +1645,10 @@ void H323ExtendedVideoCapability::AddAllCapabilities(
     H323ExtendedVideoFactory::KeyList_T::const_iterator r;
         PINDEX num = P_MAX_INDEX;
         for (r = extCaps.begin(); r != extCaps.end(); ++r) {
+           H323Capability * childCap = H323ExtendedVideoFactory::CreateInstance(*r);
            H323CodecExtendedVideoCapability * extCapability = (H323CodecExtendedVideoCapability *)capability->Clone();
-           extCapability->AddCapability(*r);
+           extCapability->AddCapability(childCap);   
+           delete childCap;
            num = basecapabilities.SetCapability(descriptorNum, simultaneous,extCapability);
            simultaneous = num;
         }
@@ -2016,6 +2018,11 @@ H323CodecExtendedVideoCapability::~H323CodecExtendedVideoCapability()
 void H323CodecExtendedVideoCapability::AddCapability(const PString & cap)
 {
     extCapabilities.Add(H323ExtendedVideoFactory::CreateInstance(cap));
+}
+
+void H323CodecExtendedVideoCapability::AddCapability(H323Capability * capability)
+{
+    extCapabilities.Add((H323Capability *)capability->Clone());
 }
 
 PString H323CodecExtendedVideoCapability::GetFormatName() const
