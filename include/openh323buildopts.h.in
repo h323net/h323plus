@@ -174,11 +174,13 @@
 #undef H323_FILE
 
 
-//#undef H323_AEC
+#undef H323_AEC
 #if defined(_MSC_VER) && defined(H323_AEC)
+#define H323_RESAMPLE    1
 #pragma include_alias(<speex/speex_echo.h>,            <@AEC_DIR@/include/speex/speex_echo.h>      )
 #pragma include_alias(<speex/speex_preprocess.h>,      <@AEC_DIR@/include/speex/speex_preprocess.h>)
 #pragma include_alias(<speex/speex_types.h>,           <@AEC_DIR@/include/speex/speex_types.h>     )
+#pragma include_alias(<speex/speex_resampler.h>,       <@AEC_DIR@/include/speex/speex_resampler.h> )
 #ifdef _WIN64
     #define H323_AEC_LIB "@AEC_DIR@/lib/libspeexdsp64.lib"
 #else

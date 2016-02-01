@@ -384,6 +384,7 @@
     <ClCompile Include="src\etc\h323aec.cxx" />
     <ClCompile Include="src\etc\h323buffer.cxx" />
     <ClCompile Include="src\etc\h323datastore.cxx" />
+    <ClCompile Include="src\etc\h323resampler.cxx" />
     <ClCompile Include="src\etc\pt_colour.cxx" />
     <ClCompile Include="src\etc\pt_wasapi.cxx">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
@@ -1134,6 +1135,7 @@
     <ClInclude Include="include\etc\h323aec.h" />
     <ClInclude Include="include\etc\h323buffer.h" />
     <ClInclude Include="include\etc\h323datastore.h" />
+    <ClInclude Include="include\etc\h323resampler.h" />
     <ClInclude Include="include\etc\pt_colour.h" />
     <ClInclude Include="include\etc\pt_nat.h" />
     <ClInclude Include="include\etc\pt_stl.h" />

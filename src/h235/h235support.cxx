@@ -236,7 +236,7 @@ PBoolean H235_DiffieHellman::Encode_G(PASN_BitString & g) const
     int len_p = BN_num_bytes(dh->p);
     int len_g = BN_num_bytes(dh->g);
     int bits_p = BN_num_bits(dh->p);
-    int bits_g = BN_num_bits(dh->g);
+    //int bits_g = BN_num_bits(dh->g); // unused
 
     if (len_p <= 128) { // Key lengths <= 1024 bits
         // Backwards compatibility G is padded out to the length of P
@@ -354,7 +354,7 @@ PBoolean H235_DiffieHellman::GenerateHalfKey()
 
 void H235_DiffieHellman::SetDHReceived(const PASN_BitString & p, const PASN_BitString & g) 
 {
-    PTRACE(4, "H235_DH\tReplacing local DH parameters with those of remote");
+    PTRACE(4, "H235\tReplacing local DH parameters with those of remote");
 
     Decode_P(p);
     Decode_G(g);
@@ -500,11 +500,11 @@ int H235_DiffieHellman::GetKeyLength() const
   return m_keySize;
 }
 
-void H235_DiffieHellman::Generate(PINDEX  keyLength, PINDEX  keyGenerator, PStringToString & parameters)
+void H235_DiffieHellman::Generate(PINDEX keyLength, PINDEX keyGenerator, PStringToString & parameters)
 {
     PString lOID;
     for (PINDEX i = 0; i < PARRAYSIZE(H235_DHCustom); ++i) {
-        if (H235_DHCustom[i].sz == keyLength) {
+        if (H235_DHCustom[i].sz == (unsigned)keyLength) {
             lOID = H235_DHCustom[i].parameterOID;
             break;
         }
