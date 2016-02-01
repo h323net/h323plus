@@ -46,6 +46,7 @@
 #include <etc/pt_nat.h>             // Fixes for removed items in NAT support in v2.13.x
 #include <etc/pt_colour.h>          // Added NV21 colour format for android
 #include <etc/h323buffer.h>         // Added Frame Buffer and sequencer
+#include <etc/h323resampler.h>      // Added Audio buffer and resampler
 
 // Extra devices
 #include <etc/pt_wasapi.h>          // Added Audio driver for Win7+ devices

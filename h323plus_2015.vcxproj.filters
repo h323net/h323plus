@@ -397,6 +397,9 @@
     <ClCompile Include="src\etc\h323datastore.cxx">
       <Filter>Source Files\etc</Filter>
     </ClCompile>
+    <ClCompile Include="src\etc\h323resampler.cxx">
+      <Filter>Source Files\etc</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\t38.h">
@@ -720,6 +723,9 @@
       <Filter>Header Files\etc</Filter>
     </ClInclude>
     <ClInclude Include="include\etc\h323datastore.h">
+      <Filter>Header Files\etc</Filter>
+    </ClInclude>
+    <ClInclude Include="include\etc\h323resampler.h">
       <Filter>Header Files\etc</Filter>
     </ClInclude>
   </ItemGroup>
