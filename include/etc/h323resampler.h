@@ -21,6 +21,69 @@
 
 #ifdef H323_RESAMPLE
 
+/* Audio Resampler */
 
+struct H323ResamplerSettings;
+class H323AudioResampler : public PObject
+{
+public:
+
+    H323AudioResampler();
+
+    ~H323AudioResampler();
+
+    void Initialise(uint32_t frame_duration,
+            int8_t i_channels,
+            int8_t o_channels
+            );
+
+    void Open(int32_t in_bytes_per_sample,
+            int32_t out_bytes_per_sample,
+            uint32_t in_freq,
+            uint32_t out_freq,
+            size_t frame_duration,
+            int8_t i_channels,
+            int8_t o_channels,
+            uint32_t quality
+            );
+
+    size_t Process(const uint16_t* in_data,
+                size_t input_size
+                );
+
+    void Close();
+
+
+private:
+
+    H323ResamplerSettings * m_resampler;
+    bool                    m_configured;
+
+    PMutex     m_mutex;
+
+};
+
+/* Audio ring buffer */
+
+struct H323SpeexBuffer;
+class H323AudioBuffer  : public PObject
+{
+public:
+
+    H323AudioBuffer();
+    ~H323AudioBuffer();
+
+    void init(int size);
+    void destroy();
+    int write(void *data, int len);
+    int writezeros(int len);
+    int read(void *data, int len);
+    int get_available();
+    int resize(int len);
+
+private:
+    H323SpeexBuffer * m_st;
+
+};
 
 #endif   // H323_RESAMPLE
