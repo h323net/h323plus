@@ -19,8 +19,6 @@
 */
 
 
-#pragma once
-
 #include <h323.h>
 
 #include "etc/pt_colour.h"
