@@ -156,56 +156,56 @@ del $(ProjectDir)..\..\include\openh323buildopts.h</Command>
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>..\..\lib\$(PlatformToolset)\$(Platform)\</OutDir>
+    <OutDir>..\..\lib\$(Platform)\</OutDir>
     <IntDir>$(OutDir)$(Configuration)\</IntDir>
     <TargetName>libh323plusd</TargetName>
     <IncludePath>..\..\..\ptlib\include;..\..\..\ptlib\lib\$(Platform)\include;..\..\..\ptlib\build\android;..\..\include;..\..\lib\$(Platform)\include;$(IncludePath)</IncludePath>
     <LibraryPath>..\..\..\ptlib\Lib;..\..\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>..\..\lib\$(PlatformToolset)\$(Platform)\</OutDir>
+    <OutDir>..\..\lib\$(Platform)\</OutDir>
     <IntDir>$(OutDir)$(Configuration)\</IntDir>
     <TargetName>libh323plus</TargetName>
     <IncludePath>..\..\..\ptlib\include;..\..\..\ptlib\lib\$(Platform)\include;..\..\..\ptlib\build\android;..\..\include;..\..\lib\$(Platform)\include;$(IncludePath)</IncludePath>
     <LibraryPath>..\..\..\ptlib\Lib;..\..\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
-    <OutDir>..\..\lib\$(PlatformToolset)\$(Platform)\</OutDir>
+    <OutDir>..\..\lib\$(Platform)\</OutDir>
     <IntDir>$(OutDir)$(Configuration)\</IntDir>
     <TargetName>libh323plusd</TargetName>
     <IncludePath>..\..\..\ptlib\include;..\..\..\ptlib\lib\$(Platform)\include;..\..\..\ptlib\build\android;..\..\include;..\..\lib\$(Platform)\include;$(IncludePath)</IncludePath>
     <LibraryPath>..\..\..\ptlib\Lib;..\..\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
-    <OutDir>..\..\lib\$(PlatformToolset)\$(Platform)\</OutDir>
+    <OutDir>..\..\lib\$(Platform)\</OutDir>
     <IntDir>$(OutDir)$(Configuration)\</IntDir>
     <TargetName>libh323plus</TargetName>
     <IncludePath>..\..\..\ptlib\include;..\..\..\ptlib\lib\$(Platform)\include;..\..\..\ptlib\build\android;..\..\include;..\..\lib\$(Platform)\include;$(IncludePath)</IncludePath>
     <LibraryPath>..\..\..\ptlib\Lib;..\..\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
-    <OutDir>..\..\lib\$(PlatformToolset)\$(Platform)\</OutDir>
+    <OutDir>..\..\lib\$(Platform)\</OutDir>
     <IntDir>$(OutDir)$(Configuration)\</IntDir>
     <TargetName>libh323plusd</TargetName>
     <IncludePath>..\..\..\ptlib\include;..\..\..\ptlib\lib\$(Platform)\include;..\..\..\ptlib\build\android;..\..\include;..\..\lib\$(Platform)\include;$(IncludePath)</IncludePath>
     <LibraryPath>..\..\..\ptlib\Lib;..\..\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
-    <OutDir>..\..\lib\$(PlatformToolset)\$(Platform)\</OutDir>
+    <OutDir>..\..\lib\$(Platform)\</OutDir>
     <IntDir>$(OutDir)$(Configuration)\</IntDir>
     <TargetName>libh323plus</TargetName>
     <IncludePath>..\..\..\ptlib\include;..\..\..\ptlib\lib\$(Platform)\include;..\..\..\ptlib\build\android;..\..\include;..\..\lib\$(Platform)\include;$(IncludePath)</IncludePath>
     <LibraryPath>..\..\..\ptlib\Lib;..\..\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
-    <OutDir>..\..\lib\$(PlatformToolset)\$(Platform)\</OutDir>
+    <OutDir>..\..\lib\$(Platform)\</OutDir>
     <IntDir>$(OutDir)$(Configuration)\</IntDir>
     <TargetName>libh323plusd</TargetName>
     <IncludePath>..\..\..\ptlib\include;..\..\..\ptlib\lib\$(Platform)\include;..\..\..\ptlib\build\android;..\..\include;..\..\lib\$(Platform)\include;$(IncludePath)</IncludePath>
     <LibraryPath>..\..\..\ptlib\Lib;..\..\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
-    <OutDir>..\..\lib\$(PlatformToolset)\$(Platform)\</OutDir>
+    <OutDir>..\..\lib\$(Platform)\</OutDir>
     <IntDir>$(OutDir)$(Configuration)\</IntDir>
     <TargetName>libh323plus</TargetName>
     <IncludePath>..\..\..\ptlib\include;..\..\..\ptlib\lib\$(Platform)\include;..\..\..\ptlib\build\android;..\..\include;..\..\lib\$(Platform)\include;$(IncludePath)</IncludePath>

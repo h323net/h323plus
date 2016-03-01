@@ -36,6 +36,10 @@
 // PTLIB H323Plus options
 #include "ptlib.h"
 
+#if defined(P_ANDROID)
+#define P_FORCE_STATIC_PLUGIN   1
+#endif
+
 // Plugin subsystem
 #include <ptlib/pluginmgr.h>
 #include <ptlib/plugin.h>

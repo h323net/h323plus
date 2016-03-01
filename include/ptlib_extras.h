@@ -50,6 +50,7 @@
 
 // Extra devices
 #include <etc/pt_wasapi.h>          // Added Audio driver for Win7+ devices
+//#include <etc/pt_extdevices.h>      // Added External Input/Output devices
 
 // Datastore
 #include <etc/h323datastore.h>     // Datastore

@@ -33,7 +33,6 @@
  *
  * Contributor(s): ______________________________________.
  *
- * $Id: h460_oid3.h,v 1.13.2.1 2015/10/10 08:53:42 shorne Exp $
  *
  *
  */
@@ -41,7 +40,6 @@
 #ifndef H_H460_Featureoid3
 #define H_H460_Featureoid3
 
-#include <h460/h4601.h>
 #include <h460/h460p.h>
 
 #include <map>

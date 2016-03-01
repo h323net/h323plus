@@ -31,14 +31,11 @@
  *
  * Contributor(s): ______________________________________.
  *
- * $Id: h460_oid6.h,v 1.3.2.1 2015/10/10 08:53:42 shorne Exp $
  *
  */
 
 #ifndef H_H460_FeatureOID6
 #define H_H460_FeatureOID6
-
-#include <h460/h4601.h>
 
 #if _MSC_VER
 #pragma once
