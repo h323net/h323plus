@@ -2346,7 +2346,7 @@ PBoolean H323TransportUDP::DiscoverGatekeeper(H323Gatekeeper & gk,
 
       sockets.Append(socket);
 
-      if (destAddr == INADDR_BROADCAST) {
+      if (destAddr == PIPSocket::Address(INADDR_BROADCAST)) {
         if (!socket->SetOption(SO_BROADCAST, 1)) {
           PTRACE(2, "RAS\tError allowing broadcast: " << socket->GetErrorText());
           return FALSE;
@@ -2368,14 +2368,14 @@ PBoolean H323TransportUDP::DiscoverGatekeeper(H323Gatekeeper & gk,
       else
         PTRACE(2, "RAS\tError writing discovery PDU: " << socket->GetErrorText());
 
-      if (destAddr == INADDR_BROADCAST)
+      if (destAddr == PIPSocket::Address(INADDR_BROADCAST))
         socket->SetOption(SO_BROADCAST, 0);
     }
 
 
 #ifdef IP_ADD_MEMBERSHIP
     // Now do it again for Multicast
-    if (destAddr == INADDR_BROADCAST || destAddr == MulticastRasAddress) {
+    if (destAddr == PIPSocket::Address(INADDR_BROADCAST) || destAddr == MulticastRasAddress) {
       socket = new PUDPSocket;
       sockets.Append(socket);
 
