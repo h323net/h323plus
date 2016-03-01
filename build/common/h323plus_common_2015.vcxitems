@@ -1,0 +1,452 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <ItemsProjectGuid>{FC24CEC0-ACAD-4575-99CB-0E27E30FDCB5}</ItemsProjectGuid>
+    <ItemsProjectName>h323plus Common</ItemsProjectName>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ProjectCapability Include="SourceItemsFromImports" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\channels.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\codecs.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\etc\h323aec.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\etc\h323buffer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\etc\h323datastore.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\etc\h323resampler.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\etc\pt_colour.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\etc\pt_nat.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\etc\pt_stl.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\etc\pt_wasapi.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\gccpdu.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\gkclient.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\gkserver.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\gnugknat.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\guid.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h224\h284.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h224\t140.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h225.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h225ras.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h230\h230.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h230\OID2.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h235.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h235auth.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h235plugin.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h235pluginmgr.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h235\h2351.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h235\h2356.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h235\h235caps.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h235\h235chan.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h235\h235crypto.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h235\h235support.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h245.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h323.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h323annexg.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h323caps.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h323con.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h323ep.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h323filetransfer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h323h224.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h323neg.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h323pdu.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h323pluginmgr.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h323rtp.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h323t120.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h323t140.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h323t38.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h323trans.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h341\h341.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h341\h341_oid.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h350\h350.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h350\h350_service.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h450\h4501.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h450\h45010.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h450\h45011.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h450\h4502.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h450\h4503.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h450\h4504.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h450\h4505.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h450\h4506.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h450\h4507.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h450\h4508.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h450\h4509.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h450\h450pdu.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h460\h460.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h460\h4601.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h460\h46015.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h460\h46018.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h460\h46018_h225.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h460\h46019.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h460\h46024b.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h460\h46026.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h460\h46026mgr.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h460\h4604.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h460\h4609.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h460\h460p.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h460\h460pres.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h460\h460tm.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h460\h460_oid3.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h460\h460_oid6.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h460\h460_oid9.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h460\h460_std17.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h460\h460_std18.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h460\h460_std22.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h460\h460_std23.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h460\h460_std26.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h460\h460_std9.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h460\h4610.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h460\h461_base.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h460\upnpcp.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\jitter.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\mcspdu.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\mediafmt.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\opalvxml.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\opalwavfile.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\peclient.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\ptlib_extras.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\q922.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\q931.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\rfc2833.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\rtp.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\rtp2wav.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\svcctrl.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\t120proto.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\t38.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\t38proto.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\transports.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\x224.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\x880.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\version.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)..\..\src\asn\gccpdu.asn" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\src\asn\h225.asn" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\src\asn\h235.asn" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\src\asn\h245.asn" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\src\asn\h248.asn" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\src\asn\h350_service.asn" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\src\asn\h4501.asn" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\src\asn\h45010.asn" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\src\asn\h45011.asn" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\src\asn\h4502.asn" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\src\asn\h4503.asn" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\src\asn\h4504.asn" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\src\asn\h4505.asn" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\src\asn\h4506.asn" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\src\asn\h4507.asn" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\src\asn\h4508.asn" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\src\asn\h4509.asn" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\src\asn\h46015.asn" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\src\asn\h46018.asn" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\src\asn\h46019.asn" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\src\asn\h46024b.asn" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\src\asn\h46026.asn" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\src\asn\h4609.asn" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\src\asn\h460pres.asn" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\src\asn\h460tm.asn" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\src\asn\h4610.asn" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\src\asn\h501.asn" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\src\asn\mcspdu.asn" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\src\asn\t38.asn" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\src\asn\x880.asn" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\src\h230\OID2.asn" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\channels.cxx">
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\codecs.cxx">
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\etc\h323aec.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\etc\h323buffer.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\etc\h323datastore.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\etc\h323resampler.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\etc\pt_colour.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\etc\pt_wasapi.cxx">
+      <ExcludedFromBuild>false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\gccpdu.cxx">
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\gkclient.cxx">
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\gkserver.cxx">
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\gnugknat.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\guid.cxx">
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h224\h224.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h224\h281.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h224\h284.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h224\t140.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h225ras.cxx">
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h225_1.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h225_2.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h230\h230.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h230\OID2.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h235.cxx">
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h235auth.cxx">
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h235auth1.cxx">
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h235pluginmgr.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h235\h2356.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h235\h235caps.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h235\h235chan.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h235\h235crypto.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h235\h235support.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h245_1.cxx">
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h245_2.cxx">
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h245_3.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h248.cxx">
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h323.cxx">
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h323annexg.cxx">
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h323caps.cxx">
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h323ep.cxx">
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h323filetransfer.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h323h224.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h323neg.cxx">
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h323pdu.cxx">
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h323pluginmgr.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h323rtp.cxx">
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h323t120.cxx">
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h323t140.cxx">
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h323t38.cxx">
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h323trans.cxx">
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h341\h341.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h350\h350.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h350\h350_service.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h450\h4501.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h450\h45010.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h450\h45011.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h450\h4502.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h450\h4503.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h450\h4504.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h450\h4505.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h450\h4506.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h450\h4507.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h450\h4508.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h450\h4509.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h450\h450pdu.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h4601.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h46015.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h46018.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h46018_h225.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h46019.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h46024b.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h46026.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h46026mgr.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h4604.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h4609.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h460p.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h460pres.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h460tm.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h460_oid3.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h460_oid6.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h460_oid9.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h460_std17.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h460_std18.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h460_std22.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h460_std23.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h460_std26.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h460_std9.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h4610.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h461_base.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\upnpcp.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h501.cxx">
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h501pdu.cxx">
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\jitter.cxx">
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\mcspdu.cxx">
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\mediafmt.cxx">
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\opalvxml.cxx">
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\opalwavfile.cxx">
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\peclient.cxx">
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\precompile.cxx">
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeader>Create</PrecompiledHeader>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\q922.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\q931.cxx">
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\rfc2833.cxx">
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\rtp.cxx">
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\rtp2wav.cxx">
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\svcctrl.cxx">
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\t120proto.cxx">
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\t38.cxx">
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\t38proto.cxx">
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\transports.cxx">
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\x224.cxx">
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\x880.cxx">
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+  </ItemGroup>
+</Project>

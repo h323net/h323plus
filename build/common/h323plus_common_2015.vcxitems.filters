@@ -1,0 +1,819 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\version.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h460\h46015.h">
+      <Filter>ASN Files\ASN Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h460\h46024b.h">
+      <Filter>ASN Files\ASN Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h460\h46026.h">
+      <Filter>ASN Files\ASN Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h460\h4604.h">
+      <Filter>ASN Files\ASN Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h460\h4610.h">
+      <Filter>ASN Files\ASN Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\gccpdu.h">
+      <Filter>ASN Files\ASN Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h225.h">
+      <Filter>ASN Files\ASN Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h235.h">
+      <Filter>ASN Files\ASN Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h245.h">
+      <Filter>ASN Files\ASN Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h350\h350_service.h">
+      <Filter>ASN Files\ASN Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h450\h4501.h">
+      <Filter>ASN Files\ASN Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h450\h45010.h">
+      <Filter>ASN Files\ASN Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h450\h45011.h">
+      <Filter>ASN Files\ASN Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h450\h4502.h">
+      <Filter>ASN Files\ASN Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h450\h4503.h">
+      <Filter>ASN Files\ASN Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h450\h4504.h">
+      <Filter>ASN Files\ASN Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h450\h4505.h">
+      <Filter>ASN Files\ASN Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h450\h4506.h">
+      <Filter>ASN Files\ASN Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h450\h4507.h">
+      <Filter>ASN Files\ASN Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h450\h4508.h">
+      <Filter>ASN Files\ASN Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h450\h4509.h">
+      <Filter>ASN Files\ASN Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h460\h46018.h">
+      <Filter>ASN Files\ASN Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h460\h46019.h">
+      <Filter>ASN Files\ASN Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h460\h4609.h">
+      <Filter>ASN Files\ASN Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h460\h460pres.h">
+      <Filter>ASN Files\ASN Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h460\h460tm.h">
+      <Filter>ASN Files\ASN Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\mcspdu.h">
+      <Filter>ASN Files\ASN Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h230\OID2.h">
+      <Filter>ASN Files\ASN Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\x880.h">
+      <Filter>ASN Files\ASN Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\channels.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\codecs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\gkclient.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\gkserver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\gnugknat.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\guid.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h225ras.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h235auth.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h235plugin.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h235pluginmgr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h323.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h323annexg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h323caps.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h323con.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h323ep.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h323filetransfer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h323h224.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h323neg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h323pdu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h323pluginmgr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h323rtp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h323t120.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h323t38.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h323trans.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\jitter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\mediafmt.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\opalvxml.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\opalwavfile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\peclient.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\ptlib_extras.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\q922.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\q931.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\rfc2833.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\rtp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\rtp2wav.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\svcctrl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\t120proto.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\t38.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\t38proto.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\transports.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\x224.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h235\h2351.h">
+      <Filter>Header Files\h235</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h235\h2356.h">
+      <Filter>Header Files\h235</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h235\h235caps.h">
+      <Filter>Header Files\h235</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h235\h235chan.h">
+      <Filter>Header Files\h235</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h235\h235crypto.h">
+      <Filter>Header Files\h235</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h235\h235support.h">
+      <Filter>Header Files\h235</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h460\h460.h">
+      <Filter>Header Files\h460</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h460\h4601.h">
+      <Filter>Header Files\h460</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h460\h46018_h225.h">
+      <Filter>Header Files\h460</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h460\h46026mgr.h">
+      <Filter>Header Files\h460</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h460\h460_oid3.h">
+      <Filter>Header Files\h460</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h460\h460_oid6.h">
+      <Filter>Header Files\h460</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h460\h460_oid9.h">
+      <Filter>Header Files\h460</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h460\h460_std17.h">
+      <Filter>Header Files\h460</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h460\h460_std18.h">
+      <Filter>Header Files\h460</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h460\h460_std22.h">
+      <Filter>Header Files\h460</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h460\h460_std23.h">
+      <Filter>Header Files\h460</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h460\h460_std26.h">
+      <Filter>Header Files\h460</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h460\h460_std9.h">
+      <Filter>Header Files\h460</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h460\h460p.h">
+      <Filter>Header Files\h460</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h460\h461_base.h">
+      <Filter>Header Files\h460</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h460\upnpcp.h">
+      <Filter>Header Files\h460</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h224\h284.h">
+      <Filter>Header Files\h224</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h224\t140.h">
+      <Filter>Header Files\h224</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h323t140.h">
+      <Filter>Header Files\h224</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h230\h230.h">
+      <Filter>Header Files\h224\h230</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h350\h350.h">
+      <Filter>Header Files\h350</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h341\h341.h">
+      <Filter>Header Files\h341</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h341\h341_oid.h">
+      <Filter>Header Files\h341</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h450\h450pdu.h">
+      <Filter>Header Files\h450</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\etc\h323aec.h">
+      <Filter>Header Files\etc</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\etc\h323buffer.h">
+      <Filter>Header Files\etc</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\etc\h323datastore.h">
+      <Filter>Header Files\etc</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\etc\h323resampler.h">
+      <Filter>Header Files\etc</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\etc\pt_colour.h">
+      <Filter>Header Files\etc</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\etc\pt_nat.h">
+      <Filter>Header Files\etc</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\etc\pt_stl.h">
+      <Filter>Header Files\etc</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\etc\pt_wasapi.h">
+      <Filter>Header Files\etc</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="ASN Files">
+      <UniqueIdentifier>{3cfcdf8c-6c2c-4981-bb51-f02da2df1a25}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ASN Files\ASN Headers">
+      <UniqueIdentifier>{c4e1ecb2-30b4-4e7c-9627-6e64b65bfcc4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ASN Files\ASN Sources">
+      <UniqueIdentifier>{952a3cee-4ea0-4ecd-b765-e4725f8ac1bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{a992ec0e-69f2-403b-a3fd-b5eb7b337e41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\h235">
+      <UniqueIdentifier>{d842ab86-db5a-40f4-a930-54054d64ecc0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\h460">
+      <UniqueIdentifier>{1dae2c1e-e049-4bb5-a88f-04251178ad69}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\h224">
+      <UniqueIdentifier>{00e824f9-7691-4d28-9b88-d0e0f4f67e9a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\h224\h230">
+      <UniqueIdentifier>{c205c355-a834-4c17-80ef-8c1b833820e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\h350">
+      <UniqueIdentifier>{46fa91cc-af10-4ef5-a8af-5193071b1cb4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\h341">
+      <UniqueIdentifier>{79c7151a-3cac-4405-b47e-b38af2b54a70}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\h450">
+      <UniqueIdentifier>{7658e415-2c98-478d-a72c-3847e959a0e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\etc">
+      <UniqueIdentifier>{6be77ef6-88f6-40a2-b539-a15ca3c1d27a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{cd55ea14-b85d-40bc-aab5-c231dfef34ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\h235">
+      <UniqueIdentifier>{2ca2585f-01e1-4413-983f-5e870a992777}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\h460">
+      <UniqueIdentifier>{3d9e3a29-c93d-45ba-aecb-fd9affa67734}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\h224">
+      <UniqueIdentifier>{5a13da7a-a5b8-4cb6-8f84-71513bb8bd5c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\h350">
+      <UniqueIdentifier>{f88689ec-a459-4af3-b126-467b41462bbe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\h450">
+      <UniqueIdentifier>{6e009b3e-6ea5-4830-aa1c-812f0316e34f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\etc">
+      <UniqueIdentifier>{fc1fee5c-01e4-4ece-9aaa-65dddfb89a74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\h341">
+      <UniqueIdentifier>{462a0523-4074-4f56-86a1-bd1050a8cf3a}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)..\..\src\asn\gccpdu.asn">
+      <Filter>ASN Files</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\src\asn\h225.asn">
+      <Filter>ASN Files</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\src\asn\h235.asn">
+      <Filter>ASN Files</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\src\asn\h245.asn">
+      <Filter>ASN Files</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\src\asn\h248.asn">
+      <Filter>ASN Files</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\src\asn\h350_service.asn">
+      <Filter>ASN Files</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\src\asn\h4501.asn">
+      <Filter>ASN Files</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\src\asn\h45010.asn">
+      <Filter>ASN Files</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\src\asn\h45011.asn">
+      <Filter>ASN Files</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\src\asn\h4502.asn">
+      <Filter>ASN Files</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\src\asn\h4503.asn">
+      <Filter>ASN Files</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\src\asn\h4504.asn">
+      <Filter>ASN Files</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\src\asn\h4505.asn">
+      <Filter>ASN Files</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\src\asn\h4506.asn">
+      <Filter>ASN Files</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\src\asn\h4507.asn">
+      <Filter>ASN Files</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\src\asn\h4508.asn">
+      <Filter>ASN Files</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\src\asn\h4509.asn">
+      <Filter>ASN Files</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\src\asn\h46015.asn">
+      <Filter>ASN Files</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\src\asn\h46018.asn">
+      <Filter>ASN Files</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\src\asn\h46019.asn">
+      <Filter>ASN Files</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\src\asn\h46024b.asn">
+      <Filter>ASN Files</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\src\asn\h46026.asn">
+      <Filter>ASN Files</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\src\asn\h4609.asn">
+      <Filter>ASN Files</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\src\asn\h460pres.asn">
+      <Filter>ASN Files</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\src\asn\h460tm.asn">
+      <Filter>ASN Files</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\src\asn\h4610.asn">
+      <Filter>ASN Files</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\src\asn\h501.asn">
+      <Filter>ASN Files</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\src\asn\mcspdu.asn">
+      <Filter>ASN Files</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\src\asn\t38.asn">
+      <Filter>ASN Files</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\src\asn\x880.asn">
+      <Filter>ASN Files</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\src\h230\OID2.asn">
+      <Filter>ASN Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h46015.cxx">
+      <Filter>ASN Files\ASN Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h46024b.cxx">
+      <Filter>ASN Files\ASN Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h46026.cxx">
+      <Filter>ASN Files\ASN Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h4604.cxx">
+      <Filter>ASN Files\ASN Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h4610.cxx">
+      <Filter>ASN Files\ASN Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\gccpdu.cxx">
+      <Filter>ASN Files\ASN Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h225_1.cxx">
+      <Filter>ASN Files\ASN Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h225_2.cxx">
+      <Filter>ASN Files\ASN Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h235.cxx">
+      <Filter>ASN Files\ASN Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h245_1.cxx">
+      <Filter>ASN Files\ASN Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h245_2.cxx">
+      <Filter>ASN Files\ASN Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h245_3.cxx">
+      <Filter>ASN Files\ASN Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h248.cxx">
+      <Filter>ASN Files\ASN Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h350\h350_service.cxx">
+      <Filter>ASN Files\ASN Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h450\h4501.cxx">
+      <Filter>ASN Files\ASN Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h450\h45010.cxx">
+      <Filter>ASN Files\ASN Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h450\h45011.cxx">
+      <Filter>ASN Files\ASN Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h450\h4502.cxx">
+      <Filter>ASN Files\ASN Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h450\h4503.cxx">
+      <Filter>ASN Files\ASN Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h450\h4504.cxx">
+      <Filter>ASN Files\ASN Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h450\h4505.cxx">
+      <Filter>ASN Files\ASN Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h450\h4506.cxx">
+      <Filter>ASN Files\ASN Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h450\h4507.cxx">
+      <Filter>ASN Files\ASN Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h450\h4508.cxx">
+      <Filter>ASN Files\ASN Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h450\h4509.cxx">
+      <Filter>ASN Files\ASN Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h46018.cxx">
+      <Filter>ASN Files\ASN Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h46019.cxx">
+      <Filter>ASN Files\ASN Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h4609.cxx">
+      <Filter>ASN Files\ASN Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h460pres.cxx">
+      <Filter>ASN Files\ASN Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h460tm.cxx">
+      <Filter>ASN Files\ASN Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h501.cxx">
+      <Filter>ASN Files\ASN Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\mcspdu.cxx">
+      <Filter>ASN Files\ASN Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h230\OID2.cxx">
+      <Filter>ASN Files\ASN Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\t38.cxx">
+      <Filter>ASN Files\ASN Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\x880.cxx">
+      <Filter>ASN Files\ASN Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\channels.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\codecs.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\gkclient.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\gkserver.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\gnugknat.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\guid.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h224\h224.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h225ras.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h230\h230.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h235auth.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h235auth1.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h235pluginmgr.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h323.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h323annexg.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h323caps.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h323ep.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h323filetransfer.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h323h224.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h323neg.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h323pdu.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h323pluginmgr.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h323rtp.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h323t120.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h323t38.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h323trans.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h501pdu.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\jitter.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\mediafmt.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\opalvxml.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\opalwavfile.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\peclient.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\precompile.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\q922.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\q931.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\rfc2833.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\rtp.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\rtp2wav.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\svcctrl.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\t120proto.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\t38proto.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\transports.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\upnpcp.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\x224.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h235\h2356.cxx">
+      <Filter>Source Files\h235</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h235\h235caps.cxx">
+      <Filter>Source Files\h235</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h235\h235chan.cxx">
+      <Filter>Source Files\h235</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h235\h235crypto.cxx">
+      <Filter>Source Files\h235</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h235\h235support.cxx">
+      <Filter>Source Files\h235</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h4601.cxx">
+      <Filter>Source Files\h460</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h46018_h225.cxx">
+      <Filter>Source Files\h460</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h46026mgr.cxx">
+      <Filter>Source Files\h460</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h460_oid3.cxx">
+      <Filter>Source Files\h460</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h460_oid6.cxx">
+      <Filter>Source Files\h460</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h460_oid9.cxx">
+      <Filter>Source Files\h460</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h460_std17.cxx">
+      <Filter>Source Files\h460</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h460_std18.cxx">
+      <Filter>Source Files\h460</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h460_std22.cxx">
+      <Filter>Source Files\h460</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h460_std23.cxx">
+      <Filter>Source Files\h460</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h460_std26.cxx">
+      <Filter>Source Files\h460</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h460_std9.cxx">
+      <Filter>Source Files\h460</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h460p.cxx">
+      <Filter>Source Files\h460</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h461_base.cxx">
+      <Filter>Source Files\h460</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h224\h284.cxx">
+      <Filter>Source Files\h224</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h224\t140.cxx">
+      <Filter>Source Files\h224</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h224\h281.cxx">
+      <Filter>Source Files\h224</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h323t140.cxx">
+      <Filter>Source Files\h224</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h350\h350.cxx">
+      <Filter>Source Files\h350</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h450\h450pdu.cxx">
+      <Filter>Source Files\h450</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\etc\h323aec.cxx">
+      <Filter>Source Files\etc</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\etc\h323buffer.cxx">
+      <Filter>Source Files\etc</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\etc\h323datastore.cxx">
+      <Filter>Source Files\etc</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\etc\h323resampler.cxx">
+      <Filter>Source Files\etc</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\etc\pt_colour.cxx">
+      <Filter>Source Files\etc</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\etc\pt_wasapi.cxx">
+      <Filter>Source Files\etc</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h341\h341.cxx">
+      <Filter>Source Files\h341</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

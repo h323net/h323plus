@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <None Include="..\..\include\openh323buildopts.h.in" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\lib\ARM\include\openh323buildopts.h" />
+  </ItemGroup>
+</Project>
