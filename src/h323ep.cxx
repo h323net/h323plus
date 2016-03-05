@@ -252,8 +252,9 @@ H323_TLSContext::H323_TLSContext()
     }
 
     m_context = SSL_CTX_new(SSLv23_method());	
-    SSL_CTX_set_options(m_context, SSL_OP_NO_SSLv2);	// remove unsafe SSLv2
-    SSL_CTX_set_mode(m_context, SSL_MODE_AUTO_RETRY); // handle re-negotiations automatically
+    SSL_CTX_set_options(m_context, SSL_OP_NO_SSLv2);	// remove unsafe SSLv2 (eg. due to DROWN)
+    SSL_CTX_set_options(m_context, SSL_OP_NO_SSLv3);	// remove unsafe SSLv3 (eg. due to POODLE)
+    SSL_CTX_set_mode(m_context, SSL_MODE_AUTO_RETRY);   // handle re-negotiations automatically
 
 #if PTLIB_VER < 2120
     context = m_context;
