@@ -2270,7 +2270,7 @@ class H323EndPoint : public PObject
 
     /** Main function to enable the feature
      */
-    PBoolean EnableIM() { m_IMenabled = true; };
+    void EnableIM() { m_IMenabled = true; };
 
     /** Callback from the H460 feature to check if the 
         feature is enabled
