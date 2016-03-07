@@ -857,12 +857,11 @@ H323EndPoint::H323EndPoint()
 #endif
 
 #ifdef H323_H460IM
-  m_IMdisable   = true;
+  m_IMenabled   = false;
   m_IMcall      = false;
   m_IMsession   = false;
   m_IMwriteevent = false;
   m_IMmsg       = PString();
-  m_IMdisable   = false;
 #endif
 
 #ifdef H323_H460P
@@ -4323,7 +4322,7 @@ void H323EndPoint::IMSend(const PString & msg)
 {
     PWaitAndSignal m(m_IMmutex);
 
-    if (m_IMdisable)
+    if (!m_IMenabled)
         return;
 
     if (msg.GetLength() == 0)
