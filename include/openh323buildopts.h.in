@@ -153,6 +153,9 @@
     #undef H323_H46025
 #endif
 
+// Text message option
+#undef H323_H460IM
+
 // Presence Feature
 #undef H323_H460P
 #ifdef H323_H460P

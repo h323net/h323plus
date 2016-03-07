@@ -92,6 +92,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h460\h460p.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h460\h460pres.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h460\h460tm.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h460\h460_oid1.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h460\h460_oid3.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h460\h460_oid6.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h460\h460_oid9.h" />
@@ -334,6 +335,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h460p.cxx" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h460pres.cxx" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h460tm.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h460_oid1.cxx" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h460_oid3.cxx" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h460_oid6.cxx" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h460_oid9.cxx" />

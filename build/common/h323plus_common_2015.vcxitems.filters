@@ -326,6 +326,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\etc\pt_wasapi.h">
       <Filter>Header Files\etc</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h460\h460_oid1.h">
+      <Filter>Header Files\h460</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="ASN Files">
@@ -814,6 +817,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h341\h341.cxx">
       <Filter>Source Files\h341</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h460_oid1.cxx">
+      <Filter>Source Files\h460</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
