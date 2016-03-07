@@ -30,6 +30,12 @@
 #include "main.h"
 #include "../../version.h"
 
+#if defined(_WIN32) && defined(_VLD)
+// Visual Leak Detector 
+// https://visualstudiogallery.msdn.microsoft.com/7c40a5d8-dd35-4019-a2af-cb1403f5939c
+#include <vld.h>
+#endif
+
 #if defined(_MSC_VER) 
    #define defVideoDriver "Application" //"DirectShow"
    #define defVideoOutDriver "NULLOutput" //"DirectShow"
