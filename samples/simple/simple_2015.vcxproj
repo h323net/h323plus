@@ -417,12 +417,6 @@
   <ItemGroup>
     <ClInclude Include="main.h" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\h323plus_2015.vcxproj">
-      <Project>{71c46eaf-48c9-47ba-9532-27b51744548d}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
