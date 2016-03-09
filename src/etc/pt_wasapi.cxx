@@ -419,7 +419,7 @@ PBoolean MFTAudioResampler::Resample(const BYTE * inMedia, PINDEX inSize, BYTE *
 
     CHECK_ERROR_RETURN(m_pTransform->ProcessInput(0, pSample, 0))
 
-    int sz = 0;
+    PINDEX sz = 0;
     do {
         MFT_OUTPUT_DATA_BUFFER outputDataBuffer;
         DWORD dwStatus;

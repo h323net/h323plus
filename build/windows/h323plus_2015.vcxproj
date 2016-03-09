@@ -411,6 +411,10 @@ del $(ProjectDir)..\..\include\openh323buildopts.h</Command>
     </CustomBuild>
     <None Include="..\configure.ac" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\lib\Win32\include\openh323buildopts.h" />
+    <ClInclude Include="..\..\lib\x64\include\openh323buildopts.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

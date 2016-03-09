@@ -220,12 +220,12 @@
 #define H323_SQLCIPHER  1
 #if defined(H323_SQLCIPHER) && defined(H323_SSL)
 #define H323_DATASTORE  1
-#pragma include_alias(<sqlcipher/sqlite3.h>,            <X:/sqlcipher-windows/StaticLib/inc/sqlite3.h>      )
+#pragma include_alias(<sqlcipher/sqlite3.h>,            <c:/sqlcipher-windows/StaticLib/inc/sqlite3.h>      )
 #ifdef _WIN32
     #ifdef _WIN64
-        #define H323_DATASTORE_LIB "X:/sqlcipher-windows/build/lib/sqlcipher64.lib"
+        #define H323_DATASTORE_LIB "c:/sqlcipher-windows/build/lib/sqlcipher64.lib"
     #else
-        #define H323_DATASTORE_LIB "X:/sqlcipher-windows/build/lib/sqlcipher32.lib"
+        #define H323_DATASTORE_LIB "c:/sqlcipher-windows/build/lib/sqlcipher32.lib"
     #endif
 #endif
 

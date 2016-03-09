@@ -170,13 +170,30 @@
       <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BrowseInformation>true</BrowseInformation>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\etc\h323aec.cxx" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\etc\h323buffer.cxx" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\etc\h323datastore.cxx" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\etc\h323resampler.cxx" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\etc\pt_colour.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\etc\h323aec.cxx">
+      <Optimization>Disabled</Optimization>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\etc\h323buffer.cxx">
+      <Optimization>Disabled</Optimization>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\etc\h323datastore.cxx">
+      <Optimization>Disabled</Optimization>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\etc\h323resampler.cxx">
+      <Optimization>Disabled</Optimization>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\etc\pt_colour.cxx">
+      <Optimization>Disabled</Optimization>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\etc\pt_wasapi.cxx">
       <ExcludedFromBuild>false</ExcludedFromBuild>
+      <Optimization>Disabled</Optimization>
+      <BrowseInformation>true</BrowseInformation>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\gccpdu.cxx">
       <Optimization>Disabled</Optimization>
@@ -193,25 +210,54 @@
       <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BrowseInformation>true</BrowseInformation>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\gnugknat.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\gnugknat.cxx">
+      <BrowseInformation>true</BrowseInformation>
+      <Optimization>Disabled</Optimization>
+    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\guid.cxx">
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BrowseInformation>true</BrowseInformation>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h224\h224.cxx" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h224\h281.cxx" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h224\h284.cxx" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h224\t140.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h224\h224.cxx">
+      <Optimization>Disabled</Optimization>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h224\h281.cxx">
+      <BrowseInformation>true</BrowseInformation>
+      <Optimization>Disabled</Optimization>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h224\h284.cxx">
+      <Optimization>Disabled</Optimization>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h224\t140.cxx">
+      <BrowseInformation>true</BrowseInformation>
+      <Optimization>Disabled</Optimization>
+    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h225ras.cxx">
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BrowseInformation>true</BrowseInformation>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h225_1.cxx" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h225_2.cxx" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h230\h230.cxx" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h230\OID2.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h225_1.cxx">
+      <Optimization>Disabled</Optimization>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h225_2.cxx">
+      <BrowseInformation>true</BrowseInformation>
+      <Optimization>Disabled</Optimization>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h230\h230.cxx">
+      <Optimization>Disabled</Optimization>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h230\OID2.cxx">
+      <Optimization>Custom</Optimization>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h235.cxx">
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -227,12 +273,36 @@
       <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BrowseInformation>true</BrowseInformation>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h235pluginmgr.cxx" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h235\h2356.cxx" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h235\h235caps.cxx" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h235\h235chan.cxx" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h235\h235crypto.cxx" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h235\h235support.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h235pluginmgr.cxx">
+      <Optimization>Disabled</Optimization>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h235\h2356.cxx">
+      <Optimization>Disabled</Optimization>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h235\h235caps.cxx">
+      <Optimization>Disabled</Optimization>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h235\h235chan.cxx">
+      <Optimization>Disabled</Optimization>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h235\h235crypto.cxx">
+      <Optimization>Disabled</Optimization>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h235\h235support.cxx">
+      <Optimization>Disabled</Optimization>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h245_1.cxx">
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -243,7 +313,11 @@
       <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BrowseInformation>true</BrowseInformation>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h245_3.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h245_3.cxx">
+      <Optimization>Disabled</Optimization>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h248.cxx">
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -269,8 +343,16 @@
       <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BrowseInformation>true</BrowseInformation>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h323filetransfer.cxx" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h323h224.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h323filetransfer.cxx">
+      <Optimization>Disabled</Optimization>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h323h224.cxx">
+      <Optimization>Disabled</Optimization>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h323neg.cxx">
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -281,7 +363,11 @@
       <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BrowseInformation>true</BrowseInformation>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h323pluginmgr.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h323pluginmgr.cxx">
+      <Optimization>Disabled</Optimization>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h323rtp.cxx">
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -307,47 +393,211 @@
       <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BrowseInformation>true</BrowseInformation>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h341\h341.cxx" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h350\h350.cxx" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h350\h350_service.cxx" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h450\h4501.cxx" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h450\h45010.cxx" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h450\h45011.cxx" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h450\h4502.cxx" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h450\h4503.cxx" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h450\h4504.cxx" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h450\h4505.cxx" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h450\h4506.cxx" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h450\h4507.cxx" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h450\h4508.cxx" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h450\h4509.cxx" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h450\h450pdu.cxx" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h4601.cxx" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h46015.cxx" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h46018.cxx" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h46018_h225.cxx" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h46019.cxx" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h46024b.cxx" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h46026.cxx" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h46026mgr.cxx" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h4604.cxx" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h4609.cxx" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h460p.cxx" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h460pres.cxx" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h460tm.cxx" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h460_oid1.cxx" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h460_oid3.cxx" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h460_oid6.cxx" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h460_oid9.cxx" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h460_std17.cxx" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h460_std18.cxx" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h460_std22.cxx" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h460_std23.cxx" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h460_std26.cxx" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h460_std9.cxx" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h4610.cxx" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h461_base.cxx" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\upnpcp.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h341\h341.cxx">
+      <Optimization>Disabled</Optimization>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h350\h350.cxx">
+      <Optimization>Disabled</Optimization>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h350\h350_service.cxx">
+      <Optimization>Disabled</Optimization>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h450\h4501.cxx">
+      <Optimization>Disabled</Optimization>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h450\h45010.cxx">
+      <Optimization>Disabled</Optimization>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h450\h45011.cxx">
+      <Optimization>Disabled</Optimization>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h450\h4502.cxx">
+      <BrowseInformation>true</BrowseInformation>
+      <Optimization>Disabled</Optimization>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h450\h4503.cxx">
+      <Optimization>Disabled</Optimization>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h450\h4504.cxx">
+      <BrowseInformation>true</BrowseInformation>
+      <Optimization>Disabled</Optimization>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h450\h4505.cxx">
+      <Optimization>Disabled</Optimization>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h450\h4506.cxx">
+      <Optimization>Disabled</Optimization>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h450\h4507.cxx">
+      <Optimization>Disabled</Optimization>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h450\h4508.cxx">
+      <BrowseInformation>true</BrowseInformation>
+      <Optimization>Disabled</Optimization>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h450\h4509.cxx">
+      <Optimization>Disabled</Optimization>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h450\h450pdu.cxx">
+      <BrowseInformation>true</BrowseInformation>
+      <Optimization>Disabled</Optimization>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h4601.cxx">
+      <Optimization>Disabled</Optimization>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h46015.cxx">
+      <Optimization>Disabled</Optimization>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h46018.cxx">
+      <Optimization>Disabled</Optimization>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h46018_h225.cxx">
+      <BrowseInformation>true</BrowseInformation>
+      <Optimization>Disabled</Optimization>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h46019.cxx">
+      <Optimization>Disabled</Optimization>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h46024b.cxx">
+      <BrowseInformation>true</BrowseInformation>
+      <Optimization>Disabled</Optimization>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h46026.cxx">
+      <Optimization>Disabled</Optimization>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h46026mgr.cxx">
+      <BrowseInformation>true</BrowseInformation>
+      <Optimization>Disabled</Optimization>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h4604.cxx">
+      <Optimization>Disabled</Optimization>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h4609.cxx">
+      <BrowseInformation>true</BrowseInformation>
+      <Optimization>Disabled</Optimization>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h460p.cxx">
+      <Optimization>Disabled</Optimization>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h460pres.cxx">
+      <BrowseInformation>true</BrowseInformation>
+      <Optimization>Disabled</Optimization>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h460tm.cxx">
+      <Optimization>Disabled</Optimization>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h460_oid1.cxx">
+      <BrowseInformation>true</BrowseInformation>
+      <Optimization>Disabled</Optimization>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h460_oid3.cxx">
+      <Optimization>Disabled</Optimization>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h460_oid6.cxx">
+      <BrowseInformation>true</BrowseInformation>
+      <Optimization>Disabled</Optimization>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h460_oid9.cxx">
+      <Optimization>Disabled</Optimization>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h460_std17.cxx">
+      <BrowseInformation>true</BrowseInformation>
+      <Optimization>Disabled</Optimization>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h460_std18.cxx">
+      <Optimization>Disabled</Optimization>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h460_std22.cxx">
+      <BrowseInformation>true</BrowseInformation>
+      <Optimization>Disabled</Optimization>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h460_std23.cxx">
+      <Optimization>Disabled</Optimization>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h460_std26.cxx">
+      <BrowseInformation>true</BrowseInformation>
+      <Optimization>Disabled</Optimization>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h460_std9.cxx">
+      <Optimization>Disabled</Optimization>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h4610.cxx">
+      <BrowseInformation>true</BrowseInformation>
+      <Optimization>Disabled</Optimization>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h461_base.cxx">
+      <Optimization>Disabled</Optimization>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\upnpcp.cxx">
+      <BrowseInformation>true</BrowseInformation>
+      <Optimization>Disabled</Optimization>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h501.cxx">
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -393,8 +643,14 @@
       <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>Create</PrecompiledHeader>
       <BrowseInformation>true</BrowseInformation>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\q922.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\q922.cxx">
+      <Optimization>Disabled</Optimization>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\q931.cxx">
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>

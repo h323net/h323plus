@@ -6,4 +6,20 @@
   <ItemGroup>
     <CustomBuild Include="..\..\include\openh323buildopts.h.in" />
   </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Win32">
+      <UniqueIdentifier>{55e7a7f6-6099-43f0-bff4-af8435701610}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Win64">
+      <UniqueIdentifier>{dc414982-1792-4de9-92d3-44bed6b50534}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\lib\Win32\include\openh323buildopts.h">
+      <Filter>Win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\lib\x64\include\openh323buildopts.h">
+      <Filter>Win64</Filter>
+    </ClInclude>
+  </ItemGroup>
 </Project>
