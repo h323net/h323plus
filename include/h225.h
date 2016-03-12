@@ -13,6 +13,7 @@
 #pragma interface
 #endif
 
+#include <ptclib/asner.h>
 
 #include "h235.h"
 #include "h245.h"

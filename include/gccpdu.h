@@ -13,6 +13,8 @@
 #pragma interface
 #endif
 
+#include <ptclib/asner.h>
+
 //
 // ChannelID
 //
