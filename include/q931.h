@@ -33,8 +33,6 @@
 #pragma interface
 #endif
 
-#include "ptlib_extras.h"
-
 ///////////////////////////////////////////////////////////////////////////////
 
 /**This class embodies a Q.931 Protocol Data Unit.
