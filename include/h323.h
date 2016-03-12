@@ -52,9 +52,6 @@
 #include <ptclib/pdns.h>
 #include <ptclib/url.h>
 
-// ASN.1 subsystem
-#include <ptclib/asner.h>
-
 // Utilties
 #include <ptlib/safecoll.h>
 #include <ptclib/random.h>
