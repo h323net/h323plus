@@ -303,10 +303,10 @@ SimpleH323EndPoint::~SimpleH323EndPoint()
 PBoolean SimpleH323EndPoint::Initialise(PArgList & args)
 {
 
-#if 0
+#if 1 //0
   PDirectory DefaultDir = PProcess::Current().GetFile().GetDirectory();
   PPluginManager & pluginMgr = PPluginManager::GetPluginManager();
-  pluginMgr.LoadPluginDirectory(DefaultDir);
+  pluginMgr.LoadDirectory(DefaultDir);
 #endif
   
 

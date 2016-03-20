@@ -99,13 +99,13 @@
     <OutDir>$(SolutionDir)bin\$(MSBuildProjectName)\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)vs2015_$(Platform)\$(Configuration)\</IntDir>
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>..\..\..\ptlib\include;..\..\..\ptlib\lib\$(Platform)\include;..\..\include;$(IncludePath)</IncludePath>
-    <LibraryPath>..\..\..\ptlib\lib;..\..\lib\vs2015\Win32;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)..\..\..\ptlib\include;$(ProjectDir)..\..\..\ptlib\lib\$(Platform)\include;$(ProjectDir)..\..\include;$(ProjectDir)..\..\lib\$(Platform)\include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\..\..\ptlib\lib;..\..\lib\$(Platform)\$(PlatformToolset);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='No Trace|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>..\..\..\ptlib\include;..\..\include;$(IncludePath)</IncludePath>
-    <LibraryPath>..\..\..\ptlib\lib;..\..\lib\vs2015\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)..\..\..\ptlib\include;$(ProjectDir)..\..\..\ptlib\lib\$(Platform)\include;$(ProjectDir)..\..\include;$(ProjectDir)..\..\lib\$(Platform)\include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\..\..\ptlib\lib;..\..\lib\$(Platform)\$(PlatformToolset);$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)bin\$(MSBuildProjectName)\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)vs2015\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
@@ -113,13 +113,13 @@
     <OutDir>$(SolutionDir)bin\$(MSBuildProjectName)\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)vs2015_$(Platform)\$(Configuration)\</IntDir>
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>..\..\..\ptlib\include;..\..\..\ptlib\lib\$(Platform)\include;..\..\include;$(IncludePath)</IncludePath>
-    <LibraryPath>..\..\..\ptlib\lib;..\..\lib\vs2015\Win32;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)..\..\..\ptlib\include;$(ProjectDir)..\..\..\ptlib\lib\$(Platform)\include;$(ProjectDir)..\..\include;$(ProjectDir)..\..\lib\$(Platform)\include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\..\..\ptlib\lib;..\..\lib\$(Platform)\$(PlatformToolset);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>..\..\..\ptlib\include;..\..\include;$(IncludePath)</IncludePath>
-    <LibraryPath>..\..\..\ptlib\lib;..\..\lib\vs2015\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)..\..\..\ptlib\include;$(ProjectDir)..\..\..\ptlib\lib\$(Platform)\include;$(ProjectDir)..\..\include;$(ProjectDir)..\..\lib\$(Platform)\include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\..\..\ptlib\lib;..\..\lib\$(Platform)\$(PlatformToolset);$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)bin\$(MSBuildProjectName)\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)vs2015\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
@@ -127,13 +127,13 @@
     <OutDir>$(SolutionDir)bin\$(MSBuildProjectName)\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)vs2015_$(Platform)\$(Configuration)\</IntDir>
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>..\..\..\ptlib\include;..\..\..\ptlib\lib\$(Platform)\include;..\..\include;$(IncludePath)</IncludePath>
-    <LibraryPath>..\..\..\ptlib\lib;..\..\lib\$(PlatformToolset)\Win32;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)..\..\..\ptlib\include;$(ProjectDir)..\..\..\ptlib\lib\$(Platform)\include;$(ProjectDir)..\..\include;$(ProjectDir)..\..\lib\$(Platform)\include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\..\..\ptlib\lib;..\..\lib\$(Platform)\$(PlatformToolset);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>..\..\..\ptlib\include;..\..\include;$(IncludePath)</IncludePath>
-    <LibraryPath>..\..\..\ptlib\lib;..\..\lib\vs2015\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)..\..\..\ptlib\include;$(ProjectDir)..\..\..\ptlib\lib\$(Platform)\include;$(ProjectDir)..\..\include;$(ProjectDir)..\..\lib\$(Platform)\include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\..\..\ptlib\lib;..\..\lib\$(Platform)\$(PlatformToolset);$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)bin\$(MSBuildProjectName)\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)vs2015\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
