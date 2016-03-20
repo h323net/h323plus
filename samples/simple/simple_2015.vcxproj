@@ -27,7 +27,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectName>simpleplus</ProjectName>
+    <ProjectName>simple</ProjectName>
     <ProjectGuid>{AC8B99A3-6DEA-48B0-A6A6-31A982FAAD0A}</ProjectGuid>
     <RootNamespace>simpleplus</RootNamespace>
     <TargetPlatformVersion>8.1</TargetPlatformVersion>
@@ -96,8 +96,8 @@
     <_ProjectFileVersion>14.0.22823.1</_ProjectFileVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='No Trace|Win32'">
-    <OutDir>$(SolutionDir)bin\$(MSBuildProjectName)\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>$(ProjectDir)vs2015_$(Platform)\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)bin\$(ProjectName)\$(Platform)\$(PlatformToolset)\</OutDir>
+    <IntDir>$(OutDir)\$(Configuration)\</IntDir>
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(ProjectDir)..\..\..\ptlib\include;$(ProjectDir)..\..\..\ptlib\lib\$(Platform)\include;$(ProjectDir)..\..\include;$(ProjectDir)..\..\lib\$(Platform)\include;$(IncludePath)</IncludePath>
     <LibraryPath>..\..\..\ptlib\lib;..\..\lib\$(Platform)\$(PlatformToolset);$(LibraryPath)</LibraryPath>
@@ -106,12 +106,12 @@
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(ProjectDir)..\..\..\ptlib\include;$(ProjectDir)..\..\..\ptlib\lib\$(Platform)\include;$(ProjectDir)..\..\include;$(ProjectDir)..\..\lib\$(Platform)\include;$(IncludePath)</IncludePath>
     <LibraryPath>..\..\..\ptlib\lib;..\..\lib\$(Platform)\$(PlatformToolset);$(LibraryPath)</LibraryPath>
-    <OutDir>$(SolutionDir)bin\$(MSBuildProjectName)\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>$(ProjectDir)vs2015\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)bin\$(ProjectName)\$(Platform)\$(PlatformToolset)\</OutDir>
+    <IntDir>$(OutDir)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>$(SolutionDir)bin\$(MSBuildProjectName)\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>$(ProjectDir)vs2015_$(Platform)\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)bin\$(ProjectName)\$(Platform)\$(PlatformToolset)\</OutDir>
+    <IntDir>$(OutDir)\$(Configuration)\</IntDir>
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(ProjectDir)..\..\..\ptlib\include;$(ProjectDir)..\..\..\ptlib\lib\$(Platform)\include;$(ProjectDir)..\..\include;$(ProjectDir)..\..\lib\$(Platform)\include;$(IncludePath)</IncludePath>
     <LibraryPath>..\..\..\ptlib\lib;..\..\lib\$(Platform)\$(PlatformToolset);$(LibraryPath)</LibraryPath>
@@ -120,22 +120,24 @@
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(ProjectDir)..\..\..\ptlib\include;$(ProjectDir)..\..\..\ptlib\lib\$(Platform)\include;$(ProjectDir)..\..\include;$(ProjectDir)..\..\lib\$(Platform)\include;$(IncludePath)</IncludePath>
     <LibraryPath>..\..\..\ptlib\lib;..\..\lib\$(Platform)\$(PlatformToolset);$(LibraryPath)</LibraryPath>
-    <OutDir>$(SolutionDir)bin\$(MSBuildProjectName)\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>$(ProjectDir)vs2015\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)bin\$(ProjectName)\$(Platform)\$(PlatformToolset)\</OutDir>
+    <IntDir>$(OutDir)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>$(SolutionDir)bin\$(MSBuildProjectName)\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>$(ProjectDir)vs2015_$(Platform)\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)bin\$(ProjectName)\$(Platform)\$(PlatformToolset)\</OutDir>
+    <IntDir>$(OutDir)\$(Configuration)\</IntDir>
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(ProjectDir)..\..\..\ptlib\include;$(ProjectDir)..\..\..\ptlib\lib\$(Platform)\include;$(ProjectDir)..\..\include;$(ProjectDir)..\..\lib\$(Platform)\include;$(IncludePath)</IncludePath>
     <LibraryPath>..\..\..\ptlib\lib;..\..\lib\$(Platform)\$(PlatformToolset);$(LibraryPath)</LibraryPath>
+    <TargetName>$(ProjectName)d</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(ProjectDir)..\..\..\ptlib\include;$(ProjectDir)..\..\..\ptlib\lib\$(Platform)\include;$(ProjectDir)..\..\include;$(ProjectDir)..\..\lib\$(Platform)\include;$(IncludePath)</IncludePath>
     <LibraryPath>..\..\..\ptlib\lib;..\..\lib\$(Platform)\$(PlatformToolset);$(LibraryPath)</LibraryPath>
-    <OutDir>$(SolutionDir)bin\$(MSBuildProjectName)\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>$(ProjectDir)vs2015\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)bin\$(ProjectName)\$(Platform)\$(PlatformToolset)\</OutDir>
+    <IntDir>$(OutDir)\$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)d</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='No Trace|Win32'">
     <Midl>
@@ -170,7 +172,7 @@
     </ResourceCompile>
     <Link>
       <AdditionalDependencies>h323plusn.lib;ptlib.lib;wsock32.lib;mpr.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>$(OutDir)/$(ProjectName).exe</OutputFile>
+      <OutputFile>$(OutDir)$(TargetName).exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <ProgramDatabaseFile>$(IntDir)/$(ProjectName).pdb</ProgramDatabaseFile>
       <SubSystem>Console</SubSystem>
@@ -214,7 +216,7 @@
     </ResourceCompile>
     <Link>
       <AdditionalDependencies>h323plusn.lib;ptlib64n.lib;wsock32.lib;mpr.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>$(OutDir)$(ProjectName).exe</OutputFile>
+      <OutputFile>$(OutDir)$(TargetName).exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <ProgramDatabaseFile>$(IntDir)$(TargetName).pdb</ProgramDatabaseFile>
       <SubSystem>Console</SubSystem>
@@ -258,7 +260,7 @@
     </ResourceCompile>
     <Link>
       <AdditionalDependencies>h323plus.lib;ptlibs.lib;wsock32.lib;mpr.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>$(OutDir)/$(ProjectName).exe</OutputFile>
+      <OutputFile>$(OutDir)$(TargetName).exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <ProgramDatabaseFile>$(IntDir)/$(ProjectName).pdb</ProgramDatabaseFile>
       <SubSystem>Console</SubSystem>
@@ -303,7 +305,7 @@
     </ResourceCompile>
     <Link>
       <AdditionalDependencies>h323plus.lib;ptlib64s.lib;wsock32.lib;mpr.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>$(OutDir)$(ProjectName).exe</OutputFile>
+      <OutputFile>$(OutDir)$(TargetName).exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <ProgramDatabaseFile>$(IntDir)$(TargetName).pdb</ProgramDatabaseFile>
       <SubSystem>Console</SubSystem>
@@ -346,7 +348,7 @@
     </ResourceCompile>
     <Link>
       <AdditionalDependencies>h323plusd.lib;ptlibsd.lib;wsock32.lib;mpr.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>$(OutDir)/$(ProjectName).exe</OutputFile>
+      <OutputFile>$(OutDir)$(TargetName).exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>$(IntDir)$(TargetName).pdb</ProgramDatabaseFile>
@@ -389,7 +391,7 @@
     </ResourceCompile>
     <Link>
       <AdditionalDependencies>h323plusd.lib;ptlib64sd.lib;wsock32.lib;mpr.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>$(OutDir)$(ProjectName).exe</OutputFile>
+      <OutputFile>$(OutDir)$(TargetName).exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <GenerateDebugInformation>Debug</GenerateDebugInformation>
       <ProgramDatabaseFile>$(IntDir)$(TargetName).pdb</ProgramDatabaseFile>

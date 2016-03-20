@@ -306,7 +306,11 @@ PBoolean SimpleH323EndPoint::Initialise(PArgList & args)
 #if 1 //0
   PDirectory DefaultDir = PProcess::Current().GetFile().GetDirectory();
   PPluginManager & pluginMgr = PPluginManager::GetPluginManager();
+#if PTLIB_VER < 2140
+  pluginMgr.LoadPluginDirectory(DefaultDir);
+#else
   pluginMgr.LoadDirectory(DefaultDir);
+#endif
 #endif
   
 
