@@ -49,84 +49,110 @@
 
 class H323EndPoint;
 class H460_FeatureStd23;
-class PNatMethod_H46024  : public PSTUNClient
+class PNatMethod_H46024 : public PSTUNClient
 {
 
-    PCLASSINFO(PNatMethod_H46024, PSTUNClient); 
+    PCLASSINFO(PNatMethod_H46024, PSTUNClient);
 
-    public:
-        PNatMethod_H46024();
+public:
+    PNatMethod_H46024();
 
-        ~PNatMethod_H46024();
+    ~PNatMethod_H46024();
 
 #if PTLIB_VER >= 2130
-        struct PortInfo {
+    struct PortInfo {
         PortInfo(WORD port = 0)
-        : basePort(port), maxPort(port), currentPort(port) {}
-            PMutex mutex;
-            WORD   basePort;
-            WORD   maxPort;
-            WORD   currentPort;
-        };
+            : basePort(port), maxPort(port), currentPort(port) {}
+        PMutex mutex;
+        WORD   basePort;
+        WORD   maxPort;
+        WORD   currentPort;
+    };
 #endif
 
 
 #if PTLIB_VER >= 2130
-        virtual PCaselessString GetMethodName() const { return "H46024"; }
-        virtual PString GetName() const { return GetMethodName(); }
+    virtual PCaselessString GetMethodName() const { return "H46024"; }
+    virtual PString GetName() const { return GetMethodName(); }
 #elif PTLIB_VER > 2120
-        static PString GetNatMethodName() { return "H46024"; }
-        virtual PString GetName() const
-               { return GetNatMethodName(); }
+    static PString GetNatMethodName() { return "H46024"; }
+    virtual PString GetName() const
+    {
+        return GetNatMethodName();
+    }
 #else
-        static PStringList GetNatMethodName() {  return PStringArray("H46024"); };
-        virtual PString GetName() const
-                { return GetNatMethodName()[0]; }
+    static PStringList GetNatMethodName() { return PStringArray("H46024"); };
+    virtual PString GetName() const
+    {
+        return GetNatMethodName()[0];
+    }
 #endif
 
-        // Start the Nat Method testing
-        void Start(const PString & server,H460_FeatureStd23 * _feat);
+    // Start the Nat Method testing
+    void Start(const PString & server, H460_FeatureStd23 * _feat);
 
-        // Whether the NAT method is Available
-        virtual bool IsAvailable(
-                const PIPSocket::Address & binding = PIPSocket::GetDefaultIpAny()  ///< Interface to see if NAT is available on
+    // Whether the NAT method is Available
+    virtual bool IsAvailable(
+        const PIPSocket::Address & binding = PIPSocket::GetDefaultIpAny()  ///< Interface to see if NAT is available on
         );
 
-        // Create the socket pair
-        virtual PBoolean CreateSocketPair(
-          PUDPSocket * & socket1,
-          PUDPSocket * & socket2,
-          const PIPSocket::Address & binding = PIPSocket::GetDefaultIpAny(),
-          void * userData = NULL
+    // Create the socket pair
+    virtual PBoolean CreateSocketPair(
+        PUDPSocket * & socket1,
+        PUDPSocket * & socket2,
+        const PIPSocket::Address & binding = PIPSocket::GetDefaultIpAny(),
+        void * userData = NULL
         );
 
-        // Whether the NAT Method is available
-        void SetAvailable();
+    // Whether the NAT Method is available
+    void SetAvailable();
 
-        // Whether the NAT method is activated for this call
-        virtual void Activate(bool act);
+    // Whether the NAT method is activated for this call
+    virtual void Activate(bool act);
 
-        // Reportable NAT Type
-        PSTUNClient::NatTypes GetNATType();
+    // Reportable NAT Type
+    PSTUNClient::NatTypes GetNATType();
 
-        // Set Port Information
-        void SetPortInformation(PortInfo & pairedPortInfo, WORD portPairBase, WORD portPairMax);
+    // Set Port Information
+    void SetPortInformation(PortInfo & pairedPortInfo, WORD portPairBase, WORD portPairMax);
 
-        //  CreateRandomPortPair
-        WORD CreateRandomPortPair(unsigned int start, unsigned int end);
+    //  CreateRandomPortPair
+    WORD CreateRandomPortPair(unsigned int start, unsigned int end);
 
 #if PTLIB_VER >= 2110
     virtual PString GetServer() const { return PString(); }
-    virtual bool GetServerAddress(PIPSocketAddressAndPort & ) const { return false; }
+    virtual bool GetServerAddress(PIPSocketAddressAndPort &) const { return false; }
     virtual NatTypes GetNatType(bool force) { return PSTUNClient::GetNatType(force); }
     virtual NatTypes GetNatType(const PTimeInterval &) { return UnknownNat; }
     virtual bool SetServer(const PString & server) { return PSTUNClient::SetServer(server); }
     virtual bool Open(const PIPSocket::Address &) { return false; }
-    virtual bool CreateSocket(BYTE,PUDPSocket * &, const PIPSocket::Address,WORD)  { return false; }
+    virtual bool CreateSocket(BYTE, PUDPSocket * &, const PIPSocket::Address, WORD) { return false; }
     virtual void SetCredentials(const PString &, const PString &, const PString &) {}
 #endif
 
+#if PTLIB_VER >= 2120
+    /** Overrides from PSTUN to correct transaction ID
+        Default PTLIB sets the RFC5389 MAGIC cookie
+     */
+    virtual PNatMethod::NatTypes DoRFC3489Discovery(
+        PSTUNUDPSocket * socket,
+        const PIPSocketAddressAndPort & serverAddress,
+        PIPSocketAddressAndPort & baseAddressAndPort,
+        PIPSocketAddressAndPort & externalAddressAndPort
+        );
+
+    virtual PNatMethod::NatTypes FinishRFC3489Discovery(
+        PSTUNMessage & responseI,
+        PSTUNUDPSocket * socket,
+        PIPSocketAddressAndPort & externalAddressAndPort
+        );
+#endif
+
 protected:
+
+#if PTLIB_VER >= 2120
+        virtual void InternalUpdate();
+#endif
 
         // Do a NAT test
         PSTUNClient::NatTypes NATTest();
@@ -151,7 +177,7 @@ private:
         PortInfo                standardPorts;
         PortInfo                multiplexPorts;
 #endif
-
+        PIPSocket::Address      locBindAddress;
         friend class H323EndPoint;
 };
 

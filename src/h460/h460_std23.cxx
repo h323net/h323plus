@@ -98,6 +98,7 @@ PNatMethod_H46024::PNatMethod_H46024()
     isAvailable = false;
     isActive = false;
     feat = NULL;
+    locBindAddress = PIPSocket::GetDefaultIpAny();
 }
 
 PNatMethod_H46024::~PNatMethod_H46024()
@@ -131,6 +132,10 @@ void PNatMethod_H46024::Start(const PString & server,H460_FeatureStd23 * _feat)
    H323EndPoint * ep = feat->GetEndPoint();
 
    SetServer(server);
+#if PTLIB_VER >= 2120
+   locBindAddress = PIPSocket::GetRouteInterfaceAddress(m_serverAddress.GetAddress());
+#endif
+
 #ifdef H323_H46019M
     WORD muxBase = ep->GetMultiplexPort();
     SetPortInformation(multiplexPorts,muxBase-2, muxBase+2);
@@ -159,13 +164,13 @@ PSTUNClient::NatTypes PNatMethod_H46024::NATTest()
 #endif
 
     singlePortInfo.currentPort = testport;
-    PTRACE(4,"Std23\tSTUN Test Port " << singlePortInfo.currentPort+1);
+    PTRACE(4,"Std23\tSTUN Test Port " << singlePortInfo.currentPort);
 
     testtype = GetNatType(true);
 
 #ifdef H323_H46019M
     // if we have a cone NAT check the RTCP Port to see if not existing binding
-    if (testtype == PSTUNClient::ConeNat || natType == PSTUNClient::UnknownNat) {
+    if (testtype == PSTUNClient::ConeNat || testtype == PSTUNClient::UnknownNat) {
         PThread::Sleep(10);
         PTRACE(4,"Std23\tCone NAT Detected rechecking. Test Port " << singlePortInfo.currentPort+1);
         PSTUNClient::NatTypes test2 = GetNatType(true);
@@ -321,6 +326,178 @@ void PNatMethod_H46024::SetConnectionSockets(PUDPSocket * data, PUDPSocket * con
     if (connection != NULL)
         connection->SetRTPNAT(info->GetSessionID(),data,control);
 }
+
+#if PTLIB_VER >= 2120
+void PNatMethod_H46024::InternalUpdate()
+{
+    m_interface = locBindAddress;
+    PSTUNClient::InternalUpdate();
+}
+
+
+#define PTLIB_CLASSIC_STUN_FIX(num) \
+    BYTE id##num = (BYTE)PRandom::Number(); \
+    PSTUNMessage request##num(PSTUNMessage::BindingRequest, &id##num);
+
+
+PNatMethod::NatTypes PNatMethod_H46024::DoRFC3489Discovery(
+    PSTUNUDPSocket * socket,
+    const PIPSocketAddressAndPort & serverAddress,
+    PIPSocketAddressAndPort & baseAddressAndPort,
+    PIPSocketAddressAndPort & externalAddressAndPort
+    )
+{
+    socket->SetReadTimeout(replyTimeout);
+
+    socket->GetLocalAddress(baseAddressAndPort);
+    socket->PUDPSocket::InternalSetSendAddress(serverAddress);
+
+    // RFC3489 discovery
+
+    /* test I - the client sends a STUN Binding Request to a server, without
+    any flags set in the CHANGE-REQUEST attribute, and without the
+    RESPONSE-ADDRESS attribute. This causes the server to send the response
+    back to the address and port that the request came from. */
+
+PTLIB_CLASSIC_STUN_FIX(I)  ///<--- PTLIB FIX HERE
+//    PSTUNMessage requestI(PSTUNMessage::BindingRequest);
+    requestI.AddAttribute(PSTUNChangeRequest(false, false));
+
+    PSTUNMessage responseI;
+    if (!responseI.Poll(*socket, requestI, m_pollRetries)) {
+        PTRACE(2, "STUN\tSTUN server " << serverAddress << " did not respond.");
+        return PNatMethod::UnknownNat;
+    }
+
+    return FinishRFC3489Discovery(responseI, socket, externalAddressAndPort);
+}
+
+PNatMethod::NatTypes PNatMethod_H46024::FinishRFC3489Discovery(
+    PSTUNMessage & responseI,
+    PSTUNUDPSocket * socket,
+    PIPSocketAddressAndPort & externalAddressAndPort
+    )
+{
+    // check if server returned "420 Unknown Attribute" - that probably means it cannot do CHANGE_REQUEST even with no changes
+    bool canDoChangeRequest = true;
+
+    PSTUNErrorCode * errorAttribute = (PSTUNErrorCode *)responseI.FindAttribute(PSTUNAttribute::ERROR_CODE);
+    if (errorAttribute != NULL) {
+        bool ok = false;
+        if (errorAttribute->GetErrorCode() == 420) {
+            // try again without CHANGE request
+            PSTUNMessage request(PSTUNMessage::BindingRequest);
+            ok = responseI.Poll(*socket, request, m_pollRetries);
+            if (ok) {
+                errorAttribute = (PSTUNErrorCode *)responseI.FindAttribute(PSTUNAttribute::ERROR_CODE);
+                ok = errorAttribute == NULL;
+                canDoChangeRequest = false;
+            }
+        }
+        if (!ok) {
+            PTRACE(2, "STUN\tSTUN server " << socket->GetSendAddress() << " returned unexpected error " << errorAttribute->GetErrorCode() << ", reason = '" << errorAttribute->GetReason() << "'");
+            return PNatMethod::BlockedNat;
+        }
+    }
+
+    PSTUNAddressAttribute * mappedAddress = (PSTUNAddressAttribute *)responseI.FindAttribute(PSTUNAttribute::XOR_MAPPED_ADDRESS);
+    if (mappedAddress == NULL) {
+        mappedAddress = (PSTUNAddressAttribute *)responseI.FindAttribute(PSTUNAttribute::MAPPED_ADDRESS);
+        if (mappedAddress == NULL) {
+            PTRACE(2, "STUN\tExpected (XOR)mapped address attribute from " << m_serverAddress);
+            return PNatMethod::UnknownNat; // Protocol error
+        }
+    }
+
+    mappedAddress->GetIPAndPort(externalAddressAndPort);
+
+    bool notNAT = (socket->GetPort() == externalAddressAndPort.GetPort()) && PIPSocket::IsLocalHost(externalAddressAndPort.GetAddress());
+
+    // can only guess based on a single sample
+    if (!canDoChangeRequest) {
+        PNatMethod::NatTypes natType = notNAT ? PNatMethod::OpenNat : PNatMethod::SymmetricNat;
+        PTRACE(3, "STUN\tSTUN server has only one address - best guess is that NAT is " << PNatMethod::GetNatTypeString(natType));
+        return natType;
+    }
+
+    PTRACE(3, "STUN\tTest I response received - sending test II (change port and address)");
+
+    /* Test II - the client sends a Binding Request with both the "change IP"
+    and "change port" flags from the CHANGE-REQUEST attribute set. */
+
+PTLIB_CLASSIC_STUN_FIX(II)  ///<--- PTLIB FIX HERE
+//    PSTUNMessage requestII(PSTUNMessage::BindingRequest);
+
+    requestII.AddAttribute(PSTUNChangeRequest(true, true));
+    PSTUNMessage responseII;
+    bool testII = responseII.Poll(*socket, requestII, m_pollRetries);
+
+    PTRACE(3, "STUN\tTest II response " << (testII ? "" : "not ") << "received");
+
+    if (notNAT) {
+        PNatMethod::NatTypes natType = (testII ? PNatMethod::OpenNat : PNatMethod::PartiallyBlocked);
+        // Is not NAT or symmetric firewall
+        PTRACE(2, "STUN\tTest I and II indicate nat is " << PNatMethod::GetNatTypeString(natType));
+        return natType;
+    }
+
+    if (testII)
+        return PNatMethod::ConeNat;
+
+    PSTUNAddressAttribute * changedAddress = (PSTUNAddressAttribute *)responseI.FindAttribute(PSTUNAttribute::CHANGED_ADDRESS);
+    if (changedAddress == NULL) {
+        changedAddress = (PSTUNAddressAttribute *)responseI.FindAttribute(PSTUNAttribute::OTHER_ADDRESS);
+        if (changedAddress == NULL) {
+            PTRACE(3, "STUN\tTest II response indicates no alternate address in use - testing finished");
+            return PNatMethod::UnknownNat; // Protocol error
+        }
+    }
+
+    PTRACE(3, "STUN\tSending test I to alternate server");
+
+    // Send test I to another server, to see if restricted or symmetric
+    PIPSocket::Address secondaryServer = changedAddress->GetIP();
+    WORD secondaryPort = changedAddress->GetPort();
+    socket->PUDPSocket::InternalSetSendAddress(PIPSocketAddressAndPort(secondaryServer, secondaryPort));
+
+PTLIB_CLASSIC_STUN_FIX(I2)  ///<--- PTLIB FIX HERE
+//    PSTUNMessage requestII(PSTUNMessage::BindingRequest);
+    requestI2.AddAttribute(PSTUNChangeRequest(false, false));
+
+    PSTUNMessage responseI2;
+    if (!responseI2.Poll(*socket, requestI2, m_pollRetries)) {
+        PTRACE(3, "STUN\tPoll of secondary server " << secondaryServer << ':' << secondaryPort
+            << " failed, NAT partially blocked by firewall rules.");
+        return PNatMethod::PartiallyBlocked;
+    }
+
+    mappedAddress = (PSTUNAddressAttribute *)responseI2.FindAttribute(PSTUNAttribute::XOR_MAPPED_ADDRESS);
+    if (mappedAddress == NULL) {
+        mappedAddress = (PSTUNAddressAttribute *)responseI2.FindAttribute(PSTUNAttribute::MAPPED_ADDRESS);
+        if (mappedAddress == NULL) {
+            PTRACE(2, "STUN\tExpected (XOR)mapped address attribute from " << m_serverAddress);
+            return PNatMethod::UnknownNat; // Protocol error
+        }
+    }
+
+    {
+        PIPSocketAddressAndPort ipAndPort;
+        mappedAddress->GetIPAndPort(ipAndPort);
+        if (ipAndPort != externalAddressAndPort)
+            return PNatMethod::SymmetricNat;
+    }
+
+    socket->PUDPSocket::InternalSetSendAddress(m_serverAddress);
+
+PTLIB_CLASSIC_STUN_FIX(III)  ///<--- PTLIB FIX HERE
+//    PSTUNMessage requestIII(PSTUNMessage::BindingRequest);
+    requestIII.SetAttribute(PSTUNChangeRequest(false, true));
+    PSTUNMessage responseIII;
+
+    return responseIII.Poll(*socket, requestIII, m_pollRetries) ? PNatMethod::RestrictedNat : PNatMethod::PortRestrictedNat;
+}
+
+#endif
 
 //////////////////////////////////////////////////////////////////////
 
@@ -515,6 +692,8 @@ bool H460_FeatureStd23::DetectALG(const PIPSocket::Address & detectAddress)
 
     return false;
 }
+
+
 
 void H460_FeatureStd23::StartSTUNTest(const PString & server)
 {
