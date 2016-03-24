@@ -34,7 +34,6 @@
  *
  * Contributor(s): ______________________________________.
  *
- * $Id: h460_std26.h,v 1.8.2.1 2015/10/10 08:53:42 shorne Exp $
  *
  */
 
@@ -196,11 +195,13 @@ public:
     /**  CreateSocketPair
         Create the UDP Socket pair (does nothing)
     */
+#if PTLIB_VER < 2130
    virtual PBoolean CreateSocketPair(
       PUDPSocket * & /*socket1*/,            ///< Created DataSocket
       PUDPSocket * & /*socket2*/,            ///< Created ControlSocket
       const PIPSocket::Address & /*binding*/
       ) {  return false; }
+#endif
 
   /**  CreateSocketPair
         Create the UDP Socket pair
@@ -209,7 +210,11 @@ public:
       PUDPSocket * & socket1,
       PUDPSocket * & socket2,
       const PIPSocket::Address & binding,  
-      void * userData
+#if PTLIB_VER >= 2130
+      PObject * context = NULL
+#else
+      void * userData = NULL
+#endif
     );
 
   /**  isAvailable.

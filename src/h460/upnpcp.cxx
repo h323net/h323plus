@@ -34,7 +34,6 @@
  *
  * Contributor(s): ______________________________________.
  *
- * $Id: upnpcp.cxx,v 1.19.2.1 2015/10/10 08:54:37 shorne Exp $
  *
  *
  */
@@ -1106,8 +1105,15 @@ void PNatMethod_UPnP::SetConnectionSockets(PUDPSocket * data, PUDPSocket * contr
         connection->SetRTPNAT(info->GetSessionID(),data,control);
 }
 
-PBoolean PNatMethod_UPnP::CreateSocketPair(PUDPSocket * & socket1, PUDPSocket * & socket2,
-      const PIPSocket::Address & binding, void * userData)
+PBoolean PNatMethod_UPnP::CreateSocketPair(PUDPSocket * & socket1, 
+                                            PUDPSocket * & socket2,
+                                            const PIPSocket::Address & binding, 
+#if PTLIB_VER >= 2130
+                                            PObject * userData
+#else
+                                            void * userData
+#endif
+    )
 {
 
     H323Connection::SessionInformation * info = (H323Connection::SessionInformation *)userData;

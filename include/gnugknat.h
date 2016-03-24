@@ -33,7 +33,6 @@
  *
  * Contributor(s): ______________________________________.
  *
- * $Id: gnugknat.h,v 1.18.2.1 2015/10/10 08:53:39 shorne Exp $
  *
  *
  */
@@ -213,6 +212,9 @@ public:
       PUDPSocket * & socket1,
       PUDPSocket * & socket2,
       const PIPSocket::Address & binding = PIPSocket::GetDefaultIpAny()
+#if PTLIB_VER >= 2130
+      , PObject * userData = NULL
+#endif
     );
 
   /**  isAvailable.

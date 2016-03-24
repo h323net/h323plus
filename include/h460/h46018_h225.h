@@ -36,7 +36,6 @@
  *
  * Contributor(s): ______________________________________.
  *
- * $Id: h46018_h225.h,v 1.42.2.1 2015/10/10 08:53:42 shorne Exp $
  *
  */
 
@@ -264,11 +263,13 @@ class PNatMethod_H46019  : public H323NatMethod
     /**  CreateSocketPair
         Create the UDP Socket pair (does nothing)
     */
+#if PTLIB_VER < 2130
     virtual PBoolean CreateSocketPair(
         PUDPSocket * & /*socket1*/,            ///< Created DataSocket
         PUDPSocket * & /*socket2*/,            ///< Created ControlSocket
         const PIPSocket::Address & /*binding*/
         ) {  return false; }
+#endif
 
     /**  CreateSocketPair
         Create the UDP Socket pair
@@ -277,7 +278,11 @@ class PNatMethod_H46019  : public H323NatMethod
         PUDPSocket * & socket1,            ///< Created DataSocket
         PUDPSocket * & socket2,            ///< Created ControlSocket
         const PIPSocket::Address & binding,  
-        void * userData
+#if PTLIB_VER >= 2130
+        PObject * userData = NULL
+#else
+        void * userData = NULL
+#endif
     );
 
     /**  isAvailable.

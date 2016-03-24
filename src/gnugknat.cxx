@@ -513,6 +513,9 @@ PBoolean PNatMethod_GnuGk::CreateSocketPair(
                             PUDPSocket * & socket1,
                             PUDPSocket * & socket2,
                             const PIPSocket::Address & binding
+#if PTLIB_VER >= 2130
+                            , PObject *
+#endif
                             )
 {
 

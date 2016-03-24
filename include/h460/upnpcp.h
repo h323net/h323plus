@@ -78,9 +78,11 @@ public:
  /**  CreateSocketPair
         Create the UDP Socket pair (not used)
   */
+#if PTLIB_VER < 2130
    virtual PBoolean CreateSocketPair(
        PUDPSocket *&,PUDPSocket *&,
        const PIPSocket::Address &) { return false; }
+#endif
 
   /**  CreateSocketPair
         Create the UDP Socket pair
@@ -89,7 +91,11 @@ public:
       PUDPSocket * & socket1,
       PUDPSocket * & socket2,
       const PIPSocket::Address & binding,
-      void * userData
+#if PTLIB_VER >= 2130
+      PObject * userData = NULL
+#else
+      void * userData = NULL
+#endif
     );
 
   /** Retreive a random port in the allocated port range

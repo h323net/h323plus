@@ -31,7 +31,6 @@
  *
  * Contributor(s): ______________________________________.
  *
- * $Id: h460_std23.cxx,v 1.40.2.1 2015/10/10 08:54:37 shorne Exp $
  *
  */
 #include <h323.h>
@@ -256,7 +255,12 @@ WORD PNatMethod_H46024::CreateRandomPortPair(unsigned int start, unsigned int en
 PBoolean PNatMethod_H46024::CreateSocketPair(PUDPSocket * & socket1,
                                              PUDPSocket * & socket2,
                                              const PIPSocket::Address & binding,
-	                                         void * userData
+#if PTLIB_VER >= 2130
+                                             PObject * userData
+#else
+                                             void * userData
+#endif
+
                                              )
 {
     PWaitAndSignal m(portMute);

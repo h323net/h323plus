@@ -101,7 +101,11 @@ public:
         PUDPSocket * & socket1,
         PUDPSocket * & socket2,
         const PIPSocket::Address & binding = PIPSocket::GetDefaultIpAny(),
+#if PTLIB_VER >= 2130
+        PObject * userData = NULL
+#else
         void * userData = NULL
+#endif
         );
 
     // Whether the NAT Method is available

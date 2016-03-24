@@ -36,7 +36,6 @@
  *
  * Contributor(s): ______________________________________.
  *
- * $Id: h46018_h225.cxx,v 1.73.2.1 2015/10/10 08:54:37 shorne Exp $
  *
  *
  */
@@ -592,7 +591,11 @@ PBoolean PNatMethod_H46019::GetExternalAddress(PIPSocket::Address & /*externalAd
 PBoolean PNatMethod_H46019::CreateSocketPair(PUDPSocket * & socket1,
                     PUDPSocket * & socket2,
                     const PIPSocket::Address & binding,
+#if PTLIB_VER >= 2130
+                    PObject * userData
+#else
                     void * userData
+#endif
                     )
 {
 
