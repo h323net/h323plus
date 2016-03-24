@@ -113,7 +113,7 @@ H350_Schema(H235Identity);
 PBoolean H350_Session::Open(const PString & hostname, WORD port)
 {
 
-#if P_DNS
+#if H323_DNS
   PDNS::SRVRecordList srvRecords;
 
   if (PDNS::GetSRVRecords(PString("_ldap._tcp.") + hostname, srvRecords)) {

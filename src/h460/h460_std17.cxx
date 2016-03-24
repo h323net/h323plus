@@ -55,7 +55,7 @@ static PBoolean FindSRVRecords(std::vector<LookupRecord> & recs,
                     const PString & domain,
                     const PString & srv)
 {
-#if P_DNS
+#if H323_DNS
   PDNS::SRVRecordList srvRecords;
   PString srvLookupStr = srv + domain;
   PBoolean found = PDNS::GetRecords(srvLookupStr, srvRecords);

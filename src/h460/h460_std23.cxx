@@ -698,7 +698,7 @@ bool H460_FeatureStd23::DetectALG(const PIPSocket::Address & detectAddress)
 void H460_FeatureStd23::StartSTUNTest(const PString & server)
 {
     PString s;
-#ifdef P_DNS
+#ifdef H323_DNS
     PStringList SRVs;
     PStringList x = server.Tokenise(":");
     PString number = "h323:user@" + x[0];

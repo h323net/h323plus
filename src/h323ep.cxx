@@ -1975,7 +1975,7 @@ H323Connection * H323EndPoint::InternalMakeCall(const PString & trasferFromToken
   return connection;
 }
 
-#if P_DNS
+#if H323_DNS
 
 struct LookupRecord {
   enum {
@@ -2052,7 +2052,7 @@ PBoolean H323EndPoint::ResolveCallParty(const PString & _remoteParty, PStringLis
 {
   PString remoteParty = _remoteParty;
 
-#if P_DNS
+#if H323_DNS
   // if there is no gatekeeper, 
   if (gatekeeper == NULL) {
 
@@ -2364,7 +2364,7 @@ PBoolean H323EndPoint::ParsePartyName(const PString & _remoteParty,
       return TRUE;
     }
 /*
-#if P_DNS
+#if H323_DNS
     // if we have an address and the correct scheme, then check DNS
     if (!address && (url.GetScheme() *= "h323")) {
       std::vector<LookupRecord> routes;
