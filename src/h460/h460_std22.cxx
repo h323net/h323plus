@@ -29,7 +29,6 @@
  *
  * Contributor(s): ______________________________________.
  *
- * $Id: h460_std22.cxx,v 1.15.2.1 2015/10/10 08:54:37 shorne Exp $
  *
  */
 
@@ -63,7 +62,7 @@ H460_FEATURE(Std22);
 H460_FeatureStd22::H460_FeatureStd22()
 : H460_FeatureStd(22), EP(NULL), CON(NULL), isEnabled(false)
 {
-  PTRACE(6,"Std22\tInstance Created");
+  PTRACE(6,"H46022\tInstance Created");
   FeatureCategory = FeatureSupported;
 }
 
@@ -74,7 +73,7 @@ H460_FeatureStd22::~H460_FeatureStd22()
 
 void H460_FeatureStd22::AttachEndPoint(H323EndPoint * _ep)
 {
-   PTRACE(6,"Std22\tEndpoint Attached");
+   PTRACE(6,"H46022\tEndpoint Attached");
    EP = _ep; 
 }
 

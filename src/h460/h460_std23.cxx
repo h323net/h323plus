@@ -163,7 +163,7 @@ PSTUNClient::NatTypes PNatMethod_H46024::NATTest()
 #endif
 
     singlePortInfo.currentPort = testport;
-    PTRACE(4,"Std23\tSTUN Test Port " << singlePortInfo.currentPort);
+    PTRACE(4,"H46023\tSTUN Test Port " << singlePortInfo.currentPort);
 
     testtype = GetNatType(true);
 
@@ -171,7 +171,7 @@ PSTUNClient::NatTypes PNatMethod_H46024::NATTest()
     // if we have a cone NAT check the RTCP Port to see if not existing binding
     if (testtype == PSTUNClient::ConeNat || testtype == PSTUNClient::UnknownNat) {
         PThread::Sleep(10);
-        PTRACE(4,"Std23\tCone NAT Detected rechecking. Test Port " << singlePortInfo.currentPort+1);
+        PTRACE(4,"H46023\tCone NAT Detected rechecking. Test Port " << singlePortInfo.currentPort+1);
         PSTUNClient::NatTypes test2 = GetNatType(true);
         if (test2 > testtype)
             testtype = test2;
@@ -206,7 +206,7 @@ void PNatMethod_H46024::MainMethod(PThread &,  H323_INT)
 
         isAvailable = false;
         if (natType == PSTUNClient::UnknownNat) {
-            PTRACE(1,"Std24\tNAT Test failed to resolve NAT Type");
+            PTRACE(1,"H46024\tNAT Test failed to resolve NAT Type");
             break;
         }
     }
@@ -290,7 +290,7 @@ PBoolean PNatMethod_H46024::CreateSocketPair(PUDPSocket * & socket1,
 
            PIPSocket::Address stunAddress;
            muxSocket1->GetSubSocket()->GetLocalAddress(stunAddress);
-           PTRACE(1,"Std24\tMux STUN Created: " << stunAddress  << " "
+           PTRACE(1,"H46024\tMux STUN Created: " << stunAddress  << " "
                         << muxSocket1->GetSubSocket()->GetPort() << "-" << muxSocket2->GetSubSocket()->GetPort());
            
            handler->StartMultiplexListener();  // Start Multiplexing Listening thread;
@@ -510,7 +510,7 @@ H460_FEATURE(Std23);
 H460_FeatureStd23::H460_FeatureStd23()
 : H460_FeatureStd(23)
 {
-  PTRACE(6,"Std23\tInstance Created");
+  PTRACE(6,"H46023\tInstance Created");
 
   FeatureCategory = FeatureSupported;
 
@@ -639,7 +639,7 @@ void H460_FeatureStd23::OnNATTypeDetection(PSTUNClient::NatTypes type, const PIP
     externalIP = ExtIP;
 
     if (natType == PSTUNClient::UnknownNat) {
-        PTRACE(4,"Std23\tSTUN Test Result: " << type << " forcing reregistration.");
+        PTRACE(4,"H46023\tSTUN Test Result: " << type << " forcing reregistration.");
 #ifdef H323_UPnP
         if (type > PSTUNClient::ConeNat) {
            PString name = PString();
@@ -651,7 +651,7 @@ void H460_FeatureStd23::OnNATTypeDetection(PSTUNClient::NatTypes type, const PIP
 #endif
         natType = type;  // first time detection
     } else {
-        PTRACE(2,"Std23\tBAD NAT Detected: Was " << natType << " Now " << type << " Disabling H.460.23/.24");
+        PTRACE(2,"H46023\tBAD NAT Detected: Was " << natType << " Now " << type << " Disabling H.460.23/.24");
         natType = PSTUNClient::UnknownNat;  // Leopard changed it spots (disable H.460.23/.24)
     }
     
@@ -673,12 +673,12 @@ bool H460_FeatureStd23::DetectALG(const PIPSocket::Address & detectAddress)
     bool found = true;
     PIPSocket::InterfaceTable if_table;
     if (!PIPSocket::GetInterfaceTable(if_table)) {
-        PTRACE(1, "Std23\tERROR: Can't get interface table");
+        PTRACE(1, "H46023\tERROR: Can't get interface table");
         found = false;
     } else {  
         for (PINDEX i=0; i< if_table.GetSize(); i++) {
             if (detectAddress == if_table[i].GetAddress()) {
-                PTRACE(4, "Std23\tNo Intermediary device detected between EP and GK");
+                PTRACE(4, "H46023\tNo Intermediary device detected between EP and GK");
                 found = false;
                 break;
             }
@@ -689,7 +689,7 @@ bool H460_FeatureStd23::DetectALG(const PIPSocket::Address & detectAddress)
       PIPSocket::SetDefaultIpAddressFamilyV6();
 #endif
     if (found) {
-        PTRACE(4, "Std23\tWARNING: Intermediary device detected!");
+        PTRACE(4, "H46023\tWARNING: Intermediary device detected!");
         EP->NATMethodCallBack("ALG",1,"Available");
         return true;
     }
@@ -739,7 +739,7 @@ bool H460_FeatureStd23::IsAlternateAvailable(PString & name)
 {
     PNatMethod_UPnP * upnpMethod = (PNatMethod_UPnP *)EP->GetNatMethods().GetMethodByName("UPnP");
     if (upnpMethod && upnpMethod->IsAvailable(PIPSocket::Address::GetAny(4))) {
-          PTRACE(4,"Std23\tSTUN Setting alternate: UPnP");
+          PTRACE(4,"H46023\tSTUN Setting alternate: UPnP");
           name = upnpMethod->GetName();
           natType = PSTUNClient::ConeNat;
           natNotify = true;
@@ -812,7 +812,7 @@ H460_FeatureStd24::H460_FeatureStd24()
   EP(NULL), CON(NULL), natconfig(H460_FeatureStd24::e_unknown), 
   nattype(0), isEnabled(false), useAlternate(false)
 {
- PTRACE(6,"Std24\tInstance Created");
+ PTRACE(6,"H46024\tInstance Created");
 
  FeatureCategory = FeatureSupported;
 }
@@ -831,7 +831,7 @@ void H460_FeatureStd24::AttachEndPoint(H323EndPoint * _ep)
         isEnabled = feat->IsAvailable();
         useAlternate = feat->UseAlternate();
     } else {
-        PTRACE(4,"Std24\tH.460.24 disabled as H.460.23 is disabled!");
+        PTRACE(4,"H46024\tH.460.24 disabled as H.460.23 is disabled!");
         isEnabled = false;
     }
 }
@@ -855,7 +855,7 @@ PBoolean H460_FeatureStd24::OnSendAdmissionRequest(H225_FeatureDescriptor & pdu)
     PWaitAndSignal m(h460mute);
 
     // Build Message
-    PTRACE(6,"Std24\tSending ARQ ");
+    PTRACE(6,"H46024\tSending ARQ ");
     H460_FeatureStd feat = H460_FeatureStd(24);
 
     if (natconfig != e_unknown) {
@@ -871,7 +871,7 @@ void H460_FeatureStd24::OnReceiveAdmissionConfirm(const H225_FeatureDescriptor &
      H460_FeatureStd & feat = (H460_FeatureStd &)pdu;
 
     if (feat.Contains(NATInstOID)) {
-        PTRACE(6,"Std24\tReading ACF");
+        PTRACE(6,"H46024\tReading ACF");
         unsigned NATinst = feat.Value(NATInstOID); 
         natconfig = (NatInstruct)NATinst;
         HandleNATInstruction(natconfig);
@@ -880,7 +880,7 @@ void H460_FeatureStd24::OnReceiveAdmissionConfirm(const H225_FeatureDescriptor &
 
 void H460_FeatureStd24::OnReceiveAdmissionReject(const H225_FeatureDescriptor & pdu) 
 {
-     PTRACE(6,"Std24\tARJ Received");
+     PTRACE(6,"H46024\tARJ Received");
      HandleNATInstruction(H460_FeatureStd24::e_natFailure);
 }
 
@@ -890,7 +890,7 @@ PBoolean H460_FeatureStd24::OnSendSetup_UUIE(H225_FeatureDescriptor & pdu)
   if (!isEnabled) 
         return FALSE;
 
- PTRACE(6,"Std24\tSend Setup");
+ PTRACE(6,"H46024\tSend Setup");
     if (natconfig == H460_FeatureStd24::e_unknown)
         return FALSE;
 
@@ -930,7 +930,7 @@ void H460_FeatureStd24::OnReceiveSetup_UUIE(const H225_FeatureDescriptor & pdu)
      H460_FeatureStd & feat = (H460_FeatureStd &)pdu;
 
      if (feat.Contains(NATInstOID)) {
-      PTRACE(6,"Std24\tReceive Setup");
+      PTRACE(6,"H46024\tReceive Setup");
 
         unsigned NATinst = feat.Value(NATInstOID); 
         natconfig = (NatInstruct)NATinst;
@@ -942,17 +942,17 @@ void H460_FeatureStd24::OnReceiveSetup_UUIE(const H225_FeatureDescriptor & pdu)
 void H460_FeatureStd24::HandleNATInstruction(NatInstruct _config)
 {
         
-        PTRACE(4,"Std24\tNAT Instruction Received: " << _config);
+        PTRACE(4,"H46024\tNAT Instruction Received: " << _config);
         switch (_config) {
             case H460_FeatureStd24::e_localMaster:
-                PTRACE(4,"Std24\tLocal NAT Support: H.460.24 ENABLED");
+                PTRACE(4,"H46024\tLocal NAT Support: H.460.24 ENABLED");
                 CON->SetRemoteNAT(true);
                 CON->H46019SetOffload();
                 SetNATMethods(e_enable);
                 break;
 
             case H460_FeatureStd24::e_remoteMaster:
-                PTRACE(4,"Std24\tRemote NAT Support: ALL NAT DISABLED");
+                PTRACE(4,"H46024\tRemote NAT Support: ALL NAT DISABLED");
                 CON->H46019SetOffload();
                 if (IsNatSendAvailable()) {  // If we can use STUN do it!
                     CON->SetRemoteNAT(false);
@@ -962,18 +962,18 @@ void H460_FeatureStd24::HandleNATInstruction(NatInstruct _config)
                 break;
 
             case H460_FeatureStd24::e_remoteProxy:
-                PTRACE(4,"Std24\tRemote Proxy Support: H.460.24 DISABLED");
+                PTRACE(4,"H46024\tRemote Proxy Support: H.460.24 DISABLED");
                 SetNATMethods(e_default);
                 break;
 
             case H460_FeatureStd24::e_localProxy:
-                PTRACE(4,"Std24\tCall Local Proxy: H.460.24 DISABLED");
+                PTRACE(4,"H46024\tCall Local Proxy: H.460.24 DISABLED");
                 SetNATMethods(e_default);
                 break;
 
 #ifdef H323_H46024A
             case H460_FeatureStd24::e_natAnnexA:
-                PTRACE(4,"Std24\tSame NAT: H.460.24 AnnexA ENABLED");
+                PTRACE(4,"H46024\tSame NAT: H.460.24 AnnexA ENABLED");
                 CON->H46024AEnabled();
                 SetNATMethods(e_AnnexA);
                 break;
@@ -981,7 +981,7 @@ void H460_FeatureStd24::HandleNATInstruction(NatInstruct _config)
 
 #ifdef H323_H46024B
             case H460_FeatureStd24::e_natAnnexB:
-                PTRACE(4,"Std24\tSame NAT: H.460.24 AnnexA ENABLED");
+                PTRACE(4,"H46024\tSame NAT: H.460.24 AnnexA ENABLED");
                 CON->H46024BEnabled();
                 //CON->H46024AEnabled();  // Might be on same internal network
                 SetNATMethods(e_AnnexB);
@@ -989,13 +989,13 @@ void H460_FeatureStd24::HandleNATInstruction(NatInstruct _config)
 #endif
 
             case H460_FeatureStd24::e_natFailure:
-                PTRACE(4,"Std24\tCall Failure Detected");
+                PTRACE(4,"H46024\tCall Failure Detected");
                 EP->FeatureCallBack(GetFeatureName()[0],1,"Call Failure");
                 break;
             case H460_FeatureStd24::e_noassist:
-                PTRACE(4,"Std24\tNAT Call direct");
+                PTRACE(4,"H46024\tNAT Call direct");
             default:
-                PTRACE(4,"Std24\tNo Assist: H.460.24 DISABLED.");
+                PTRACE(4,"H46024\tNo Assist: H.460.24 DISABLED.");
                 CON->DisableNATSupport();
                 SetNATMethods(e_default);
                 break;
@@ -1080,7 +1080,7 @@ void H460_FeatureStd24::SetNATMethods(H46024NAT state)
         }
     }
 
-   PTRACE(6,"Std24\tNAT Methods " << GetH460NATString(state));
+   PTRACE(6,"H46024\tNAT Methods " << GetH460NATString(state));
    for (PINDEX i=0; i< natlist.GetSize(); i++) {
 #if PTLIB_VER >= 2130
        PString name = natlist[i].GetMethodName();
