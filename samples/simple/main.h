@@ -82,7 +82,8 @@ class SimpleH323EndPoint : public H323EndPoint
     PBoolean autoAnswer;
     PString busyForwardParty;
     PString soundDriver;
-    PString videoDriver;
+    PString videoInDriver;
+    PString videoOutDriver;
 };
 
 

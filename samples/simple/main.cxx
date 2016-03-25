@@ -37,11 +37,12 @@
 #endif
 
 #if defined(_MSC_VER) 
-   #define defVideoDriver "Application" //"DirectShow"
-   #define defVideoOutDriver "NULLOutput" //"DirectShow"
+   #define defVideoInDriver "DirectShow"
+   #define defVideoOutDriver "Window"
    #define defSoundDriver "WindowsMultimedia"
 #else
-   #define defVideoDriver "*"
+   #define defVideoInDriver "*"
+   #define defVideoOutDriver "*"
    #define defSoundDriver "*"
 #endif
 
@@ -303,7 +304,7 @@ SimpleH323EndPoint::~SimpleH323EndPoint()
 PBoolean SimpleH323EndPoint::Initialise(PArgList & args)
 {
 
-#if 1 //0
+#if 0
   PDirectory DefaultDir = PProcess::Current().GetFile().GetDirectory();
   PPluginManager & pluginMgr = PPluginManager::GetPluginManager();
 #if PTLIB_VER < 2140
@@ -415,28 +416,36 @@ PBoolean SimpleH323EndPoint::Initialise(PArgList & args)
   PBoolean hasVideo = TRUE;
 #ifdef H323_VIDEO
 
+  videoOutDriver = defVideoOutDriver;
+
   PStringList drivers = PVideoInputDevice::GetDriverNames();
   cout << "Available Video Drivers: " << endl;
   for (PINDEX i = 0; i < drivers.GetSize(); i++)
       cout << "   " << drivers[i] << endl;
 
-  videoDriver = defVideoDriver;
+  videoInDriver = defVideoInDriver;
   if (args.HasOption("video")) {
-      videoDriver = args.GetOptionString("video");
+      videoInDriver = args.GetOptionString("video");
   }
-  cout << "Using video driver " << videoDriver << endl;
+  cout << "Using video driver " << videoInDriver << endl;
 
   H323Capability::CapabilityFrameSize MaxVideoFrame = H323Capability::p720MPI; // H323Capability::cifMPI;
-  PString inputDriverName = videoDriver;
 
-  PStringArray devices = PVideoInputDevice::GetDriversDeviceNames(inputDriverName);
+  PStringArray devices = PVideoInputDevice::GetDriversDeviceNames(videoInDriver);
   if (devices.GetSize() == 0) {
       cout << "No Video Grabber available Disabling Video Support!" << endl;
-      hasVideo = FALSE; 
-/*#if PTLIB_VER >= 2110
-  } else {
+      hasVideo = FALSE;
+  }
+
+  if (hasVideo) {
+    cout << "Available Video Devices: " << endl;
+    for (PINDEX i = 0; i < devices.GetSize(); i++)
+        cout << "   " << devices[i] << endl;
+    cout << endl;
+
+#if PTLIB_VER >= 2140
     PVideoInputDevice::Capabilities caps;
-    if (PVideoInputDevice::GetDeviceCapabilities(devices[0],inputDriverName,&caps)) {
+    if (PVideoInputDevice::GetDeviceCapabilities(devices[0], videoInDriver,&caps)) {
       cout << "Video Device " << devices[0] << " capabilities." << endl;
       cout << "  Grabber capabilities." << endl;
       for (std::list<PVideoFrameInfo>::const_iterator r = caps.framesizes.begin(); r != caps.framesizes.end(); ++r) {
@@ -449,8 +458,8 @@ PBoolean SimpleH323EndPoint::Initialise(PArgList & args)
     } else {
       cout << "InputDevice " << devices[0] << " capabilities not Available." << endl;
     }
-#endif */
- } 
+#endif 
+  } 
 
   if (MaxVideoFrame == H323Capability::p720MPI)
       cout << "High Definition Webcam detected." << endl << endl;
@@ -892,10 +901,10 @@ PBoolean SimpleH323EndPoint::OpenVideoChannel(H323Connection & /*connection*/,
                                     H323VideoCodec & codec)
 {
 
+  PString deviceDriver = isEncoding ? videoInDriver : videoOutDriver;
 
-  PString deviceDriver = videoDriver;
-  PStringList devices = isEncoding ? PVideoInputDevice::GetDriversDeviceNames(deviceDriver)
-                                  : PVideoOutputDevice::GetDriversDeviceNames(defVideoOutDriver);
+  PStringList devices =  isEncoding ? PVideoInputDevice::GetDriversDeviceNames(deviceDriver)
+                                    : PVideoOutputDevice::GetDriversDeviceNames(deviceDriver);
   // Look for a useful device
   PString deviceName;
   for (PINDEX i = 0; i < devices.GetSize(); i++) {
@@ -909,61 +918,57 @@ PBoolean SimpleH323EndPoint::OpenVideoChannel(H323Connection & /*connection*/,
   if (deviceName.IsEmpty())
     deviceName = isEncoding ? "fake" : "NULL";
 
+#if PTLIB_VER >= 2120
+  PVideoDevice * device = isEncoding ? (PVideoDevice *)PVideoInputDevice::CreateOpenedDevice(deviceDriver, deviceName, FALSE)
+                                     : (PVideoDevice *)PVideoOutputDevice::CreateOpenedDevice(deviceDriver, deviceName, FALSE);
+#else
   PVideoDevice * device = isEncoding ? (PVideoDevice *)PVideoInputDevice::CreateDeviceByName(deviceName)
                                      : (PVideoDevice *)PVideoOutputDevice::CreateDeviceByName(deviceName);
+#endif
+  
+  if (device == NULL) {
+      PTRACE(1, "Failed to instance video device \"" << deviceName << '"');
+      return FALSE;
+  }
 
   // codec needs a list of possible formats, otherwise the frame size isn't negotiated properly
+    if (isEncoding) {
+        PVideoInputDevice::Capabilities videoCaps;
 #if PTLIB_VER >= 2110
-  if (isEncoding) {
-      PVideoInputDevice::Capabilities videoCaps;
-      if (((PVideoInputDevice *)device)->GetDeviceCapabilities(deviceName,deviceDriver,&videoCaps)) {
-          codec.SetSupportedFormats(videoCaps.framesizes);
-      } else {
-        // set fixed list of resolutions for drivers that don't provide a list
-        PVideoInputDevice::Capabilities caps;
-        PVideoFrameInfo cap;
-        cap.SetColourFormat("YUV420P");
-        cap.SetFrameRate(30);
-        // sizes must be from largest to smallest
-        cap.SetFrameSize(1280, 720);
-        caps.framesizes.push_back(cap);
-        cap.SetFrameSize(704, 576);
-        caps.framesizes.push_back(cap);
-        cap.SetFrameSize(352, 288);
-        caps.framesizes.push_back(cap);
-        codec.SetSupportedFormats(caps.framesizes);
-      }
-  }
-#else
-  if (isEncoding) {
-    PVideoInputDevice::Capabilities caps;
-    PVideoFrameInfo cap;
-    cap.SetColourFormat("YUV420P");
-    cap.SetFrameRate(30);
-    // sizes must be from largest to smallest
-    cap.SetFrameSize(1280, 720);
-    caps.framesizes.push_back(cap);
-    cap.SetFrameSize(704, 576);
-    caps.framesizes.push_back(cap);
-    cap.SetFrameSize(640, 400);
-    caps.framesizes.push_back(cap);
-    cap.SetFrameSize(352, 288);
-    caps.framesizes.push_back(cap);
-    codec.SetSupportedFormats(caps.framesizes);
-  }
+        if (((PVideoInputDevice *)device)->GetDeviceCapabilities(deviceName, deviceDriver, &videoCaps))
+            codec.SetSupportedFormats(videoCaps.framesizes);
 #endif
+            // set fixed list of resolutions for drivers that don't provide a list
+        if (videoCaps.framesizes.size() == 0) {
+            PVideoFrameInfo cap;
+            cap.SetColourFormat("YUV420P");
+            cap.SetFrameRate(30);
+            // sizes must be from largest to smallest
+            cap.SetFrameSize(1280, 720);
+            videoCaps.framesizes.push_back(cap);
+            cap.SetFrameSize(704, 576);
+            videoCaps.framesizes.push_back(cap);
+            cap.SetFrameSize(352, 288);
+            videoCaps.framesizes.push_back(cap);
+            codec.SetSupportedFormats(videoCaps.framesizes);
+        }
+    }
 
-  if (!device->SetFrameSize(codec.GetWidth(), codec.GetHeight()) ||
-      !device->SetFrameRate(codec.GetFrameRate()) ||
-      !device->SetColourFormatConverter("YUV420P")) {
-       PTRACE(1, "Failed to configure the video device \"" << deviceName << '"');
-       return FALSE;
-  }
+    if (!device->SetColourFormatConverter("YUV420P") ||
+        !device->SetFrameSize(codec.GetWidth(), codec.GetHeight()) ||
+        !device->SetFrameRate(codec.GetFrameRate())) {
+            PTRACE(1, "Failed to configure the video device \"" << deviceName << '"');
+            return FALSE;
+    }
 
-  if (!device->Open(deviceName, TRUE)) {
-    PTRACE(1, "Failed to open the video device \"" << deviceName << '"');
-    return FALSE;
-  }
+#if PTLIB_VER >= 2120
+    device->Start();
+#else
+    if (!device->Open(deviceName, TRUE)) {
+        PTRACE(1, "Failed to open the video device \"" << deviceName << '"');
+        return FALSE;
+    }
+#endif
 
   PVideoChannel * channel = new PVideoChannel;
 
