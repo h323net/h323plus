@@ -7,64 +7,16 @@
  *
  * Copyright (c) 2007 ISVO (Asia) Pte. Ltd.
  *
- * The contents of this file are subject to the Mozilla Public License
- * Version 1.1 (the "License"); you may not use this file except in
- * compliance with the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Alternatively, the contents of this file may be used under the terms
- * of the General Public License (the  "GNU License"), in which case the
- * provisions of GNU License are applicable instead of those
- * above. If you wish to allow use of your version of this file only
- * under the terms of the GNU License and not to allow others to use
- * your version of this file under the MPL, indicate your decision by
- * deleting the provisions above and replace them with the notice and
- * other provisions required by the GNU License. If you do not delete
- * the provisions above, a recipient may use your version of this file
- * under either the MPL or the GNU License."
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, you can obtain one at http://mozilla.org/MPL/2.0/
  *
  * Software distributed under the License is distributed on an "AS IS"
  * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See
  * the License for the specific language governing rights and limitations
  * under the License.
  *
- *
- * The Initial Developer of the Original Code is ISVO (Asia) Pte. Ltd.
- *
  * Contributor(s): ______________________________________.
- *
- * $Log: h230.cxx,v $
- * Revision 1.9.2.1  2015/10/10 08:54:36  shorne
- * Major code restructure. Created h323.h precompiled header to improve compile time x5. created etc directory and restuctured ptlib cludges and centralised management. Added custom DH generation and negotiation (testing).
- *
- * Revision 1.9  2013/08/23 06:32:21  willamowius
- * add missing breaks
- *
- * Revision 1.8  2013/01/24 11:49:47  shorne
- * General tidy up and removal of unused code
- *
- * Revision 1.7  2011/06/28 10:32:24  shorne
- * Fix typos in comments
- *
- * Revision 1.6  2008/05/23 11:22:45  willamowius
- * switch BOOL to PBoolean to be able to compile with Ptlib 2.2.x
- *
- * Revision 1.5  2008/01/22 01:17:11  shorne
- * Fixes to the H.230 system
- *
- * Revision 1.4  2007/11/19 18:06:32  shorne
- * changed lists from PList to std::list
- *
- * Revision 1.3  2007/11/07 15:45:43  willamowius
- * linux compile fix
- *
- * Revision 1.2  2007/10/18 17:44:21  shorne
- * Small fixes during test compile
- *
- * Revision 1.1  2007/10/16 16:35:44  shorne
- * Added H.230 Support
- *
- *
  *
  *
  */

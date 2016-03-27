@@ -1,7 +1,7 @@
 /*
 * pt_wasapi.h
 *
-* Copyright (c) 2015 Spranto International Pte Ltd. All Rights Reserved.
+* Copyright (c) 2015 ISVO (Asia) Pte Ltd. All Rights Reserved.
 *
 * This Source Code Form is subject to the terms of the Mozilla Public
 * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,7 +14,6 @@
 *
 * Contributor(s): ______________________________________.
 *
-* $Id: pt_wasapi.h,v 1.1.2.3 2016/01/03 07:19:16 shorne Exp $
 *
 */
 
