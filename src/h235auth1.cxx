@@ -23,7 +23,6 @@
  *
  * Contributor(s): Fürbass Franz <franz.fuerbass@infonova.at>
  *
- * $Id: h235auth1.cxx,v 1.24.2.5 2016/01/03 07:19:17 shorne Exp $
  *
  */
 

@@ -22,7 +22,6 @@
  * The Initial Developer of the Original Code is Equivalence Pty. Ltd.
  * Contributor(s): ______________________________________.
  *
- * $Id: svcctrl.h,v 1.6 2013/12/28 08:47:07 shorne Exp $
  *
  */
 

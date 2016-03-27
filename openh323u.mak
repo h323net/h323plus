@@ -21,7 +21,6 @@
 #
 # Contributor(s): ______________________________________.
 #
-# $Id: openh323u.mak,v 1.5.2.3 2016/01/03 07:19:16 shorne Exp $
 #
 
 PTLIBDIR	= @PTLIBDIR@

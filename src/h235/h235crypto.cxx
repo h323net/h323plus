@@ -31,7 +31,6 @@
  *
  * The Initial Developer of the Original Code is Jan Willamowius.
  *
- * $Id: h235crypto.cxx,v 1.46.2.1 2015/10/10 08:54:36 shorne Exp $
  *
  */
 
