@@ -445,12 +445,12 @@ int  RTP_MultiControlFrame::GetMultiHeaderSize() const
 
 WORD RTP_MultiControlFrame::GetMultiplexID() const
 {
-   return *(PUInt16b *)&theArray[0];
+   return *(PUInt32b *)&theArray[0];
 }
 
 void RTP_MultiControlFrame::SetMultiplexID(WORD id)
 {
-   *(PUInt16b *)&theArray[0] = id;
+   *(PUInt32b *)&theArray[0] = id;
 }
 
 void RTP_MultiControlFrame::GetRTCPPayload(RTP_ControlFrame & frame) const
