@@ -76,6 +76,9 @@
 #define H323_SSL 1
 #endif
 
+#ifdef P_STUN
+#define H323_NAT 1
+#endif
 
 //////////////////////////////////////////////////
 // static codec definitions
@@ -212,19 +215,19 @@
 #define H323_IPV6   1
 #endif
 
-#if defined(WIN32) //&& WINVER >= 0x600
+#if defined(WIN32) && WINVER >= 0x600
 #define H323_WASAPI 1
 #endif
 
-#define H323_SQLCIPHER  1
+#undef H323_SQLCIPHER
 #if defined(H323_SQLCIPHER) && defined(H323_SSL)
 #define H323_DATASTORE  1
-#pragma include_alias(<sqlcipher/sqlite3.h>,            <x:/sqlcipher-windows/StaticLib/inc/sqlite3.h>      )
+#pragma include_alias(<sqlcipher/sqlite3.h>,            <@CIPHER_DIR@/StaticLib/inc/sqlite3.h>      )
 #ifdef _WIN32
     #ifdef _WIN64
-        #define H323_DATASTORE_LIB "x:/sqlcipher-windows/build/lib/sqlcipher64.lib"
+        #define H323_DATASTORE_LIB "@CIPHER_DIR@/build/lib/sqlcipher64.lib"
     #else
-        #define H323_DATASTORE_LIB "x:/sqlcipher-windows/build/lib/sqlcipher32.lib"
+        #define H323_DATASTORE_LIB "@CIPHER_DIR@/build/lib/sqlcipher32.lib"
     #endif
 #endif
 
