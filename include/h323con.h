@@ -2409,7 +2409,7 @@ class H323Connection : public PObject
       */
     PBoolean isSameNAT() const { return sameNAT; };
 
-#ifdef P_STUN
+#ifdef H323_NAT
     /** GetPreferedNatMethod
         returns the NATMethod to use for a call 
         by default calls the H323Endpoint function of the same name
@@ -2949,7 +2949,7 @@ class H323Connection : public PObject
       unsigned seconds  ///< max duration of call in seconds
     );
 
-#ifdef P_STUN
+#ifdef H323_NAT
 
     /**Session Information 
         This contains session information which is passed to the socket handler
@@ -3611,7 +3611,7 @@ class H323Connection : public PObject
 #endif
 #endif
 
-#ifdef P_STUN
+#ifdef H323_NAT
     PMutex NATSocketMutex;
     std::map<unsigned,NAT_Sockets> m_NATSockets;
 #endif

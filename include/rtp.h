@@ -40,7 +40,7 @@
 class RTP_JitterBuffer;
 class PHandleAggregator;
 
-#ifdef P_STUN
+#ifdef H323_NAT
 class PNatMethod;
 #endif
 
@@ -1064,7 +1064,7 @@ class RTP_UDP : public RTP_Session
       WORD portMax,                     ///<  end of ports to search (inclusive)
       BYTE ipTypeOfService,             ///<  Type of Service byte
 	  const H323Connection & connection, ///< Connection
-#ifdef P_STUN
+#ifdef H323_NAT
       PNatMethod * meth = NULL,         ///< Nat Method to use to create sockets (or NULL if no Method)
 #else
       void * = NULL,                    ///<  STUN server to use createing sockets (or NULL if no STUN)

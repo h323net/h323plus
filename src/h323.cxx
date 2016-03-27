@@ -675,7 +675,7 @@ H323Connection::~H323Connection()
   }
 #endif
 #endif
-#ifdef P_STUN
+#ifdef H323_NAT
     m_NATSockets.clear();
 #endif
 
@@ -1903,7 +1903,7 @@ PBoolean H323Connection::OnReceivedSignalConnect(const H323SignalPDU & pdu)
   if (fastStartState != FastStartAcknowledged) {
     fastStartState = FastStartDisabled;
     fastStartChannels.RemoveAll();
-#ifdef P_STUN
+#ifdef H323_NAT
     m_NATSockets.clear();
 #endif
   }
@@ -2788,7 +2788,7 @@ void H323Connection::DisableNATSupport() {
     remoteIsNAT = false; 
 }
 
-#ifdef P_STUN
+#ifdef H323_NAT
 
 PNatMethod * H323Connection::GetPreferedNatMethod(const PIPSocket::Address & ip) const
 {
@@ -4603,7 +4603,7 @@ PBoolean H323Connection::OnOpenLogicalChannel(const H245_OpenLogicalChannel & op
   fastStartState = FastStartDisabled;
   if (!fastStartChannels.IsEmpty()) {
     fastStartChannels.RemoveAll();
-#ifdef P_STUN
+#ifdef H323_NAT
     m_NATSockets.clear();
 #endif
     PTRACE(1, "H245\tReceived early start OLC, aborting fast start");
@@ -6918,7 +6918,7 @@ void H323Connection::MonitorCallStatus()
   Unlock();
 }
 
-#ifdef P_STUN
+#ifdef H323_NAT
 
 H323Connection::SessionInformation::SessionInformation(const OpalGloballyUniqueID & id, unsigned crv, const PString & token, unsigned session, const H323Connection * conn)
 : m_callID(id), m_crv(crv), m_callToken(token), m_sessionID(session), m_recvMultiID(0), m_sendMultiID(0), m_connection(conn)

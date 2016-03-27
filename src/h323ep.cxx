@@ -741,7 +741,7 @@ H323EndPoint::H323EndPoint()
   tcpPorts.current = tcpPorts.base = tcpPorts.max = 0;
   udpPorts.current = udpPorts.base = udpPorts.max = 0;
 
-#ifdef P_STUN
+#ifdef H323_NAT
   natMethods = new H323NatStrategy();
 #endif
 
@@ -956,7 +956,7 @@ H323EndPoint::~H323EndPoint()
   ERR_free_strings();
 #endif
 
-#ifdef P_STUN
+#ifdef H323_NAT
   delete natMethods;
 #endif
 
@@ -3181,7 +3181,7 @@ void H323EndPoint::OnGatekeeperNATDetect(
 
     gnugk = new GNUGK_Feature(*this,gkRouteAddress,gkIdentifier);
 
-#ifdef P_STUN
+#ifdef H323_NAT
      if (gnugk->IsOpen()) {
           PTRACE(4, "GNUGK\tNat Address " << gkRouteAddress);
 
@@ -3601,7 +3601,7 @@ void H323EndPoint::SetAudioJitterDelay(unsigned minDelay, unsigned maxDelay)
 
 #endif
 
-#ifdef P_STUN
+#ifdef H323_NAT
 
 PSTUNClient * H323EndPoint::GetSTUN(const PIPSocket::Address & ip) const
 {
@@ -3705,7 +3705,7 @@ void H323EndPoint::InternalTranslateTCPAddress(PIPSocket::Address & localAddr, c
   if (remoteAddr.GetVersion() != 4)
       return;
 
-#ifdef P_STUN
+#ifdef H323_NAT
   // if using NAT Method, then translate internal local address to external if required
   if (connection && !connection->HasNATSupport())
       return;
@@ -3823,7 +3823,7 @@ void H323EndPoint::SetUDPPorts(unsigned udpBase, unsigned udpMax)
 {
   udpPorts.Set(udpBase, udpMax, 199, 0);
 
-#ifdef P_STUN
+#ifdef H323_NAT
     natMethods->SetPortRanges(GetUDPPortBase(), GetUDPPortMax(), GetRtpIpPortBase(), GetRtpIpPortMax());
 #endif
 }
@@ -3839,7 +3839,7 @@ void H323EndPoint::SetRtpIpPorts(unsigned rtpIpBase, unsigned rtpIpMax)
 {
   rtpIpPorts.Set((rtpIpBase+1)&0xfffe, rtpIpMax&0xfffe, 999, 5000);
 
-#ifdef P_STUN
+#ifdef H323_NAT
   natMethods->SetPortRanges(GetUDPPortBase(), GetUDPPortMax(), GetRtpIpPortBase(), GetRtpIpPortMax());
 #endif
 }

@@ -84,7 +84,7 @@ H323_RTP_UDP::H323_RTP_UDP(const H323Connection & conn,
   PIPSocket::Address remoteAddress;
   transport.GetRemoteAddress().GetIpAddress(remoteAddress);
 
-#ifdef P_STUN
+#ifdef H323_NAT
   PNatMethod * meth = NULL;
   if (conn.HasNATSupport()) {
       meth = conn.GetPreferedNatMethod(remoteAddress);
@@ -105,7 +105,7 @@ H323_RTP_UDP::H323_RTP_UDP(const H323Connection & conn,
                    nextPort, nextPort,
                    endpoint.GetRtpIpTypeofService(),
                    conn,
-#ifdef P_STUN
+#ifdef H323_NAT
                    meth,
 #else
                    NULL,

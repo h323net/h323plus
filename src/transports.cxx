@@ -41,7 +41,7 @@
 #include "h323ep.h"
 #include "gkclient.h"
 
-#ifdef P_STUN
+#ifdef H323_NAT
 #include <ptclib/pstun.h>
  #ifdef _MSC_VER
   #pragma warning(disable : 4701)  // initialisation warning
@@ -2090,7 +2090,7 @@ PBoolean H323TransportUDP::Connect()
 
   PUDPSocket * socket;
 
-#ifdef P_STUN
+#ifdef H323_NAT
   PSTUNClient * stun = endpoint.GetSTUN(remoteAddress);
   if (stun != NULL) {
 #if (PTLIB_VER >= 2110) && (PTLIB_VER < 2130)
@@ -2290,7 +2290,7 @@ PBoolean H323TransportUDP::DiscoverGatekeeper(H323Gatekeeper & gk,
 
   
 
-#ifdef P_STUN
+#ifdef H323_NAT
   PSTUNClient * stun = endpoint.GetSTUN(remoteAddress);
 #endif
 
@@ -2322,7 +2322,7 @@ PBoolean H323TransportUDP::DiscoverGatekeeper(H323Gatekeeper & gk,
     static PIPSocket::Address MulticastRasAddress(224, 0, 1, 41);
     if (destAddr != MulticastRasAddress) {
 
-#ifdef P_STUN
+#ifdef H323_NAT
       // Not explicitly multicast
 #if (PTLIB_VER >= 2110) && (PTLIB_VER < 2130)
       if (stun != NULL && stun->CreateSocket(PNatMethod::eComponent_Unknown,socket)) {

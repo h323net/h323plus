@@ -46,7 +46,7 @@
 #endif
 
 // Add NAT Method Support
-#ifdef P_STUN
+#ifdef H323_NAT
 class PSTUNClient;
 #endif
 
@@ -2577,7 +2577,7 @@ class H323EndPoint : public PObject
                              PNatMethod_UPnP * nat);
 #endif
 
-#ifdef P_STUN
+#ifdef H323_NAT
 
     /**Return the STUN server to use.
        Returns NULL if address is a local address as per IsLocalAddress().
@@ -3025,7 +3025,7 @@ class H323EndPoint : public PObject
       WORD   current;
     } tcpPorts, udpPorts, rtpIpPorts;
 
-#ifdef P_STUN
+#ifdef H323_NAT
     H323NatStrategy * natMethods;
 #endif
 

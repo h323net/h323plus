@@ -1449,7 +1449,7 @@ PQoS & RTP_UDP::GetQOS()
 PBoolean RTP_UDP::Open(PIPSocket::Address _localAddress,
                    WORD portBase, WORD portMax,
                    BYTE tos,
-#ifdef P_STUN
+#ifdef H323_NAT
                    const H323Connection & connection,
                    PNatMethod * meth,
 #else
@@ -1483,7 +1483,7 @@ PBoolean RTP_UDP::Open(PIPSocket::Address _localAddress,
   }
 #endif
 
-#ifdef P_STUN
+#ifdef H323_NAT
   if (meth != NULL) {
     H323Connection::SessionInformation * info = 
          connection.BuildSessionInformation(GetSessionID());
