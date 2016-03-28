@@ -1,6 +1,17 @@
+
 ===============================================================================
-H323plus 1.28 - 1.28.x
+H323plus 1.28.2
 ===============================================================================
+Rewrite and expand multiplexing support
+
+
+===============================================================================
+H323plus 1.28.1
+===============================================================================
+Moved to GIT from CVS First version on GitHub
+Removed all CVS file tags
+Updated licences on most files to MPL 2.0
+Changed all associated open source licenses.
 Major code restructering. Changed precompiled header to h323.h. Compiles 5x faster.
 Added etc directory to better match and manage the various PTLIB versions 
 Added support for encrypted local datastore (sqlcipher)
