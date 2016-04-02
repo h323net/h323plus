@@ -96,6 +96,10 @@
 #include "h460/h460_oid9.h"
 #endif
 
+#ifdef H323_NAT
+#include <h323rtpmux.h>
+#endif
+
 #endif  // H323_H460
 
 #include "gkclient.h"
@@ -741,16 +745,6 @@ H323EndPoint::H323EndPoint()
   tcpPorts.current = tcpPorts.base = tcpPorts.max = 0;
   udpPorts.current = udpPorts.base = udpPorts.max = 0;
 
-#ifdef H323_NAT
-  natMethods = new H323NatStrategy();
-#endif
-
-#ifdef H323_H46019M
-  defaultMultiRTPPort = 2776;
-  rtpMuxID.current = rtpMuxID.base = PRandom::Number(999900);
-  rtpMuxID.max   = (unsigned)1000000;
-#endif
-
 #ifdef _WIN32
 
 #  if defined(H323_AUDIO_CODECS) && defined(P_AUDIO)
@@ -824,6 +818,11 @@ H323EndPoint::H323EndPoint()
 #ifdef H323_H460
   disableH460 = false;
 
+#ifdef H323_NAT
+  natMethods = new H323NatStrategy();
+  m_muxHandler = NULL;
+#endif
+
 #ifdef H323_H46017
   m_tryingH46017 = false;           // set to true when attempting H.460.17
   m_registeredWithH46017 = false;   // set to true when gatekeeper accepts it
@@ -835,16 +834,11 @@ H323EndPoint::H323EndPoint()
 #endif
 
 #ifdef H323_H46019M
-  m_h46019Menabled = true;
-  m_h46019Msend = false;
+  m_muxHandler = new H460_MultiplexHandler();
 #endif
 
 #ifdef H323_H46023
   m_h46023enabled = true;
-#endif
-
-#ifdef H323_H46023
-  m_h46025enabled = false;
 #endif
 
 #ifdef H323_H46026
@@ -853,6 +847,10 @@ H323EndPoint::H323EndPoint()
 
 #ifdef H323_UPnP
   m_UPnPenabled = false;
+#endif
+
+#ifdef H323_H46025
+  m_h46025enabled = false;
 #endif
 
 #ifdef H323_H460IM
@@ -956,16 +954,17 @@ H323EndPoint::~H323EndPoint()
   ERR_free_strings();
 #endif
 
-#ifdef H323_NAT
-  delete natMethods;
-#endif
-
 #ifdef H323_H460P
   delete presenceHandler;
 #endif
 
 #ifdef H323_H461
   delete m_h461DataStore;
+#endif
+
+#ifdef H323_NAT
+  delete natMethods;
+  delete m_muxHandler;
 #endif
 
   PTRACE(3, "H323\tDeleted endpoint.");
@@ -3791,21 +3790,6 @@ WORD H323EndPoint::PortInfo::GetNext(unsigned increment)
   return p;
 }
 
-#ifdef H323_H46019M
-unsigned H323EndPoint::MuxIDInfo::GetNext(unsigned increment)
-{
-  PWaitAndSignal m(mutex);
-
-  if (current < base || current > (max-increment))
-    current = base;
-
-  if (current == 0)
-    return 0;
-
-  current = current + increment;
-  return current;
-}
-#endif
 
 void H323EndPoint::SetTCPPorts(unsigned tcpBase, unsigned tcpMax)
 {
@@ -3850,20 +3834,24 @@ WORD H323EndPoint::GetRtpIpPortPair()
   return rtpIpPorts.GetNext(2);
 }
 
-#ifdef H323_H46019M
+#ifdef H323_NAT
+H323MultiplexConnection * H323EndPoint::BuildH323MultiplexConnection()
+{
+    return new H323MultiplexConnection(m_muxHandler);
+}
+
 void H323EndPoint::SetMultiplexPort(unsigned rtpPort)
 {
-    defaultMultiRTPPort = rtpPort;
+    if (m_muxHandler)
+        m_muxHandler->SetPorts(rtpPort, rtpPort + 10);
 }
 
 WORD H323EndPoint::GetMultiplexPort()
 {
-    return defaultMultiRTPPort;
-}
-
-unsigned H323EndPoint::GetMultiplexID()
-{
-   return rtpMuxID.GetNext(1);
+    if (m_muxHandler)
+        return m_muxHandler->GetMultiplexPort(H323UDPSocket::rtp);
+    else
+        return 0;
 }
 #endif
 
@@ -3988,22 +3976,28 @@ PBoolean H323EndPoint::H46018IsEnabled()
 #ifdef H323_H46019M
 void H323EndPoint::H46019MEnable(PBoolean enable)
 {
-    m_h46019Menabled = enable;
+    if (enable && !m_muxHandler)
+        m_muxHandler = new H460_MultiplexHandler();
+    else if (!enable && m_muxHandler) {
+        delete m_muxHandler;
+        m_muxHandler = NULL;
+    }
 }
 
 PBoolean H323EndPoint::H46019MIsEnabled()
 {
-    return m_h46019Menabled;
+    return (m_muxHandler && PIsDescendant(m_muxHandler, H460_MultiplexHandler));
 }
 
 void H323EndPoint::H46019MSending(PBoolean enable)
 {
-    m_h46019Msend = enable;
+    if (H46019MIsEnabled())
+        m_muxHandler->SetMultiplexSend(enable);
 }
 
 PBoolean H323EndPoint::H46019MIsSending()
 {
-    return (m_h46019Menabled && m_h46019Msend);
+    return (H46019MIsEnabled() && m_muxHandler->IsMultiplexSend());
 }
 #endif  // H323_H46019M
 

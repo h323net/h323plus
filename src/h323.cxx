@@ -72,6 +72,10 @@
 #include <etc/h323aec.h>
 #endif
 
+#ifdef H323_NAT
+#include <h323rtpmux.h>
+#endif
+
 #include "h235auth.h"
 
 const PTimeInterval MonitorCallStatusTime(0, 10); // Seconds
@@ -399,6 +403,9 @@ H323Connection::H323Connection(H323EndPoint & ep,
 #ifdef H323_H460
     ,features(ep.GetFeatureSet())
 #endif
+#ifdef H323_NAT
+    ,m_muxConnection(ep.BuildH323MultiplexConnection())
+#endif
 {
   localAliasNames.MakeUnique();
 
@@ -676,7 +683,7 @@ H323Connection::~H323Connection()
 #endif
 #endif
 #ifdef H323_NAT
-    m_NATSockets.clear();
+    delete m_muxConnection;
 #endif
 
   PTRACE(3, "H323\tConnection " << callToken << " deleted.");
@@ -1904,7 +1911,7 @@ PBoolean H323Connection::OnReceivedSignalConnect(const H323SignalPDU & pdu)
     fastStartState = FastStartDisabled;
     fastStartChannels.RemoveAll();
 #ifdef H323_NAT
-    m_NATSockets.clear();
+    m_muxConnection->ClearPairs();
 #endif
   }
 
@@ -2795,47 +2802,10 @@ PNatMethod * H323Connection::GetPreferedNatMethod(const PIPSocket::Address & ip)
     return endpoint.GetPreferedNatMethod(ip);
 }
 
-PUDPSocket * H323Connection::GetNatSocket(unsigned session, PBoolean rtp) 
+
+PObject * H323Connection::BuildNATSessionInformation(unsigned sessionid) const
 {
-    std::map<unsigned,NAT_Sockets>::const_iterator sockets_iter = m_NATSockets.find(session);
-    if (sockets_iter != m_NATSockets.end()) {
-        NAT_Sockets sockets = sockets_iter->second;
-        if (rtp)
-            return sockets.rtp;
-        else
-            return sockets.rtcp;
-    }
-    return NULL;
-}
-
-void H323Connection::SetRTPNAT(unsigned sessionid, PUDPSocket * _rtp, PUDPSocket * _rtcp)
-{
-    PWaitAndSignal m(NATSocketMutex);
-
-    PTRACE(4,"H323\tRTP NAT Connection Callback! Session: " << sessionid);
-
-    NAT_Sockets sockets;
-     sockets.rtp = _rtp;
-     sockets.rtcp = _rtcp;
-     sockets.isActive = false;
-
-    m_NATSockets.insert(pair<unsigned, NAT_Sockets>(sessionid, sockets));
-}
-
-void H323Connection::SetNATChannelActive(unsigned sessionid)
-{
-    std::map<unsigned,NAT_Sockets>::iterator sockets_iter = m_NATSockets.find(sessionid);
-    if (sockets_iter != m_NATSockets.end())
-        sockets_iter->second.isActive = true;
-}
-
-PBoolean H323Connection::IsNATMethodActive(unsigned sessionid)
-{
-    std::map<unsigned,NAT_Sockets>::iterator sockets_iter = m_NATSockets.find(sessionid);
-    if (sockets_iter != m_NATSockets.end())
-        return sockets_iter->second.isActive;
-
-    return false;
+    return m_muxConnection->BuildSessionInformation(sessionid, this);
 }
 #endif
 
@@ -4604,7 +4574,7 @@ PBoolean H323Connection::OnOpenLogicalChannel(const H245_OpenLogicalChannel & op
   if (!fastStartChannels.IsEmpty()) {
     fastStartChannels.RemoveAll();
 #ifdef H323_NAT
-    m_NATSockets.clear();
+    m_muxConnection->ClearPairs();
 #endif
     PTRACE(1, "H245\tReceived early start OLC, aborting fast start");
   }
@@ -5658,15 +5628,14 @@ PBoolean H323Connection::ReceivedH46024AMessage(bool toStart)
 
         PTRACE(4,"H46024A\tReceived Indication to " << (toStart ? "initiate" : "wait for") << " direct connection");
 
-            if (m_H46024Astate == 0)                // We are the receiver
-                m_H46024Astate = (toStart ? 2 : 1); 
+        if (m_H46024Astate == 0)                // We are the receiver
+            m_H46024Astate = (toStart ? 2 : 1); 
 
-            for (std::map<unsigned,NAT_Sockets>::const_iterator r = m_NATSockets.begin(); r != m_NATSockets.end(); ++r) {
-                NAT_Sockets sockets = r->second;
-                ((H46019UDPSocket *)sockets.rtp)->H46024Adirect(toStart);
-                ((H46019UDPSocket *)sockets.rtcp)->H46024Adirect(toStart);
-            }
-    //    }
+        H323MultiplexConnection::SocketPairs & m_sockets = m_muxConnection->GetSocketPairs();
+        for (H323MultiplexConnection::SocketPairs::const_iterator r = m_sockets.begin(); r != m_sockets.end(); ++r) {
+            if (r->second.m_rtp) ((H46019UDPSocket *)r->second.m_rtp)->H46024Adirect(toStart);
+            if (r->second.m_rtcp)((H46019UDPSocket *)r->second.m_rtcp)->H46024Adirect(toStart);
+        }
 
         if (!toStart) {
             PTRACE(4,"H46024A\tReply for remote to " << (!toStart ? "initiate" : "wait for") << " direct connection");
@@ -5937,13 +5906,12 @@ PBoolean H323Connection::OnReceivedGenericMessage(h245MessageType type, const PS
             for (PINDEX i=0; i < address.GetSize(); ++i) {
                 unsigned muxID = 0;
                 if (address[i].HasOptionalField(H46024B_AlternateAddress::e_multiplexID))
-                      muxID = address[i].m_multiplexID;
-                std::map<unsigned,NAT_Sockets>::const_iterator sockets_iter = m_NATSockets.find(address[i].m_sessionID);
-                    if (sockets_iter != m_NATSockets.end()) {
-                        NAT_Sockets sockets = sockets_iter->second;
+                    muxID = address[i].m_multiplexID;
+                    H323MultiplexConnection::SocketPair * pair = m_muxConnection->GetSocketPair(address[i].m_sessionID);
+                    if (pair && pair->m_rtp) {
                         if (address[i].HasOptionalField(H46024B_AlternateAddress::e_rtpAddress)) { 
                             H323TransportAddress add = H323TransportAddress(address[i].m_rtpAddress); 
-                            ((H46019UDPSocket *)sockets.rtp)->H46024Bdirect(add,muxID);
+                            ((H46019UDPSocket *)pair->m_rtp)->H46024Bdirect(add,muxID);
                         }
                     }
             }
@@ -6072,13 +6040,12 @@ PBoolean H323Connection::OnReceiveOLCGenericInformation(unsigned sessionID,
                         ttl = a;
                     }
 
-                    std::map<unsigned,NAT_Sockets>::const_iterator sockets_iter = m_NATSockets.find(sessionID);
-                        if (sockets_iter != m_NATSockets.end()) {
-                            NAT_Sockets sockets = sockets_iter->second;
+                    H323MultiplexConnection::SocketPair * pair = m_muxConnection->GetSocketPair(sessionID);
+                        if (pair) {
 #ifdef H323_H46019M
                             if (multiID > 0) {
-                               ((H46019UDPSocket *)sockets.rtp)->SetMultiplexID(multiID, isAck);
-                               ((H46019UDPSocket *)sockets.rtcp)->SetMultiplexID(multiID, isAck);
+                               if (pair->m_rtp)  ((H46019UDPSocket *)pair->m_rtp)->SetMultiplexID(multiID, isAck);
+                               if (pair->m_rtcp) ((H46019UDPSocket *)pair->m_rtcp)->SetMultiplexID(multiID, isAck);
                                if (keepAliveAddress) {
                                    PIPSocket::Address multiAddr;  
                                    multiRTPaddress.GetIpAddress(multiAddr);    // Sanity check....
@@ -6087,15 +6054,15 @@ PBoolean H323Connection::OnReceiveOLCGenericInformation(unsigned sessionID,
                                       multiRTPaddress = RTPaddress;
                                       multiRTCPaddress = RTCPaddress;
                                    }                    
-                                  ((H46019UDPSocket *)sockets.rtp)->Activate(multiRTPaddress,payload,ttl);
-                                  ((H46019UDPSocket *)sockets.rtcp)->Activate(multiRTCPaddress,payload,ttl);
+                                  ((H46019UDPSocket *)pair->m_rtp)->Activate(multiRTPaddress,payload,ttl);
+                                  ((H46019UDPSocket *)pair->m_rtcp)->Activate(multiRTCPaddress,payload,ttl);
                                }
                             } else 
 #endif
                             {
                               if (keepAliveAddress) {
-                                ((H46019UDPSocket *)sockets.rtp)->Activate(RTPaddress,payload,ttl);
-                                ((H46019UDPSocket *)sockets.rtcp)->Activate(RTCPaddress,payload,ttl);
+                                  if (pair->m_rtp)  ((H46019UDPSocket *)pair->m_rtp)->Activate(RTPaddress,payload,ttl);
+                                  if (pair->m_rtcp) ((H46019UDPSocket *)pair->m_rtcp)->Activate(RTCPaddress,payload,ttl);
                               }
                             }
                         }
@@ -6112,13 +6079,12 @@ PBoolean H323Connection::OnReceiveOLCGenericInformation(unsigned sessionID,
                 GetUnsignedGeneric(3,msg,m_altMuxID);
 
                 if (!error) {
-                    std::map<unsigned,NAT_Sockets>::const_iterator sockets_iter = m_NATSockets.find(sessionID);
-                        if (sockets_iter != m_NATSockets.end()) {
-                            NAT_Sockets sockets = sockets_iter->second;
-                            ((H46019UDPSocket *)sockets.rtp)->SetAlternateAddresses(m_altAddr1,m_CUI,m_altMuxID);
-                            ((H46019UDPSocket *)sockets.rtcp)->SetAlternateAddresses(m_altAddr2,m_CUI,m_altMuxID);
-                            success = true;
-                        }
+                    H323MultiplexConnection::SocketPair * pair = m_muxConnection->GetSocketPair(sessionID);
+                    if (pair) {
+                        if (pair->m_rtp)  ((H46019UDPSocket *)pair->m_rtp)->SetAlternateAddresses(m_altAddr1,m_CUI,m_altMuxID);
+                        if (pair->m_rtcp) ((H46019UDPSocket *)pair->m_rtcp)->SetAlternateAddresses(m_altAddr2,m_CUI,m_altMuxID);
+                        success = true;
+                    }
                 }
             }
 #endif
@@ -6145,18 +6111,19 @@ PBoolean H323Connection::OnSendingOLCGenericInformation(const unsigned & session
         H323TransportAddress m_altAddr1, m_altAddr2;
         unsigned m_altMuxID=0;
 #endif
-        std::map<unsigned,NAT_Sockets>::const_iterator sockets_iter = m_NATSockets.find(sessionID);
-            if (sockets_iter != m_NATSockets.end()) {
-                NAT_Sockets sockets = sockets_iter->second;
-                H46019UDPSocket * rtp = ((H46019UDPSocket *)sockets.rtp);
-                H46019UDPSocket * rtcp = ((H46019UDPSocket *)sockets.rtcp);
-                if (rtp->GetPingPayload() == 0) 
-                    rtp->SetPingPayLoad(defH46019payload);
-                payload = rtp->GetPingPayload();
+        H323MultiplexConnection::SocketPair * pair = m_muxConnection->GetSocketPair(sessionID);
+            if (pair) {
+                H46019UDPSocket * rtp = (H46019UDPSocket *)pair->m_rtp;
+                H46019UDPSocket * rtcp = (H46019UDPSocket *)pair->m_rtcp;
+                if (rtp) {
+                    if (rtp->GetPingPayload() == 0)
+                        rtp->SetPingPayLoad(defH46019payload);
+                    payload = rtp->GetPingPayload();
 
-                if (rtp->GetTTL() == 0) 
-                    rtp->SetTTL(ttl);
-                ttl = rtp->GetTTL();
+                    if (rtp->GetTTL() == 0)
+                        rtp->SetTTL(ttl);
+                    ttl = rtp->GetTTL();
+                }
 
                 // Traversal Clients do not need to send a keepalive address 
                 // ToDo Server implementation  - SH
@@ -6166,18 +6133,18 @@ PBoolean H323Connection::OnSendingOLCGenericInformation(const unsigned & session
                 //}
 #ifdef H323_H46019M
                 if (/*!isAck &&*/ m_H46019multiplex) {
-                   rtp->GetMultiplexAddress(m_multiRTPAddress,multiID, isAck);
-                   rtcp->GetMultiplexAddress(m_multiRTCPAddress,multiID, isAck);
+                    if (rtp)  rtp->GetMultiplexAddress(m_multiRTPAddress,multiID, isAck);
+                    if (rtcp) rtcp->GetMultiplexAddress(m_multiRTCPAddress,multiID, isAck);
                 }
 #endif            
                 if (isAck) {
-                    rtp->Activate();  // Start the RTP Channel if not already started
-                    rtcp->Activate();  // Start the RTCP Channel if not already started
+                    if (rtp)  rtp->Activate();   // Start the RTP Channel if not already started
+                    if (rtcp) rtcp->Activate();  // Start the RTCP Channel if not already started
                 }
 #ifdef H323_H46024A
               if (m_H46024Aenabled) {
-                rtp->GetAlternateAddresses(m_altAddr1,m_cui, m_altMuxID);
-                rtcp->GetAlternateAddresses(m_altAddr2,m_cui, m_altMuxID);
+                  if (rtp)  rtp->GetAlternateAddresses(m_altAddr1,m_cui, m_altMuxID);
+                  if (rtcp) rtcp->GetAlternateAddresses(m_altAddr2,m_cui, m_altMuxID);
               }
 #endif
             } else {
@@ -6292,16 +6259,9 @@ void H323Connection::ReleaseSession(unsigned sessionID)
 
 #ifdef H323_H46024A
    const RTP_Session * sess = GetSession(sessionID);
-   if (sess && sess->GetReferenceCount() == 1) {  // last session reference
-      std::map<unsigned,NAT_Sockets>::iterator sockets_iter = m_NATSockets.find(sessionID);
-      if (sockets_iter != m_NATSockets.end()) 
-         m_NATSockets.erase(sockets_iter);
-      else {
-         sockets_iter = m_NATSockets.find(0);
-         if (sockets_iter != m_NATSockets.end()) 
-              m_NATSockets.erase(sockets_iter);
-      }
-   }
+   if (sess && sess->GetReferenceCount() == 1)    // last session reference
+       m_muxConnection->RemoveSocketSession(sessionID);
+
 #endif
   rtpSessions.ReleaseSession(sessionID);
 }
@@ -6918,73 +6878,6 @@ void H323Connection::MonitorCallStatus()
   Unlock();
 }
 
-#ifdef H323_NAT
-
-H323Connection::SessionInformation::SessionInformation(const OpalGloballyUniqueID & id, unsigned crv, const PString & token, unsigned session, const H323Connection * conn)
-: m_callID(id), m_crv(crv), m_callToken(token), m_sessionID(session), m_recvMultiID(0), m_sendMultiID(0), m_connection(conn)
-{
-
-#ifdef H323_H46019M
-    if (conn->IsH46019Multiplexed())
-        m_recvMultiID = conn->GetEndPoint().GetMultiplexID();
-#endif
-
-#ifdef H323_H46024A
-    // Some random number bases on the session id (for H.460.24A)
-    int rand = PRandom::Number((session *100),((session+1)*100)-1);
-    m_CUI = PString(rand); 
-    PTRACE(4,"H46024A\tGenerated CUI s: " << session << " value: " << m_CUI);
-#else
-    m_CUI = PString();
-#endif
-}
-
-unsigned H323Connection::SessionInformation::GetCallReference()
-{
-    return m_crv;
-}
-
-const PString & H323Connection::SessionInformation::GetCallToken()
-{
-    return m_callToken;
-}
-
-unsigned H323Connection::SessionInformation::GetSessionID() const
-{
-    return m_sessionID;
-}
-
-void H323Connection::SessionInformation::SetSendMultiplexID(unsigned id)
-{
-    m_sendMultiID = id;
-}
-
-unsigned H323Connection::SessionInformation::GetRecvMultiplexID() const
-{
-    return m_recvMultiID;
-}
-
-H323Connection::SessionInformation * H323Connection::BuildSessionInformation(unsigned sessionID) const
-{
-    return new SessionInformation(GetCallIdentifier(),GetCallReference(),GetCallToken(),sessionID, this);
-}
-
-const OpalGloballyUniqueID & H323Connection::SessionInformation::GetCallIdentifer()
-{
-    return m_callID;
-}
-
-const PString & H323Connection::SessionInformation::GetCUI()
-{
-    return m_CUI;
-}
-
-const H323Connection * H323Connection::SessionInformation::GetConnection()
-{
-    return m_connection;
-}
-
-#endif
 
 #ifdef H323_H460
 void H323Connection::DisableFeatures(PBoolean disable)

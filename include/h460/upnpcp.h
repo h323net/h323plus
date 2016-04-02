@@ -168,11 +168,6 @@ protected:
 #endif
 #endif
 
-protected:
-
-    void SetConnectionSockets(PUDPSocket * data,  PUDPSocket * control,  
-                              H323Connection::SessionInformation * info );
-
 private:
     H323EndPoint*                            ep;
     UPnPThread*                                m_pUPnP;

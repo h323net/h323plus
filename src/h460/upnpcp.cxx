@@ -35,6 +35,8 @@
 #include <UPnP.h>
 #include <map>
 
+#include <h323rtpmux.h>
+
 
 /////////////////////////////////////////////////////////////////////
 #define SAFE_RELEASE(p) { if(p) { (p)->Release(); (p)=NULL; } }
@@ -1080,14 +1082,6 @@ PBoolean PNatMethod_UPnP::GetExternalAddress(PIPSocket::Address & externalAddres
     return available;
 }
 
-void PNatMethod_UPnP::SetConnectionSockets(PUDPSocket * data, PUDPSocket * control, 
-                                             H323Connection::SessionInformation * info)
-{
-    H323Connection * connection = PRemoveConst(H323Connection, info->GetConnection());
-    if (connection != NULL)
-        connection->SetRTPNAT(info->GetSessionID(),data,control);
-}
-
 PBoolean PNatMethod_UPnP::CreateSocketPair(PUDPSocket * & socket1, 
                                             PUDPSocket * & socket2,
                                             const PIPSocket::Address & binding, 
@@ -1099,58 +1093,56 @@ PBoolean PNatMethod_UPnP::CreateSocketPair(PUDPSocket * & socket1,
     )
 {
 
-    H323Connection::SessionInformation * info = (H323Connection::SessionInformation *)userData;
+    H323MultiplexConnection::SessionInformation * info = (H323MultiplexConnection::SessionInformation *)userData;
 
 #ifdef H323_H46019M
     PNatMethod_H46019 * handler = 
                (PNatMethod_H46019 *)ep->GetNatMethods().GetMethodByName("H46019");
 
     if (handler && info->GetRecvMultiplexID() > 0) {
-        if (!handler->IsMultiplexed()) {
-           H46019MultiplexSocket * & muxSocket1 = (H46019MultiplexSocket * &)handler->GetMultiplexSocket(true); 
-           H46019MultiplexSocket * & muxSocket2 = (H46019MultiplexSocket * &)handler->GetMultiplexSocket(false); 
-           muxSocket1 = new H46019MultiplexSocket(true);
-           muxSocket2 = new H46019MultiplexSocket(false);
-           muxSocket1->GetSubSocket() = new UPnPUDPSocket(this);  /// Data 
-           muxSocket2->GetSubSocket() = new UPnPUDPSocket(this);  /// Signal
-            pairedPortInfo.basePort    = ep->GetMultiplexPort();
-            pairedPortInfo.maxPort     = pairedPortInfo.basePort+100;
-            pairedPortInfo.currentPort = pairedPortInfo.basePort-1;  
-                while ((!OpenSocket(*(muxSocket1->GetSubSocket()), pairedPortInfo,binding)) ||
-                       (!OpenSocket(*(muxSocket2->GetSubSocket()), pairedPortInfo,binding)) ||
-                       (muxSocket2->GetSubSocket()->GetPort() != muxSocket1->GetSubSocket()->GetPort() + 1) )
-                {
-                        delete muxSocket1->GetSubSocket();
-                        delete muxSocket2->GetSubSocket();
-                        muxSocket1->GetSubSocket() = new UPnPUDPSocket(this);  /// Data 
-                        muxSocket2->GetSubSocket() = new UPnPUDPSocket(this);  /// Signal
-                }
+        H323MultiplexConnection * muxhandler = info->GetMultiplexConnection();
 
-                // Open UPnP mappings
-                WORD locPort,extPort;
-                PIPSocket::Address locAddr, extAddr;
-                muxSocket1->GetLocalAddress(locAddr,locPort);
-                extPort = locPort;
-                
-                if (m_pUPnP->CreateMap(true,"UDP",locAddr,locPort,extAddr,extPort,true)) {
-                    ((UPnPUDPSocket*)muxSocket1->GetSubSocket())->SetMasqAddress(extAddr,extPort);
-                    ((UPnPUDPSocket*)muxSocket2->GetSubSocket())->SetMasqAddress(extAddr,extPort+1);
-                } else {
-                    PTRACE(3, "UPnP\tError mapped ports. Abort Creating socket pair.");
-                    return false;
-                }
+        if (muxhandler->GetMultiplexSocket(H323UDPSocket::rtp) == NULL) {
+            PUDPSocket * & rtp = muxhandler->GetMultiplexSocket(H323UDPSocket::rtp);
+            PUDPSocket * & rtcp = muxhandler->GetMultiplexSocket(H323UDPSocket::rtcp);
+            rtp = new UPnPUDPSocket(this);
+            rtcp = new UPnPUDPSocket(this);
 
-              handler->StartMultiplexListener();  // Start Multiplexing Listening thread;
-              handler->EnableMultiplex(true); 
+            unsigned basePort = muxhandler->GetMultiplexPort(H323UDPSocket::rtp);
+            PortInfo muxPortInfo(basePort, basePort+100);
+
+            if ((!OpenSocket(*rtp, muxPortInfo, binding)) ||
+                (!OpenSocket(*rtcp, muxPortInfo, binding)) ||
+                (rtcp->GetPort() != rtp->GetPort() + 1)) {
+                delete rtp;
+                delete rtcp;
+                rtp = new UPnPUDPSocket(this);
+                rtcp = new UPnPUDPSocket(this);
+            }
+
+            // Open UPnP mappings
+            WORD locPort, extPort;
+            PIPSocket::Address locAddr, extAddr;
+            rtp->GetLocalAddress(locAddr, locPort);
+            extPort = locPort;
+
+            if (m_pUPnP->CreateMap(true, "UDP", locAddr, locPort, extAddr, extPort, true)) {
+                ((UPnPUDPSocket*)rtp)->SetMasqAddress(extAddr, extPort);
+                ((UPnPUDPSocket*)rtcp)->SetMasqAddress(extAddr, extPort + 1);
+            }  else {
+                PTRACE(3, "UPnP\tError mapped ports. Abort Creating socket pair.");
+                return false;
+            }
+
+            PTRACE(4, "H46019\tMultiplex UDP ports created " << rtp->GetPort() << '-' << rtcp->GetPort());
+
+            muxhandler->Start();  // Start Multiplexing Listening thread;
         }
 
-       socket1 = new H46019UDPSocket(*handler->GetHandler(),info,true);      /// Data 
-       socket2 = new H46019UDPSocket(*handler->GetHandler(),info,false);     /// Signal
-       
-       PNatMethod_H46019::RegisterSocket(true ,info->GetRecvMultiplexID(), socket1);
-       PNatMethod_H46019::RegisterSocket(false,info->GetRecvMultiplexID(), socket2);
+        socket1 = new H46019UDPSocket(*handler->GetHandler(), info, true);      /// Data 
+        socket2 = new H46019UDPSocket(*handler->GetHandler(), info, false);     /// Signal
 
-       SetConnectionSockets(socket1,socket2,info);
+        muxhandler->SetSocketSession(info->GetSessionID(), info->GetRecvMultiplexID(), socket1, socket2);
 
     } else 
 #endif
@@ -1209,9 +1201,6 @@ PBoolean PNatMethod_UPnP::CreateSocketPair(PUDPSocket * & socket1,
                 " to " << extAddr << " " << extPort << "-" <<  extPort+1 );
             }
         }
-
-        if (ok)
-          SetConnectionSockets(socket1,socket2,info);
     }
 
     return true;

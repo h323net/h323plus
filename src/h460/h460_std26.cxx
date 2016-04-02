@@ -32,6 +32,8 @@
 #include <h460/h460_std26.h>
 #include <h460/h460_std17.h>
 
+#include <h323rtpmux.h>
+
 ////////////////////////////////////////////////////////////////////////////////
 
 H460_FEATURE(Std26);
@@ -295,7 +297,7 @@ PBoolean PNatMethod_H46026::CreateSocketPair(
                             )
 {
 
-    H323Connection::SessionInformation * info = (H323Connection::SessionInformation *)userData;
+    H323MultiplexConnection::SessionInformation * info = (H323MultiplexConnection::SessionInformation *)userData;
 
     socket1 = new H46026UDPSocket(*handler,info,true);  /// Data 
     socket2 = new H46026UDPSocket(*handler,info,false);  /// Signal
@@ -307,8 +309,9 @@ PBoolean PNatMethod_H46026::CreateSocketPair(
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-H46026UDPSocket::H46026UDPSocket(H46026Tunnel & _handler, H323Connection::SessionInformation * info, bool _rtpSocket)
-: m_transport(_handler), m_crv(info->GetCallReference()), m_session(info->GetSessionID()), m_rtpSocket(_rtpSocket), m_shutdown(false)
+H46026UDPSocket::H46026UDPSocket(H46026Tunnel & _handler, PObject * info, bool _rtpSocket)
+: m_transport(_handler), m_crv(((H323MultiplexConnection::SessionInformation*)info)->GetCallReference()), 
+  m_session(((H323MultiplexConnection::SessionInformation*)info)->GetSessionID()), m_rtpSocket(_rtpSocket), m_shutdown(false)
 {
 }
 

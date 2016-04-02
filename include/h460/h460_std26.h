@@ -300,7 +300,7 @@ class H46026UDPSocket : public H323UDPSocket
     /** create a UDP Socket Fully Nat Supported
         ready for H323plus to Call.
     */
-    H46026UDPSocket(H46026Tunnel & _handler, H323Connection::SessionInformation * info, bool _rtpSocket);
+    H46026UDPSocket(H46026Tunnel & _handler, PObject * info, bool _rtpSocket);
 
     /** Deconstructor to reallocate Socket and remove any exiting
         allocated NAT ports, 

@@ -95,6 +95,11 @@ struct PresSubDetails;
 class H460PresenceHandler;
 #endif
 
+#ifdef H323_NAT
+class H323_MultiplexHandler;
+class H323MultiplexConnection;
+#endif
+
 #ifdef H323_GNUGK
 class GNUGK_Feature;
 #endif
@@ -2692,7 +2697,11 @@ class H323EndPoint : public PObject
      */
     WORD GetRtpIpPortPair();
 
-#ifdef H323_H46019M
+#ifdef H323_NAT
+    /** Get the Multiplex Connection Handler
+      */
+    H323MultiplexConnection * BuildH323MultiplexConnection();
+
    /**Set the UDP port number base for Multiplex RTP/RTCP channels.
      */
     void SetMultiplexPort(unsigned rtpPort);
@@ -2700,11 +2709,6 @@ class H323EndPoint : public PObject
    /**Get the UDP port number base for Multiplex RTP/RTCP channels.
      */
     WORD GetMultiplexPort();
-
-   /**Get next Multiplex RTP/RTCP channel ID.
-      Each call indexes the counter by 1;
-     */
-    unsigned GetMultiplexID();
 #endif
 
     /**Get the IP Type Of Service byte for RTP channels.
@@ -3025,23 +3029,6 @@ class H323EndPoint : public PObject
       WORD   current;
     } tcpPorts, udpPorts, rtpIpPorts;
 
-#ifdef H323_NAT
-    H323NatStrategy * natMethods;
-#endif
-
-#ifdef H323_H46019M
-    struct MuxIDInfo {
-       PMutex mutex;
-         unsigned   base;
-         unsigned   max;
-         unsigned   current;
-       unsigned GetNext(
-          unsigned increment
-       );
-    } rtpMuxID;
-    WORD defaultMultiRTPPort;
-#endif
-
     BYTE t35CountryCode;
     BYTE t35Extension;
     WORD manufacturerCode;
@@ -3123,6 +3110,11 @@ class H323EndPoint : public PObject
     H235AuthenticatorList EPAuthList;  /// List of Usernames & Password to check incoming call Against                   
     PBoolean m_disableMD5Authenticators; /// Disable MD5 based authenticatos (MD5 + CAT)
 
+#ifdef H323_NAT
+    H323NatStrategy * natMethods;
+    H323_MultiplexHandler * m_muxHandler;
+#endif
+
 #ifdef H323_H460
     H460_FeatureSet features;
     PBoolean disableH460;
@@ -3135,11 +3127,6 @@ class H323EndPoint : public PObject
 
 #ifdef H323_H46018
     PBoolean m_h46018enabled;
-#endif
-
-#ifdef H323_H46019M
-    PBoolean m_h46019Menabled;
-    PBoolean m_h46019Msend;
 #endif
 
 #ifdef H323_H46023

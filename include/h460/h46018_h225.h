@@ -296,33 +296,6 @@ class PNatMethod_H46019  : public H323NatMethod
         Enable Multiplexing for this call
      */
     static void EnableMultiplex(bool enable);
-
-    /** IsMultiplex
-        Is Multiplexing media
-     */
-    static PBoolean IsMultiplexed();
-
-    /** Get multiplex socket
-      */
-    static PUDPSocket * & GetMultiplexSocket(bool rtp);
-
-    /** Get multiplex socket
-      */
-    static PUDPSocket * & GetMultiplexReadSocket(bool rtp);
-
-
-    /** Register a multiplex socket
-      */
-    static void RegisterSocket(bool rtp, unsigned id, PUDPSocket * socket);
-
-    /** Unregister a multiplex socket
-      */
-    static void UnregisterSocket(bool rtp, unsigned id);
-
-    /** Start Multiplex listener thread
-      */
-    void StartMultiplexListener();
-
 #endif
 
     /**  OpenSocket
@@ -389,36 +362,10 @@ protected:
 
 
   protected:
-
-    /**@name General Functions */
-    //@{
-    /**  SetConnectionSockets
-        This function sets the socket references in the 
-        H323Connection to allow the implementer to add
-        keep-alive info to the sockets
-    */
-    void SetConnectionSockets(PUDPSocket * data,            ///< Data socket
-                PUDPSocket * control,                        ///< control socket 
-                H323Connection::SessionInformation * info    ///< session Information
-                );
     
     PBoolean available;                 ///< Whether this NAT Method is available for call
     PBoolean active;                    ///< Whether the method is active for call
     H46018Handler * handler;            ///< handler
-
-#ifdef H323_H46019M
-    static PBoolean                      multiplex;
-    static PBoolean                      muxShutdown;
-    PortInfo                             muxPortInfo;
-    static H323Connection::NAT_Sockets   muxSockets;
-
-    static muxSocketMap                  rtpSocketMap;
-    static muxPortMap                    rtpPortMap;
-    static muxSocketMap                  rtcpSocketMap;
-    static PMutex                        muxMutex;
-    PThread *                            m_readThread;
-    PDECLARE_NOTIFIER(PThread, PNatMethod_H46019, ReadThread);
-#endif
 
 };
 
@@ -451,16 +398,6 @@ class H46019MultiplexSocket : public H323UDPSocket
 
     ~H46019MultiplexSocket();
 
-    enum MuxType {
-        e_unknown,
-        e_rtp,
-        e_rtcp
-    };
-
-    virtual MuxType GetMultiplexType() const;
-
-    virtual void SetMultiplexType(MuxType type);
-
      /**Read a datagram from a remote computer
        @return PTrue if any bytes were sucessfully read.
        */
@@ -491,7 +428,6 @@ class H46019MultiplexSocket : public H323UDPSocket
   private:
 
     PUDPSocket              *  m_subSocket;
-    MuxType                    m_plexType;
     PMutex                     m_mutex;
 
 };
@@ -505,7 +441,7 @@ class H46019UDPSocket : public H323UDPSocket
     /** create a UDP Socket Fully Nat Supported
         ready for H323plus to Call.
     */
-    H46019UDPSocket(H46018Handler & _handler, H323Connection::SessionInformation * info, bool _rtpSocket);
+    H46019UDPSocket(H46018Handler & _handler, PObject * info, bool _rtpSocket);
 
     /** Deconstructor to reallocate Socket and remove any exiting
         allocated NAT ports, 
@@ -513,10 +449,13 @@ class H46019UDPSocket : public H323UDPSocket
     ~H46019UDPSocket();
     //@}
 
-
+    /** Close the socket
+      */
     PBoolean Close();
 
-    PBoolean GetLocalAddress(Address & addr, WORD & port);
+    /** Get local Address
+      */
+    virtual PBoolean GetLocalAddress(Address & addr, WORD & port);
 
     /**@name Functions */
     //@{
@@ -743,8 +682,11 @@ private:
     PTimer    Keep;                                        ///< Polling Timer
 
 #ifdef H323_H46019M
+    H323MultiplexConnection* m_connection;          ///< Multiplex Connection
+    H323_MultiplexHandler  * m_muxHandler;          ///< Multiplex Handler
     unsigned         m_recvMultiplexID;             ///< Multiplex ID
     unsigned         m_sendMultiplexID;             ///< Multiplex ID
+    PIPSocketAddressAndPort m_muxLocalAddress;      ///< Multiplex local address
     H46019MultiQueue m_multQueue;                   ///< Incoming frame Queue
     unsigned         m_multiBuffer;                 ///< Multiplex BufferSize
     PMutex           m_multiMutex;                  ///< MultiQueue mutex

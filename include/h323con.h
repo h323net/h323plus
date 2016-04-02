@@ -174,6 +174,10 @@ class OpalRFC2833Info;
 class H460_FeatureSet;
 #endif
 
+#ifdef H323_NAT
+class H323MultiplexConnection;
+#endif
+
 #if H323_FILE
 class H323FileTransferHandler;
 class H323FileTransferList;
@@ -2416,21 +2420,8 @@ class H323Connection : public PObject
       */
     virtual PNatMethod * GetPreferedNatMethod(const PIPSocket::Address & ip) const;
 
-    virtual PUDPSocket * GetNatSocket(unsigned session, PBoolean rtp);
-
-    /** Set RTP NAT information callback
-      */
-    virtual void SetRTPNAT(unsigned sessionid, PUDPSocket * _rtp, PUDPSocket * _rtcp);
-
-    /** Set NAT Channel in effect 
-      */
-    void SetNATChannelActive(unsigned sessionid);
-
-    /** Is NAT Method Active
-      */
-    PBoolean IsNATMethodActive(unsigned sessionid);
-
 #endif
+
     /** Set Endpoint Type Information
       Override this to advertise the Endpoint type on a Call by Call basis
 
@@ -2950,57 +2941,13 @@ class H323Connection : public PObject
     );
 
 #ifdef H323_NAT
-
-    /**Session Information 
-        This contains session information which is passed to the socket handler
-        when creating RTP socket pairs.
+    /** Multiplex Connection handler
       */
-    class SessionInformation : public PObject
-    {
-        public:
-            SessionInformation(const OpalGloballyUniqueID & id, unsigned crv, const PString & token, unsigned session, const H323Connection * connection);
+    H323MultiplexConnection * m_muxConnection;
 
-            unsigned GetCallReference();
-
-            const PString & GetCallToken();
-
-            unsigned GetSessionID() const;
-
-            const OpalGloballyUniqueID & GetCallIdentifer();
-
-            void SetSendMultiplexID(unsigned id);
-
-            unsigned GetRecvMultiplexID() const;
-
-            const PString & GetCUI();
-
-            const H323Connection * GetConnection(); 
-
-        protected:
-            OpalGloballyUniqueID m_callID;
-            unsigned m_crv;
-            PString m_callToken;
-            unsigned m_sessionID;
-            unsigned m_recvMultiID;
-            unsigned m_sendMultiID;
-            PString m_CUI;
-            const H323Connection * m_connection;
-
-    };
-
-    SessionInformation * BuildSessionInformation(unsigned sessionID) const;
-
-    class NAT_Sockets 
-    {
-      public:
-        NAT_Sockets() 
-        { rtp = NULL; rtcp = NULL; isActive = false; }
-
-        PUDPSocket * rtp;
-        PUDPSocket * rtcp;
-        PBoolean     isActive;
-    };
-
+    /** Build NAT session info
+    */
+    PObject * BuildNATSessionInformation(unsigned sessionid) const;
 #endif
 
     /** Called when an endpoint receives a SETUP PDU with a
@@ -3612,8 +3559,9 @@ class H323Connection : public PObject
 #endif
 
 #ifdef H323_NAT
-    PMutex NATSocketMutex;
-    std::map<unsigned,NAT_Sockets> m_NATSockets;
+//   PMutex NATSocketMutex;
+//    std::map<unsigned,NAT_Sockets> m_NATSockets;
+//    H323_MultiplexHandler * m_muxHandler;
 #endif
 
     H323TransportSecurity m_transportSecurity;

@@ -155,8 +155,8 @@ void H460_FeatureStd18::OnReceiveServiceControlIndication(const H225_FeatureDesc
 // Must Declare for Factory Loader.
 H460_FEATURE(Std19);
 
-#define H46019_Multiplex      1
-#define H46019_MultiServer    2
+#define H46019_MultiplexSend      1
+#define H46019_MultiServer        2    // Not Used
 
 H460_FeatureStd19::H460_FeatureStd19()
 : H460_FeatureStd(19), EP(NULL), CON(NULL), isEnabled(false),
@@ -229,7 +229,7 @@ PBoolean H460_FeatureStd19::OnSendSetup_UUIE(H225_FeatureDescriptor & pdu)
     H460_FeatureStd feat = H460_FeatureStd(19); 
 #ifdef H323_H46019M
     if (EP->H46019MIsSending())
-        feat.Add(H46019_Multiplex);
+        feat.Add(H46019_MultiplexSend);
 #endif
     pdu = feat;
     return true; 
@@ -243,7 +243,7 @@ void H460_FeatureStd19::OnReceiveSetup_UUIE(const H225_FeatureDescriptor & pdu)
         CON->H46019SetCallReceiver();
 #ifdef H323_H46019M
         H460_FeatureStd & feat = (H460_FeatureStd &)pdu;
-        if (feat.Contains(H46019_Multiplex) && EP->H46019MIsEnabled()) { 
+        if (feat.Contains(H46019_MultiplexSend) && EP->H46019MIsEnabled()) {
              EnableMultiplex();
              multiSupport = true;
         }
@@ -259,7 +259,7 @@ PBoolean H460_FeatureStd19::OnSendCallProceeding_UUIE(H225_FeatureDescriptor & p
     H460_FeatureStd feat = H460_FeatureStd(19); 
 #ifdef H323_H46019M
     if (multiSupport && EP->H46019MIsSending())
-         feat.Add(H46019_Multiplex);
+         feat.Add(H46019_MultiplexSend);
 #endif
     pdu = feat;
     return TRUE; 
@@ -278,7 +278,7 @@ PBoolean H460_FeatureStd19::OnSendAlerting_UUIE(H225_FeatureDescriptor & pdu)
     H460_FeatureStd feat = H460_FeatureStd(19); 
 #ifdef H323_H46019M
     if (multiSupport && EP->H46019MIsSending())
-         feat.Add(H46019_Multiplex);
+         feat.Add(H46019_MultiplexSend);
 #endif
     pdu = feat;
     return TRUE; 
@@ -291,7 +291,7 @@ void H460_FeatureStd19::OnReceiveAlerting_UUIE(const H225_FeatureDescriptor & pd
         CON->H46019Enabled();
 #ifdef H323_H46019M
         H460_FeatureStd & feat = (H460_FeatureStd &)pdu;
-        if (feat.Contains(H46019_Multiplex) && EP->H46019MIsEnabled()) {
+        if (feat.Contains(H46019_MultiplexSend) && EP->H46019MIsEnabled()) {
              EnableMultiplex();
              multiSupport = true;
         }
@@ -307,7 +307,7 @@ PBoolean H460_FeatureStd19::OnSendCallConnect_UUIE(H225_FeatureDescriptor & pdu)
     H460_FeatureStd feat = H460_FeatureStd(19); 
 #ifdef H323_H46019M
     if (multiSupport && EP->H46019MIsSending())
-         feat.Add(H46019_Multiplex);
+         feat.Add(H46019_MultiplexSend);
 #endif
     pdu = feat;
     return TRUE; 
@@ -320,7 +320,7 @@ void H460_FeatureStd19::OnReceiveCallConnect_UUIE(const H225_FeatureDescriptor &
         CON->H46019Enabled();
 #ifdef H323_H46019M
         H460_FeatureStd & feat = (H460_FeatureStd &)pdu;
-        if (feat.Contains(H46019_Multiplex) && EP->H46019MIsEnabled()) {
+        if (feat.Contains(H46019_MultiplexSend) && EP->H46019MIsEnabled()) {
              EnableMultiplex();
              multiSupport = true;
         }
@@ -371,3 +371,4 @@ void H460_FeatureStd19::EnableMultiplex()
 }
 
 #endif
+

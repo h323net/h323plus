@@ -329,6 +329,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h460\h460_oid1.h">
       <Filter>Header Files\h460</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h323rtpmux.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="ASN Files">
@@ -820,6 +823,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h460\h460_oid1.cxx">
       <Filter>Source Files\h460</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h323rtpmux.cxx">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

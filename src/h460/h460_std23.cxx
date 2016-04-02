@@ -29,8 +29,10 @@
   #include <h460/h46018_h225.h>
 #endif
 #ifdef H323_UPnP
- #include "h460/upnpcp.h"
+ #include <h460/upnpcp.h>
 #endif
+
+#include <h323rtpmux.h>
 
 #if _WIN32
 #pragma message("H.460.23/.24 Enabled. Contact consulting@h323plus.org for licensing terms.")
@@ -248,43 +250,40 @@ PBoolean PNatMethod_H46024::CreateSocketPair(PUDPSocket * & socket1,
 {
     PWaitAndSignal m(portMute);
 
-    H323Connection::SessionInformation * info = (H323Connection::SessionInformation *)userData;
+    H323MultiplexConnection::SessionInformation * info = (H323MultiplexConnection::SessionInformation *)userData;
 #ifdef H323_H46019M
-    PNatMethod_H46019 * handler = 
-               (PNatMethod_H46019 *)feat->GetEndPoint()->GetNatMethods().GetMethodByName("H46019");
+    if (info->GetRecvMultiplexID() > 0) {
 
-    if (handler && info && (info->GetRecvMultiplexID() > 0)) {
-        if (!handler->IsMultiplexed()) {
-           // Set Multiplex ports here
-           SetPortRanges(multiplexPorts.basePort, multiplexPorts.maxPort, multiplexPorts.basePort, multiplexPorts.maxPort);
+        PNatMethod_H46019 * handler =
+            (PNatMethod_H46019 *)feat->GetEndPoint()->GetNatMethods().GetMethodByName("H46019");
 
-           H46019MultiplexSocket * & muxSocket1 = (H46019MultiplexSocket * &)handler->GetMultiplexSocket(true); 
-           H46019MultiplexSocket * & muxSocket2 = (H46019MultiplexSocket * &)handler->GetMultiplexSocket(false);
-           muxSocket1 = new H46019MultiplexSocket(true);
-           muxSocket2 = new H46019MultiplexSocket(false);
-           pairedPortInfo.currentPort = feat->GetEndPoint()->GetMultiplexPort()-1;
+        H323MultiplexConnection * muxhandler = info->GetMultiplexConnection();
+
+        if (muxhandler->GetMultiplexSocket(H323UDPSocket::rtp) == NULL) {
+            PUDPSocket * & rtp = muxhandler->GetMultiplexSocket(H323UDPSocket::rtp);
+            PUDPSocket * & rtcp = muxhandler->GetMultiplexSocket(H323UDPSocket::rtcp);
+
+            pairedPortInfo.currentPort = muxhandler->GetMultiplexPort(H323UDPSocket::rtp)-1;
 
 #if PTLIB_VER >= 2130
-           if (!PSTUNClient::CreateSocketPair(muxSocket1->GetSubSocket(), muxSocket2->GetSubSocket(), binding, NULL)) 
+            if (!PSTUNClient::CreateSocketPair(rtp, rtcp, binding, NULL))
 #else
-           if (!PSTUNClient::CreateSocketPair(muxSocket1->GetSubSocket(), muxSocket2->GetSubSocket(), binding))
+            if (!PSTUNClient::CreateSocketPair(rtp, rtcp, binding))
 #endif
                 return false;
 
-           PIPSocket::Address stunAddress;
-           muxSocket1->GetSubSocket()->GetLocalAddress(stunAddress);
-           PTRACE(1,"H46024\tMux STUN Created: " << stunAddress  << " "
-                        << muxSocket1->GetSubSocket()->GetPort() << "-" << muxSocket2->GetSubSocket()->GetPort());
-           
-           handler->StartMultiplexListener();  // Start Multiplexing Listening thread;
-           handler->EnableMultiplex(true); 
+            PIPSocket::Address stunAddress;
+            rtp->GetLocalAddress(stunAddress);
+            PTRACE(1, "H46024\tMux STUN Created: " << stunAddress << " "
+                << rtp->GetPort() << '-' << rtcp->GetPort());
+
+            muxhandler->Start();  // Start Multiplexing Listening thread;
         }
 
-       socket1 = new H46019UDPSocket(*handler->GetHandler(),info,true);      /// Data 
-       socket2 = new H46019UDPSocket(*handler->GetHandler(),info,false);     /// Signal
- 
-       PNatMethod_H46019::RegisterSocket(true ,info->GetRecvMultiplexID(), socket1);
-       PNatMethod_H46019::RegisterSocket(false,info->GetRecvMultiplexID(), socket2);
+        socket1 = new H46019UDPSocket(*handler->GetHandler(), info, true);      /// Data 
+        socket2 = new H46019UDPSocket(*handler->GetHandler(), info, false);     /// Signal
+
+        muxhandler->SetSocketSession(info->GetSessionID(), info->GetRecvMultiplexID(), socket1, socket2);
 
     } else {
         // Set standard ports here
@@ -301,18 +300,9 @@ PBoolean PNatMethod_H46024::CreateSocketPair(PUDPSocket * & socket1,
              return false;
     }
 
-    SetConnectionSockets(socket1,socket2,info);
     return true;
 }
 
-
-void PNatMethod_H46024::SetConnectionSockets(PUDPSocket * data, PUDPSocket * control, 
-                                             H323Connection::SessionInformation * info)
-{
-    H323Connection * connection = PRemoveConst(H323Connection, info->GetConnection());
-    if (connection != NULL)
-        connection->SetRTPNAT(info->GetSessionID(),data,control);
-}
 
 #if PTLIB_VER >= 2120
 void PNatMethod_H46024::InternalUpdate()

@@ -49,6 +49,7 @@
 #include <ptclib/sockagg.h>
 #endif
 
+
 #define new PNEW
 
 
@@ -1485,21 +1486,23 @@ PBoolean RTP_UDP::Open(PIPSocket::Address _localAddress,
 
 #ifdef H323_NAT
   if (meth != NULL) {
-    H323Connection::SessionInformation * info = 
-         connection.BuildSessionInformation(GetSessionID());
+      PObject * info = connection.BuildNATSessionInformation(GetSessionID());
 
 #if PTLIB_VER >= 2130
-    if (meth->CreateSocketPair(dataSocket, controlSocket, localAddress,(PObject *)info)) {
+    if (meth->CreateSocketPair(dataSocket, controlSocket, localAddress, info)) {
 #elif PTLIB_VER > 260
     if (meth->CreateSocketPair(dataSocket, controlSocket, localAddress,(void *)info)) {
 #else
     if (meth->CreateSocketPair(dataSocket, controlSocket, localAddress)) {
 #endif
-      dataSocket->GetLocalAddress(localAddress, localDataPort);
-      controlSocket->GetLocalAddress(localAddress, localControlPort);
+
 #if PTLIB_VER >= 2130
+      ((H323UDPSocket*)dataSocket)->GetLocalAddress(localAddress, localDataPort);
+      ((H323UDPSocket*)controlSocket)->GetLocalAddress(localAddress, localControlPort);
       PString name = meth->GetMethodName(); 
 #else
+      dataSocket->GetLocalAddress(localAddress, localDataPort);
+      controlSocket->GetLocalAddress(localAddress, localControlPort);
       PString name = meth->GetName();
 #endif
       PTRACE(4, "RTP\tNAT Method " << name << " created NAT ports " << localDataPort << " " << localControlPort);

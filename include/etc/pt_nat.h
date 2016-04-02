@@ -30,9 +30,32 @@ class H323UDPSocket : public PUDPSocket
     PCLASSINFO(H323UDPSocket, PUDPSocket);
 
 public:
-    H323UDPSocket() {}
+    H323UDPSocket() : m_type(unknown) {}
     virtual PBoolean IsAlternateAddress(const Address & /*address*/, WORD /*port*/) { return false; }
     virtual PBoolean DoPseudoRead(int & /*selectStatus*/) { return false; }
+
+    virtual PBoolean GetLocalAddress(Address & addr, WORD & port)  { return PUDPSocket::GetLocalAddress(addr, port); }
+
+    /** Socket types
+    */
+#if PTLIB_VER >= 2130
+    P_DECLARE_STREAMABLE_ENUM(Type,
+        unknown,  ///< Unknown socket
+        rtp,      ///< RTP mux socket
+        rtcp,     ///< RTCP mux socket
+        sctp      ///< SCTP mux socket (Not implemented)
+        );
+#else
+    enum Type {
+        rtp,      ///< RTP mux socket
+        rtcp,     ///< RTCP mux socket
+        sctp      ///< SCTP mux socket (Not implemented)
+    };
+#endif
+
+    virtual Type GetType() const { return m_type;  }
+
+    virtual void SetType(Type type) { m_type = type; }
 
     virtual PBoolean Close() {
 #if 0 //P_QWAVE - QoS not supported yet
@@ -41,6 +64,9 @@ public:
         return PSocket::Close();
 #endif
     }
+
+private:
+    Type m_type;
 };
 
 #endif // H323UDPSocket
@@ -73,8 +99,8 @@ public:
 
 protected:
     struct PortInfo {
-        PortInfo(WORD port = 0)
-            : basePort(port), maxPort(port), currentPort(port) {}
+        PortInfo(WORD base = 0, WORD max = 0)
+            : basePort(base), maxPort(max == 0 ? base : max), currentPort(base) {}
         PMutex mutex;
         WORD   basePort;
         WORD   maxPort;

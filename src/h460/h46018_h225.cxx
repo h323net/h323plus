@@ -33,6 +33,8 @@
 #include <h460/h46018_h225.h>
 #include <h460/h46018.h>
 
+#include <h323rtpmux.h>
+
 #define H46019_KEEPALIVE_TIME       19   // Sec between keepalive messages
 #define H46019_KEEPALIVE_COUNT      3    // Number of probes per message
 #define H46019_KEEPALIVE_INTERVAL   100  // ms between each probe
@@ -101,7 +103,7 @@ void H46018TransportThread::Main()
     while (transport && transport->IsOpen()) {    // not close due to shutdown
         ret = transport->HandleH46018SignallingChannelPDU(this);
 
-        if (!ret && transport->CloseTransport()) {  // Closing down Instruction
+        if (!ret /*&& transport->CloseTransport()*/) {  // Closing down Instruction
             PTRACE(3, "H46018\tShutting down H46018 Thread");
             transport->ConnectionLost(true);
             break;
@@ -468,53 +470,15 @@ void H46018Handler::H46024ADirect(bool reply, const PString & token)
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-#ifdef H323_H46019M
-H323Connection::NAT_Sockets   PNatMethod_H46019::muxSockets;
-PBoolean                      PNatMethod_H46019::multiplex=false;
-muxSocketMap                  PNatMethod_H46019::rtpSocketMap;
-muxPortMap                    PNatMethod_H46019::rtpPortMap;
-muxSocketMap                  PNatMethod_H46019::rtcpSocketMap;
-PBoolean                      PNatMethod_H46019::muxShutdown;
-PMutex                        PNatMethod_H46019::muxMutex;
-#endif
-    
+
 PNatMethod_H46019::PNatMethod_H46019()
 : available(false), active(true), handler(NULL)
-#ifdef H323_H46019M
-  , m_readThread(NULL)
-#endif
 {
 }
 
 PNatMethod_H46019::~PNatMethod_H46019()
 {
 
-#ifdef H323_H46019M
-    PWaitAndSignal m(muxMutex);
-
-    if (IsMultiplexed()) {
-        muxShutdown = true;
-        EnableMultiplex(false);
-
-        m_readThread = NULL;
-
-        rtpSocketMap.clear();
-        rtpPortMap.clear();
-        rtcpSocketMap.clear();
-
-        if (muxSockets.rtp) {
-            muxSockets.rtp->Close();
-            delete muxSockets.rtp;
-            muxSockets.rtp = NULL;
-        }
-
-        if (muxSockets.rtcp) {
-            muxSockets.rtcp->Close();
-            delete muxSockets.rtcp; 
-            muxSockets.rtcp = NULL;
-        }
-    }
-#endif
 }
 
 void PNatMethod_H46019::AttachHandler(H46018Handler * _handler)
@@ -552,12 +516,6 @@ void PNatMethod_H46019::AttachHandler(H46018Handler * _handler)
 
     pairedPortInfo.mutex.Signal();
 
-#ifdef H323_H46019M
-    muxPortInfo.basePort    = handler->GetEndPoint()->GetMultiplexPort();
-    muxPortInfo.maxPort     = muxPortInfo.basePort+100;  // Just in case defined ports are blocked. - SH
-    muxPortInfo.currentPort = muxPortInfo.basePort-1;
-#endif
-
     available = FALSE;
 }
 
@@ -587,39 +545,42 @@ PBoolean PNatMethod_H46019::CreateSocketPair(PUDPSocket * & socket1,
     if (pairedPortInfo.basePort == 0 || pairedPortInfo.basePort > pairedPortInfo.maxPort)
     {
         PTRACE(1, "H46019\tInvalid local UDP port range "
-               << pairedPortInfo.currentPort << '-' << pairedPortInfo.maxPort);
+               << pairedPortInfo.basePort  << '-' << pairedPortInfo.currentPort << '-' << pairedPortInfo.maxPort);
         return FALSE;
     }
 
-    H323Connection::SessionInformation * info = (H323Connection::SessionInformation *)userData;
+    H323MultiplexConnection::SessionInformation * info = (H323MultiplexConnection::SessionInformation *)userData;
 
 #ifdef H323_H46019M
     if (info->GetRecvMultiplexID() > 0) {
-        if (!multiplex) {
-           muxSockets.rtp = new H46019MultiplexSocket(true);
-           muxSockets.rtcp = new H46019MultiplexSocket(false);
-           muxPortInfo.currentPort = muxPortInfo.basePort-1;
-            while ((!OpenSocket(*muxSockets.rtp, muxPortInfo, binding)) ||
-                   (!OpenSocket(*muxSockets.rtcp, muxPortInfo, binding)) ||
-                   (muxSockets.rtcp->GetPort() != muxSockets.rtp->GetPort() + 1) )
-                {
-                    delete muxSockets.rtp;
-                    delete muxSockets.rtcp;
-                    muxSockets.rtp = new H46019MultiplexSocket(true);    /// Data 
-                    muxSockets.rtcp = new H46019MultiplexSocket(false);    /// Signal
-                }
-               PTRACE(4, "H46019\tMultiplex UDP ports "
-                     << muxSockets.rtp->GetPort() << '-' << muxSockets.rtcp->GetPort());
+        H323MultiplexConnection * muxhandler = info->GetMultiplexConnection();
+
+        if (muxhandler->GetMultiplexSocket(H323UDPSocket::rtp) == NULL) {
+            PUDPSocket * & rtp = muxhandler->GetMultiplexSocket(H323UDPSocket::rtp);
+            PUDPSocket * & rtcp = muxhandler->GetMultiplexSocket(H323UDPSocket::rtcp);
+            rtp = new H46019MultiplexSocket(true);
+            rtcp = new H46019MultiplexSocket(false);
+
+            PortInfo muxPortInfo(muxhandler->GetMultiplexPort(false), 
+                                 muxhandler->GetMultiplexPort(true));
+
+            if ((!OpenSocket(*rtp, muxPortInfo, binding)) ||
+                (!OpenSocket(*rtcp, muxPortInfo, binding)) ||
+                (rtcp->GetPort() != rtp->GetPort() + 1) )  {
+                    delete rtp;
+                    delete rtcp;
+                    rtp = new H46019MultiplexSocket(true);    
+                    rtcp = new H46019MultiplexSocket(false);  
+            }
+            PTRACE(4, "H46019\tMultiplex UDP ports created "  << rtp->GetPort() << '-' << rtcp->GetPort());
              
-              StartMultiplexListener();  // Start Multiplexing Listening thread;
-              EnableMultiplex(true);  
+            muxhandler->Start();  // Start Multiplexing Listening thread;
         }
 
        socket1 = new H46019UDPSocket(*handler,info,true);      /// Data 
        socket2 = new H46019UDPSocket(*handler,info,false);     /// Signal
-       
-       PNatMethod_H46019::RegisterSocket(true ,info->GetRecvMultiplexID(), socket1);
-       PNatMethod_H46019::RegisterSocket(false,info->GetRecvMultiplexID(), socket2);
+
+       muxhandler->SetSocketSession(info->GetSessionID(), info->GetRecvMultiplexID(), socket1, socket2);
 
     } else
 #endif
@@ -641,8 +602,6 @@ PBoolean PNatMethod_H46019::CreateSocketPair(PUDPSocket * & socket1,
             PTRACE(5, "H46019\tUDP ports "
                    << socket1->GetPort() << '-' << socket2->GetPort());
     }
-      
-    SetConnectionSockets(socket1,socket2,info);
 
     return TRUE;
 }
@@ -666,22 +625,10 @@ PBoolean PNatMethod_H46019::OpenSocket(PUDPSocket & socket, PortInfo & portInfo,
     } while (portInfo.currentPort != startPort);
 
     PTRACE(2, "H46019\tFailed to bind to " << binding << " local UDP port range "
-        << portInfo.currentPort << '-' << portInfo.maxPort);
+        << pairedPortInfo.basePort << '-' << portInfo.currentPort << '-' << portInfo.maxPort);
       return false;
 }
 
-void PNatMethod_H46019::SetConnectionSockets(PUDPSocket * data, PUDPSocket * control, 
-                                             H323Connection::SessionInformation * info)
-{
-    if (handler->GetEndPoint() == NULL)
-        return;
-
-    H323Connection * connection = PRemoveConst(H323Connection, info->GetConnection());
-    if (connection != NULL) {
-        connection->SetRTPNAT(info->GetSessionID(),data,control);
-        connection->H46019Enabled();  // make sure H.460.19 is enabled
-    }
-}
 
 bool PNatMethod_H46019::IsAvailable(const PIPSocket::Address & /*address*/) 
 { 
@@ -696,295 +643,26 @@ void PNatMethod_H46019::SetAvailable()
     }
 }
 
+
 #ifdef H323_H46019M
 void PNatMethod_H46019::EnableMultiplex(bool enable)
 {
-        multiplex = enable;
+
 }
-
-PBoolean PNatMethod_H46019::IsMultiplexed()
-{
-    return multiplex;
-}
-
-PUDPSocket * & PNatMethod_H46019::GetMultiplexReadSocket(bool rtp)
-{
-    if (rtp)
-      if (((H46019MultiplexSocket * &)muxSockets.rtp)->GetSubSocket())
-          return ((H46019MultiplexSocket * &)muxSockets.rtp)->GetSubSocket();
-      else
-          return (PUDPSocket * &)muxSockets.rtp;
-    else
-      if (((H46019MultiplexSocket * &)muxSockets.rtcp)->GetSubSocket())
-          return ((H46019MultiplexSocket * &)muxSockets.rtcp)->GetSubSocket();
-      else
-          return (PUDPSocket * &)muxSockets.rtcp;
-}
-
-
-PUDPSocket * & PNatMethod_H46019::GetMultiplexSocket(bool rtp)
-{
-    if (rtp)
-      return (PUDPSocket * &)muxSockets.rtp;
-    else
-      return (PUDPSocket * &)muxSockets.rtcp;
-}
-
-unsigned DetectSourceAddress(muxSocketMap & socMap, const PIPSocket::Address addr, WORD port)
-{
-          PIPSocketAddressAndPort daddr;
-          daddr.SetAddress(addr,port);
-
-          std::map< unsigned, PUDPSocket*>::const_iterator i;
-          for (i = socMap.begin(); i != socMap.end(); ++i) {
-            PIPSocketAddressAndPort raddr;
-            i->second->GetPeerAddress(raddr); 
-            if (raddr.AsString() == daddr.AsString())
-                return i->first;
-          }
-          return 0;
-}
-
-unsigned ResolveMuxIDFromSourceAddress(muxSocketMap & socMap, muxPortMap & portMap, const PIPSocket::Address addr, WORD port)
-{
-          PIPSocketAddressAndPort daddr;
-          daddr.SetAddress(addr,port);
-
-          std::map<PString, unsigned>::const_iterator it;
-          it = portMap.find(daddr.AsString());
-          if (it != portMap.end())
-              return it->second;
-
-          unsigned id = DetectSourceAddress(socMap, addr, port);
-          if (id) {
-            PTRACE(2,"H46019M\tUnMUX Packet received from " << daddr.AsString() << " permenant assigned MUX " << id);
-            portMap.insert(pair<PString,unsigned>(daddr.AsString(),id));
-          }
-          return id;
-}
-
-
-unsigned ResolveSession(muxSocketMap & socMap, unsigned muxID, PBoolean rtp, const PIPSocket::Address addr, WORD port, unsigned & correctMUX) 
-{
-
-        std::map< unsigned, PUDPSocket*>::const_iterator i;
-        unsigned eraseID = 0;
-        H46019UDPSocket * mapSocket = NULL;
-        if (PNatMethod_H46019::IsMultiplexed()) {   // Check the send/receive multiplex is around the wrong way
-          for (i = socMap.begin(); i != socMap.end(); ++i) {
-              if (((H46019UDPSocket *)i->second)->GetSendMultiplexID() == muxID) {
-                  mapSocket = (H46019UDPSocket *)i->second;
-                  eraseID = i->first;
-                  correctMUX = eraseID;
-                  break;
-              }
-          }
-          if (eraseID > 0) {
-               mapSocket->SetMultiplexID(muxID,true);
-               PNatMethod_H46019::RegisterSocket(rtp,muxID, mapSocket);
-               PNatMethod_H46019::UnregisterSocket(rtp, eraseID);
-               return muxID;
-          }
-        }
-        return DetectSourceAddress(socMap, addr, port);
-}
-
-void CloseAllSessions(muxSocketMap & socMap) 
-{
-    std::map< unsigned, PUDPSocket*>::const_iterator i;
-    if (PNatMethod_H46019::IsMultiplexed()) {   // Check the send/receive multiplex is around the wrong way
-      for (i = socMap.begin(); i != socMap.end(); ++i)
-              i->second->Close();
-    }
-}
-
-
-void PNatMethod_H46019::StartMultiplexListener()
-{
-  if (m_readThread)
-      return;
-
-  muxShutdown = false;
-  m_readThread = PThread::Create(PCREATE_NOTIFIER(ReadThread), 0,
-                                    PThread::AutoDeleteThread,
-                                    PThread::NormalPriority,
-                                    "GkMonitor:%x");
-}
-
-void PNatMethod_H46019::ReadThread(PThread &,  H323_INT)
-{
-  
-  PINDEX bufferLen = 2000;
-  RTP_MultiDataFrame buffer(bufferLen);
-  PINDEX len = bufferLen;
-  PIPSocket::Address addr;
-  WORD port=0;
-
-  PUDPSocket * socket = NULL;
-  H46019MultiplexSocket::MuxType socketRead;
-
-  PUDPSocket & dataSocket = *GetMultiplexReadSocket(true);
-  PUDPSocket & ctrlSocket = *GetMultiplexReadSocket(false);
-
-  int select = 0;
-  while (!muxShutdown) { 
-        
-      if (select == 0)
-         select = PIPSocket::Select(dataSocket,ctrlSocket);
-
-      switch (select) {
-        case -1:
-            socketRead = H46019MultiplexSocket::e_rtp;
-            socket = &dataSocket;
-            select = 0;
-            break;
-        case -2:
-        case -3:
-            socketRead = H46019MultiplexSocket::e_rtcp;
-            socket = &ctrlSocket;
-            if (select == -3) select = -1;  // loop back to read RTP socket
-            else select = 0;
-            break;
-        default:
-            select = 0;
-            continue;
-      }
-
-         if (!muxShutdown && socket && socket->ReadFrom(buffer.GetPointer(),len,addr,port)) {
-             int actRead = socket->GetLastReadCount();
-             int muxHeader = buffer.GetMultiHeaderSize();
-             std::map<unsigned,PUDPSocket*>::const_iterator it;
-             switch (socketRead) {
-               case H46019MultiplexSocket::e_rtp:
-               {
-                 DWORD multiplexID=0;
-                 if (PNatMethod_H46019::IsMultiplexed() && !buffer.IsValidRTPPayload()) {
-                     if (!buffer.IsNotMultiplexed()) {
-                         PTRACE(2,"H46019M\tBad RTP MUX Packet received from " << addr << ":" << port);
-                         continue;
-                     }
-                     // We have received a valid RTP UnMuxed Packet.
-                     muxHeader=0;  // Read from the first byte.
-                     multiplexID = ResolveMuxIDFromSourceAddress(rtpSocketMap, rtpPortMap, addr, port);
-                 } else {
-                     multiplexID = buffer.GetMultiplexID();
-                 }
-
-                 it = rtpSocketMap.find(multiplexID);
-                 if (it == rtpSocketMap.end()) {
-                     unsigned badMUXid = multiplexID;
-                     unsigned rightMUXid=0;
-                     unsigned detected = ResolveSession(rtpSocketMap, badMUXid, true, addr, port, rightMUXid);
-                     if (!detected) {
-                          PTRACE(2,"H46019M\tReceived RTP packet with unknown MUX ID " << badMUXid << " " << addr << ":" << port);
-                          continue;
-                     }
-                     it = rtpSocketMap.find(detected);
-                     if (it == rtpSocketMap.end()) continue;
-
-                     if (rightMUXid == 0) {
-                          PTRACE(2,"H46019M\tERROR: Receive UnMultiplex Packet " << " " << addr << ":" << port);
-                          ((H46019UDPSocket *)it->second)->WriteMultiplexBuffer(buffer.GetPointer(), actRead, addr, port);
-                           continue;
-                     }
-                     PTRACE(2,"H46019M\tERROR: Recover Receive Multiplex Session " << rightMUXid  << " incorrectly sent as " << badMUXid);
-                 } 
-                 break;
-               }
-               case H46019MultiplexSocket::e_rtcp:
-                 it = rtcpSocketMap.find(buffer.GetMultiplexID());
-                 if (it == rtcpSocketMap.end()) {
-                     PTRACE(2,"H46019M\tReceived RTCP packet with unknown MUX ID " 
-                                        << buffer.GetMultiplexID() << " " << addr << ":" << port);
-                     continue;
-                 }
-                 break;
-               default:
-                     PTRACE(2,"H46019M\tUnknown Muxed RTP packet received from " << addr << ":" << port);
-                     continue;
-             }
-
-             ((H46019UDPSocket *)it->second)->WriteMultiplexBuffer(buffer.GetPointer()+muxHeader, actRead-muxHeader, addr, port);
-             len = bufferLen;
-         } else {
-             if (muxShutdown) continue;
-
-              switch (socket->GetErrorNumber(PChannel::LastReadError)) {
-                case ECONNRESET :
-/*                PTRACE(2, "H46019M\tUDP Port Reset! Closing all Sockets");
-                  if (socketRead == H46019MultiplexSocket::e_rtp)
-                             CloseAllSessions(rtpSocketMap);
-                   continue; */
-                case ECONNREFUSED :
-                  PTRACE(2, "H46019M\tUDP Port on remote not ready.");
-                  continue;
-
-                case EMSGSIZE :
-                  PTRACE(2, "H46019M\tRead UDP packet too large for buffer of " << len << " bytes.");
-                  continue;
-
-                case EBADF : // Interface went down
-                case EINTR :
-                case EAGAIN : // Shouldn't happen, but it does.
-                  continue;
-              }
-         }
-     }
-
-     m_readThread = NULL;
-     PTRACE(4, "H46019M\tMultiplex Read Shutdown");
-}
-
-void PNatMethod_H46019::RegisterSocket(bool rtp, unsigned id, PUDPSocket * socket)
-{
-    if (rtp)
-       rtpSocketMap.insert(pair<unsigned, PUDPSocket*>(id,socket));
-    else
-       rtcpSocketMap.insert(pair<unsigned, PUDPSocket*>(id,socket));
-}
-
-void PNatMethod_H46019::UnregisterSocket(bool rtp, unsigned id)
-{
-    if (rtp) {
-        std::map<unsigned,PUDPSocket*>::iterator it = rtpSocketMap.find(id);
-        if (it != rtpSocketMap.end())
-             rtpSocketMap.erase(it);
-    } else {
-        std::map<unsigned,PUDPSocket*>::iterator it = rtcpSocketMap.find(id);
-        if (it != rtcpSocketMap.end())
-             rtcpSocketMap.erase(it);
-    }
-
-    if (rtp && rtpSocketMap.size() == 0) {
-        muxShutdown = true;
-        if (muxSockets.rtp) { 
-            muxSockets.rtp->Close();
-            delete muxSockets.rtp;
-            muxSockets.rtp = NULL;
-        }
-        if (muxSockets.rtcp) { 
-            muxSockets.rtcp->Close();
-            delete muxSockets.rtcp;
-            muxSockets.rtcp = NULL;
-        }
-        EnableMultiplex(false);
-    }
-}
-
 #endif
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 #ifdef H323_H46019M
 H46019MultiplexSocket::H46019MultiplexSocket()
- : m_subSocket(NULL), m_plexType(e_unknown)
+ : m_subSocket(NULL)
 {   
 }
 
 H46019MultiplexSocket::H46019MultiplexSocket(bool rtp)
-: m_subSocket(NULL), m_plexType(rtp ? e_rtp : e_rtcp)
+: m_subSocket(NULL)
 {
-
+    SetType(rtp ? H323UDPSocket::rtp : H323UDPSocket::rtcp);
 }
 
 H46019MultiplexSocket::~H46019MultiplexSocket()
@@ -995,15 +673,6 @@ H46019MultiplexSocket::~H46019MultiplexSocket()
         delete m_subSocket;
 }
 
-H46019MultiplexSocket::MuxType H46019MultiplexSocket::GetMultiplexType() const
-{
-    return m_plexType;
-}
-
-void H46019MultiplexSocket::SetMultiplexType(H46019MultiplexSocket::MuxType type)
-{
-    m_plexType = type;
-}
 
 PBoolean H46019MultiplexSocket::GetLocalAddress(Address & addr, WORD & port)
 {
@@ -1049,12 +718,17 @@ PBoolean H46019MultiplexSocket::Close()
 #endif
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-H46019UDPSocket::H46019UDPSocket(H46018Handler & _handler, H323Connection::SessionInformation * info, bool _rtpSocket)
-: m_Handler(_handler), m_Session(info->GetSessionID()), m_Token(info->GetCallToken()),
-  m_CallId(info->GetCallIdentifer()), m_CUI(info->GetCUI()),
+H46019UDPSocket::H46019UDPSocket(H46018Handler & _handler, PObject * info, bool _rtpSocket)
+: m_Handler(_handler), m_Session(((H323MultiplexConnection::SessionInformation*)info)->GetSessionID()),
+  m_Token(((H323MultiplexConnection::SessionInformation*)info)->GetCallToken()),
+  m_CallId(((H323MultiplexConnection::SessionInformation*)info)->GetCallIdentifer()),
+  m_CUI(((H323MultiplexConnection::SessionInformation*)info)->GetCUI()),
   keepport(0), keeppayload(0), keepTTL(0), keepseqno(0), keepStartTime(NULL), initialKeep(NULL),
 #ifdef H323_H46019M
-  m_recvMultiplexID(info->GetRecvMultiplexID()), m_sendMultiplexID(0), m_multiBuffer(0), m_shutDown(false),
+  m_connection(((H323MultiplexConnection::SessionInformation*)info)->GetMultiplexConnection()),
+  m_muxHandler(m_connection->GetMultiplexHandler()),
+  m_recvMultiplexID(((H323MultiplexConnection::SessionInformation*)info)->GetRecvMultiplexID()), 
+  m_sendMultiplexID(0),  m_multiBuffer(0), m_shutDown(false),
 #endif
 #if defined(H323_H46024A) || defined(H323_H46024B)
   m_CUIrem(PString()), m_locAddr(PIPSocket::GetDefaultIpAny()),  m_locPort(0),
@@ -1070,7 +744,11 @@ H46019UDPSocket::H46019UDPSocket(H46018Handler & _handler, H323Connection::Sessi
 #endif
   rtpSocket(_rtpSocket)
 {
- 
+    if (m_recvMultiplexID) {
+        PUDPSocket * & muxSocket = m_connection->GetMultiplexSocket(rtpSocket ? H323UDPSocket::rtp : H323UDPSocket::rtcp);
+        if (muxSocket)
+            muxSocket->GetLocalAddress(m_muxLocalAddress);
+    }
 }
 
 H46019UDPSocket::~H46019UDPSocket()
@@ -1080,10 +758,8 @@ H46019UDPSocket::~H46019UDPSocket()
     delete keepStartTime;
 
 #ifdef H323_H46019M
-    if (PNatMethod_H46019::IsMultiplexed()) {
-        PNatMethod_H46019::UnregisterSocket(rtpSocket, m_recvMultiplexID);
-        ClearMultiplexBuffer();
-    }
+    if (m_muxHandler)
+        m_muxHandler->Unregister(m_recvMultiplexID, rtpSocket ? H323UDPSocket::rtp : H323UDPSocket::rtcp);
 #endif
 
 #ifdef H323_H46024A
@@ -1252,9 +928,10 @@ PBoolean H46019UDPSocket::SendRTCPFrame(RTP_ControlFrame & report, const PIPSock
 PBoolean H46019UDPSocket::GetLocalAddress(PIPSocket::Address & addr, WORD & port) 
 {
 #ifdef H323_H46019M
-    if (PNatMethod_H46019::IsMultiplexed()) {
-       PNatMethod_H46019::GetMultiplexSocket(rtpSocket)->GetLocalAddress(addr, port);
-       return true;
+    if (m_recvMultiplexID) {
+        addr = m_muxLocalAddress.GetAddress();
+        port = m_muxLocalAddress.GetPort();
+        return true;
     }
 #endif
 
@@ -1292,15 +969,11 @@ void H46019UDPSocket::SetTTL(unsigned val)
 
 void H46019UDPSocket::GetMultiplexAddress(H323TransportAddress & address, unsigned & multiID, PBoolean OLCack)
 {
-    // Get the local IP/Port of the underlying Multiplexed RTP;
-    if (PNatMethod_H46019::IsMultiplexed()) {
-        Address addr;
-        WORD port;
-        PNatMethod_H46019::GetMultiplexSocket(rtpSocket)->GetLocalAddress(addr,port);
-        address = H323TransportAddress(addr,port);
-    }
-
     multiID = m_recvMultiplexID;
+
+    // Get the local IP/Port of the underlying Multiplexed RTP;
+    if (m_recvMultiplexID)
+        address = H323TransportAddress(m_muxLocalAddress.GetAddress(), m_muxLocalAddress.GetPort());
 }
 
 unsigned H46019UDPSocket::GetRecvMultiplexID() const
@@ -1443,29 +1116,23 @@ PBoolean H46019UDPSocket::ReadSocket(void * buf, PINDEX & len, Address & addr, W
 
 PBoolean H46019UDPSocket::WriteSocket(const void * buf, PINDEX len, const Address & addr, WORD port, unsigned altMux)
 {
-    unsigned mux = m_sendMultiplexID;
-    if (altMux) mux = altMux;
-
-    if (!PNatMethod_H46019::IsMultiplexed() && !mux)      // No Multiplex Rec'v or Send
-         return PUDPSocket::WriteTo(buf,len, addr, port);
-    else {
 #ifdef H323_H46024A
-        if (m_remAddr.IsAny()) {
-             m_remAddr = addr;  
-             m_remPort = port;
-        }
+    if (m_remAddr.IsAny()) {
+        m_remAddr = addr;
+        m_remPort = port;
+    }
 #endif
-        PUDPSocket * muxSocket = PNatMethod_H46019::GetMultiplexSocket(rtpSocket);
-        if (muxSocket && !mux)                            // Rec'v Multiplex
-            return muxSocket->WriteTo(buf,len, addr, port);
 
-        RTP_MultiDataFrame frame(mux,(const BYTE *)buf,len);
-        if (!muxSocket)                                                // Send Multiplex
-            return PUDPSocket::WriteTo(frame.GetPointer(), frame.GetSize(), addr, port);                                   
-        else                                                           //  Send & Rec'v Multiplexed
-            return muxSocket->WriteTo(frame.GetPointer(), frame.GetSize(), addr, port);
-                                          
-    }                                                     
+    if (len == 1 && m_recvMultiplexID > 0)  // Ignore close packet send.
+        return false;
+
+    if (m_recvMultiplexID)  // Multiplex Rec'v  Send from same place
+        return m_connection->WriteTo(rtpSocket ? H323UDPSocket::rtp : H323UDPSocket::rtcp, m_sendMultiplexID, buf, len, addr, port);
+    else if (m_sendMultiplexID) {  // Send Multiplex only from seperate port
+        RTP_MultiDataFrame frame(m_sendMultiplexID, (const BYTE *)buf, len);                                              
+        return PUDPSocket::WriteTo(frame.GetPointer(), frame.GetSize(), addr, port);
+    } else
+        return PUDPSocket::WriteTo(buf, len, addr, port);
 }
 #endif
 
@@ -1543,17 +1210,21 @@ void H46019UDPSocket::SetAlternateAddresses(const H323TransportAddress & address
 
 void H46019UDPSocket::GetAlternateAddresses(H323TransportAddress & address, PString & cui, unsigned & muxID)
 {
- 
-    PIPSocket::Address tempAddr;
-    WORD               tempPort;
-    if (GetLocalAddress(tempAddr,tempPort))
-        address = H323TransportAddress(tempAddr,tempPort);
 
 #ifdef H323_H46019M
-    muxID = m_recvMultiplexID;
-#else
-    muxID = 0;
+    if (m_recvMultiplexID > 0) {
+        muxID = m_recvMultiplexID;
+        address = H323TransportAddress(m_muxLocalAddress.GetAddress(), m_muxLocalAddress.GetPort());
+    }
+    else 
 #endif
+    {
+        muxID = 0;
+        PIPSocket::Address tempAddr;
+        WORD               tempPort;
+        if (GetLocalAddress(tempAddr, tempPort))
+            address = H323TransportAddress(tempAddr, tempPort);
+    }
 
     if (!rtpSocket)
         cui = m_CUI;

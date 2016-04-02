@@ -39,11 +39,11 @@ public:
     PNatMethod_H46024();
 
     ~PNatMethod_H46024();
-
+   
 #if PTLIB_VER >= 2130
     struct PortInfo {
-        PortInfo(WORD port = 0)
-            : basePort(port), maxPort(port), currentPort(port) {}
+        PortInfo(WORD base = 0, WORD max = 0)
+            : basePort(base), maxPort(max == 0 ? base : max), currentPort(base) {}
         PMutex mutex;
         WORD   basePort;
         WORD   maxPort;
@@ -142,8 +142,6 @@ protected:
         // Do a NAT test
         PSTUNClient::NatTypes NATTest();
 
-        void SetConnectionSockets(PUDPSocket * data,  PUDPSocket * control,  
-                              H323Connection::SessionInformation * info );
 
 #if PTLIB_VER >= 2130
         PortInfo singlePortInfo;
