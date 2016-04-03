@@ -651,10 +651,10 @@ class H46019UDPSocket : public H323UDPSocket
 
 #ifdef H323_H46024A
     // H46024 Annex A support
-    PBoolean ReceivedProbePacket(const RTP_ControlFrame & frame, bool & probe, bool & success);
+    PBoolean ReceivedProbePacket(const RTP_ControlFrame & frame, bool & reply, bool & sendResponse);
     void BuildProbe(RTP_ControlFrame & report, bool reply);
     void StartProbe();
-    void ProbeReceived(bool probe, const PIPSocket::Address & addr, WORD & port);
+    void ProbeResponse(bool reply, const PIPSocket::Address & addr, WORD & port);
     void SetProbeState(probe_state newstate);
     int GetProbeState() const;
     PMutex probeMutex;
@@ -717,7 +717,7 @@ private:
     PBoolean    m_h46024b;
 #endif
 
-	PAdaptiveDelay selectBlock;
+	PAdaptiveDelay readBlock;
     bool rtpSocket;
 
 };

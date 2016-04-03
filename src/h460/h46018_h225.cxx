@@ -1032,28 +1032,21 @@ PBoolean H46019UDPSocket::WriteMultiplexBuffer(const void * buf, PINDEX len, con
 
     m_multiMutex.Wait();
       m_multQueue.push(packet);
+      m_multiBuffer++;
     m_multiMutex.Signal();
-    m_multiBuffer++;
 
-    if (!rtpSocket) {
-        RTP_ControlFrame frame(len); 
-        memcpy(frame.GetPointer(),buf,len);
-        if (frame.GetPayloadType() == RTP_ControlFrame::e_ApplDefined) {
-            PTRACE(6,"H46024A\tReading RTCP Probe Packet.");
-            PBYTEArray tempData;
-            tempData.SetSize(2048);
-            int tempLen = 2048;
-            Address tempAddr;
-            return ReadFrom((void *)tempData.GetPointer(), tempLen, tempAddr, port);
-        }
-    }
+
     return true;
 }
 
 PBoolean H46019UDPSocket::ReadMultiplexBuffer(void * buf, PINDEX & len, Address & addr, WORD & port)
 {
+ 
+    while (!m_shutDown && (m_multiBuffer == 0)) {
+        readBlock.Delay(3);
+    }
 
-     if (m_multiBuffer == 0 || m_multQueue.size() == 0)
+    if (m_shutDown)
         return false;
 
     m_multiMutex.Wait();
@@ -1063,13 +1056,13 @@ PBoolean H46019UDPSocket::ReadMultiplexBuffer(void * buf, PINDEX & len, Address 
       port = packet.fromPort;
       len = packet.frame.GetSize();
       memcpy(buf, packet.frame.GetPointer(), len);
-
       m_multQueue.pop();
+      m_multiBuffer--;
     m_multiMutex.Signal();
 
-    m_multiBuffer--;
     return true;
 }
+
 
 void H46019UDPSocket::ClearMultiplexBuffer()
 {
@@ -1083,15 +1076,11 @@ void H46019UDPSocket::ClearMultiplexBuffer()
      m_multiBuffer = 0;
 }
     
+
 PBoolean H46019UDPSocket::DoPseudoRead(int & selectStatus)
 {
    if (m_recvMultiplexID == 0)
        return false;
-
-   if (rtpSocket) {
-	   while (!m_shutDown && m_multiBuffer == 0)
-          selectBlock.Delay(3);
-   }
 
    if (m_shutDown)
        selectStatus += PSocket::Interrupted;
@@ -1101,21 +1090,23 @@ PBoolean H46019UDPSocket::DoPseudoRead(int & selectStatus)
    return rtpSocket;
 }
 
+
 PBoolean H46019UDPSocket::ReadSocket(void * buf, PINDEX & len, Address & addr, WORD & port)
 {
-    // TODO: Support for receive side only multiplex...SH
-    if (m_recvMultiplexID == 0)
-        return PUDPSocket::ReadFrom(buf, len, addr, port);
-    else
+    if (m_recvMultiplexID) {
         if (ReadMultiplexBuffer(buf, len, addr, port)) {
             lastReadCount = len;
             return true;
         } else
             return false;
+    } else
+        return PUDPSocket::ReadFrom(buf, len, addr, port);
 }
+
 
 PBoolean H46019UDPSocket::WriteSocket(const void * buf, PINDEX len, const Address & addr, WORD port, unsigned altMux)
 {
+
 #ifdef H323_H46024A
     if (m_remAddr.IsAny()) {
         m_remAddr = addr;
@@ -1126,10 +1117,13 @@ PBoolean H46019UDPSocket::WriteSocket(const void * buf, PINDEX len, const Addres
     if (len == 1 && m_recvMultiplexID > 0)  // Ignore close packet send.
         return false;
 
+    unsigned mux = m_sendMultiplexID;
+    if (altMux) mux = altMux;
+
     if (m_recvMultiplexID)  // Multiplex Rec'v  Send from same place
-        return m_connection->WriteTo(rtpSocket ? H323UDPSocket::rtp : H323UDPSocket::rtcp, m_sendMultiplexID, buf, len, addr, port);
+        return m_connection->WriteTo(rtpSocket ? H323UDPSocket::rtp : H323UDPSocket::rtcp, mux, buf, len, addr, port);
     else if (m_sendMultiplexID) {  // Send Multiplex only from seperate port
-        RTP_MultiDataFrame frame(m_sendMultiplexID, (const BYTE *)buf, len);                                              
+        RTP_MultiDataFrame frame(mux, (const BYTE *)buf, len);                                              
         return PUDPSocket::WriteTo(frame.GetPointer(), frame.GetSize(), addr, port);
     } else
         return PUDPSocket::WriteTo(buf, len, addr, port);
@@ -1172,11 +1166,11 @@ void H46019UDPSocket::SetProbeState(probe_state newstate)
     PWaitAndSignal m(probeMutex);
 
     if (m_state >= newstate) {
-        PTRACE(4,"H46024\ts:" << m_Session << (rtpSocket ? " RTP " : " RTCP ") << "current state not changed from " << ProbeState(m_state));
+        PTRACE(4,"H46024A\ts:" << m_Session << (rtpSocket ? " RTP " : " RTCP ") << "current state not changed from " << ProbeState(m_state));
         return;
     }
 
-    PTRACE(4,"H46024\ts:" << m_Session << (rtpSocket ? " RTP " : " RTCP ") << " changing state from " << ProbeState(m_state) 
+    PTRACE(4,"H46024A\ts:" << m_Session << (rtpSocket ? " RTP " : " RTCP ") << "changing state from " << ProbeState(m_state) 
         << " to " << ProbeState(newstate));
 
     m_state = newstate;
@@ -1194,7 +1188,7 @@ void H46019UDPSocket::SetAlternateAddresses(const H323TransportAddress & address
     address.GetIpAndPort(m_altAddr,m_altPort);
     m_altMuxID = muxID;
 
-    PTRACE(6,"H46024A\ts: " << m_Session << (rtpSocket ? " RTP " : " RTCP ")  
+    PTRACE(6,"H46024A\ts:" << m_Session << (rtpSocket ? " RTP " : " RTCP ")  
         << "Remote Alt: " << m_altAddr << ":" << m_altPort << " CUI: " << cui);
 
     if (!rtpSocket) {
@@ -1203,8 +1197,8 @@ void H46019UDPSocket::SetAlternateAddresses(const H323TransportAddress & address
             SetProbeState(e_idle);
             StartProbe();
         // We Already have a direct connection but we are waiting on the CUI for the reply
-        } else if (GetProbeState() == e_verify_receiver) 
-            ProbeReceived(false,m_pendAddr,m_pendPort);
+        } else if ((GetProbeState() == e_verify_receiver) && !m_pendAddr.IsAny())
+            ProbeResponse(false,m_pendAddr,m_pendPort);
     }
 }
 
@@ -1246,7 +1240,7 @@ PBoolean H46019UDPSocket::IsAlternateAddress(const Address & address,WORD port)
 void H46019UDPSocket::StartProbe()
 {
 
-    PTRACE(4,"H46024A\ts: " << m_Session << " Starting direct connection probe.");
+    PTRACE(4,"H46024A\ts:" << m_Session << " Start probing " << m_altAddr << ":" << m_altPort << " ID: " << m_altMuxID);
 
     SetProbeState(e_probing);
     m_probes = 0;
@@ -1254,10 +1248,10 @@ void H46019UDPSocket::StartProbe()
     m_Probe.RunContinuous(H46024A_PROBE_INTERVAL); 
 }
 
-void H46019UDPSocket::BuildProbe(RTP_ControlFrame & report, bool probing)
+void H46019UDPSocket::BuildProbe(RTP_ControlFrame & report, bool reply)
 {
     report.SetPayloadType(RTP_ControlFrame::e_ApplDefined);
-    report.SetCount((probing ? 0 : 1));  // SubType Probe
+    report.SetCount((reply ? 1 : 0));  // SubType Probe
     
     report.SetPayloadSize(sizeof(probe_packet));
 
@@ -1290,7 +1284,7 @@ void H46019UDPSocket::Probe(PTimer &,  H323_INT)
 
     RTP_ControlFrame report;
     report.SetSize(4+sizeof(probe_packet));
-    BuildProbe(report, true);
+    BuildProbe(report, false);
 
      if (!WriteTo(report.GetPointer(),report.GetSize(),
                  m_altAddr, m_altPort, m_altMuxID)) {
@@ -1307,19 +1301,19 @@ void H46019UDPSocket::Probe(PTimer &,  H323_INT)
                     << GetErrorText(PChannel::LastWriteError));
         }
     } else {
-        PTRACE(6, "H46024A\ts" << m_Session <<" RTCP Probe sent: " << m_altAddr << ":" << m_altPort);    
+        PTRACE(6, "H46024A\ts" << m_Session <<" RTCP Probe sent: " << m_altAddr << ":" << m_altPort << " ID: " << m_altMuxID);
     }
 }
 
-void H46019UDPSocket::ProbeReceived(bool probe, const PIPSocket::Address & addr, WORD & port)
+void H46019UDPSocket::ProbeResponse(bool reply, const PIPSocket::Address & addr, WORD & port)
 {
 
-    if (probe) {
-        m_Handler.H46024ADirect(true,m_Token);  //< Tell remote to wait for connection
+    if (reply) {  //< Tell remote to wait for connection
+        m_Handler.H46024ADirect(true,m_Token);
     } else if (addr.IsValid() && !addr.IsLoopback() && !addr.IsAny()) {
         RTP_ControlFrame reply;
         reply.SetSize(4+sizeof(probe_packet));
-        BuildProbe(reply, false);
+        BuildProbe(reply, true);
         if (SendRTCPFrame(reply,addr,port,m_altMuxID)) {
             PTRACE(4, "H46024A\tRTCP Reply packet sent: " << addr << ":" << port);
         }
@@ -1355,7 +1349,7 @@ PBoolean H46019UDPSocket::ReadFrom(void * buf, PINDEX len, Address & addr, WORD 
     while (PUDPSocket::ReadFrom(buf, len, addr, port)) {
 #endif
 #if defined(H323_H46024A) || defined(H323_H46024B)
-      bool probe = false; bool success = false;
+        bool reply = false; bool sendResponseNow = false;
       RTP_ControlFrame frame(2048);
         /// Set the detected routed remote address (on first packet received)
         if (m_remAddr.IsAny()) {   
@@ -1380,13 +1374,14 @@ PBoolean H46019UDPSocket::ReadFrom(void * buf, PINDEX len, Address & addr, WORD 
             case e_verify_receiver:                        // RTCP only
                 frame.SetSize(len);
                 memcpy(frame.GetPointer(),buf,len);
-                if (ReceivedProbePacket(frame,probe,success)) {
-                    if (success)
-                        ProbeReceived(probe,addr,port);
+                if (ReceivedProbePacket(frame,reply, sendResponseNow)) {
+                    if (sendResponseNow)
+                        ProbeResponse(reply,addr,port);
                     else {
-                        m_pendAddr = addr; m_pendPort = port;
+                        m_pendAddr = addr;  
+                        m_pendPort = port;
                     }
-                  continue;  // don't forward on probe packets.
+                    continue;  // don't forward on probe packets.
                 }
                 break;
             case e_wait:
@@ -1444,20 +1439,17 @@ PBoolean H46019UDPSocket::WriteTo(const void * buf, PINDEX len, const Address & 
 
 
 #ifdef H323_H46024A
-PBoolean H46019UDPSocket::ReceivedProbePacket(const RTP_ControlFrame & frame, bool & probe, bool & success)
+PBoolean H46019UDPSocket::ReceivedProbePacket(const RTP_ControlFrame & frame, bool & reply, bool & sendResponse)
 {
     if (frame.GetPayloadType() != RTP_ControlFrame::e_ApplDefined) {
         // Not a probe packet ignore
         return false;  
     }
 
-    if (m_CUIrem.IsEmpty()) {
-        PTRACE(4, "H46024A\ts:" << m_Session <<" Probe received too early. local not setup. IGNORING!");
-        return false;
-    }
+    reply = (frame.GetCount() > 0);
+
 
     //Inspect the probe packet
-    success = false;
     int cstate = GetProbeState();
     if (cstate == e_notRequired) {
         PTRACE(6, "H46024A\ts:" << m_Session <<" received RTCP probe packet. LOGIC ERROR!");
@@ -1465,12 +1457,11 @@ PBoolean H46019UDPSocket::ReceivedProbePacket(const RTP_ControlFrame & frame, bo
     }
 
     if (cstate > e_probing) {
-        PTRACE(6, "H46024A\ts:" << m_Session <<" received RTCP probe packet. IGNORING! Already authenticated.");
+        PTRACE(6, "H46024A\ts:" << m_Session << " received " << (reply ?  "Reply" : "Request") << " RTCP packet. IGNORING! Already authenticated.");
         return false;
     }
 
-    probe = (frame.GetCount() > 0);
-    PTRACE(4, "H46024A\ts:" << m_Session <<" RTCP Probe " << (probe ? "Reply" : "Request") << " received.");
+    PTRACE(4, "H46024A\ts:" << m_Session <<" RTCP Probe " << (reply ? "Reply" : "Request") << " received.");
 
     BYTE * data = frame.GetPayloadPtr();
     PBYTEArray bytes(20);
@@ -1480,18 +1471,25 @@ PBoolean H46019UDPSocket::ReceivedProbePacket(const RTP_ControlFrame & frame, bo
     PBYTEArray val(bin_digest.GetPointer(),bin_digest.GetSize());
 
     if (bytes != val) {
-        PTRACE(4, "H46024A\ts:" << m_Session <<" RTCP Probe " << (probe ? "Reply" : "Request") << " verify FAILURE");
+        PTRACE(4, "H46024A\ts:" << m_Session <<" RTCP Probe " << (reply ? "Reply" : "Request") << " verify FAILURE");
         return false;
     }
 
-    PTRACE(4, "H46024A\ts:" << m_Session <<" RTCP Probe " << (probe ? "Reply" : "Request") << " verified.");
-    if (probe)  // We have a reply
+    PTRACE(4, "H46024A\ts:" << m_Session <<" RTCP Probe " << (reply ? "Reply" : "Request") << " verified.");
+
+    if (!reply && m_CUIrem.IsEmpty()) {
+        PTRACE(4, "H46024A\ts:" << m_Session << " received " << (reply ? "Reply" : "Request") << " RTCP packet too early. local not setup. Waiting for remote signal!");
+        SetProbeState(e_verify_receiver);
+        return false;
+    }
+
+    if (reply)  // We have a reply
         SetProbeState(e_verify_sender);
-    else 
+    else
         SetProbeState(e_verify_receiver);
 
+    sendResponse = true;
     m_Probe.Stop();
-    success = true;
 
     return true;
 }
