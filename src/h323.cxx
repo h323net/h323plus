@@ -6070,7 +6070,7 @@ PBoolean H323Connection::OnReceiveOLCGenericInformation(unsigned sessionID,
             }
 #ifdef H323_H46024A
             if (m_H46024Aenabled && (oid.AsString() == H46024AOID)) {
-                PTRACE(4,"H46024A\tAlt Port Info:\n" << msg);
+                PTRACE(4,"H46024A\tRec'd Alt Port Info:\n" << msg);
                 PString m_CUI = PString();  H323TransportAddress m_altAddr1, m_altAddr2; unsigned m_altMuxID=0;
                 bool error = false;
                 if (!GetStringGenericOctetString(0,msg,m_CUI))  error = true;
