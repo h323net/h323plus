@@ -158,6 +158,11 @@ ifndef OH323_SUPPRESS_H235
 SOURCES		+= $(OH323_SRCDIR)/h235.cxx 
 endif
 
+ifdef H323_NAT
+HEADER_FILES    += $(OH323_INCDIR)/h323rtpmux.h 
+COMMON_SOURCES  += $(OH323_SRCDIR)/h323rtpmux.cxx 
+endif
+
 ifdef HAS_OPENSSL
 COMMON_SOURCES	+= $(OH323_SRCDIR)/h235auth1.cxx
 
