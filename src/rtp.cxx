@@ -439,6 +439,13 @@ RTP_MultiControlFrame::RTP_MultiControlFrame(PINDEX rtplen)
 {
 }
 
+RTP_MultiControlFrame::RTP_MultiControlFrame(DWORD id, const BYTE * buffer, PINDEX rtplen)
+    : PBYTEArray(rtplen + MUX_HEADER_SIZE)
+{
+    memcpy(theArray + MUX_HEADER_SIZE, buffer, rtplen);
+    *(PUInt32b *)&theArray[0] = id;
+}
+
 int  RTP_MultiControlFrame::GetMultiHeaderSize() const
 {
     return 4;

@@ -326,6 +326,12 @@ class RTP_MultiControlFrame : public PBYTEArray
       PINDEX rtplen          ///< Length of RTP Frame
   );
 
+  RTP_MultiControlFrame(
+      DWORD id,              ///< Multiplex id
+      BYTE const * buffer,   ///< Pointer to an array of BYTEs.
+      PINDEX length          ///< Number of elements pointed to by \p buffer.
+  );
+
   int  GetMultiHeaderSize() const;
   WORD GetMultiplexID() const;
   void SetMultiplexID(WORD id);
