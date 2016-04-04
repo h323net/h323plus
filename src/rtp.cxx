@@ -1503,15 +1503,10 @@ PBoolean RTP_UDP::Open(PIPSocket::Address _localAddress,
     if (meth->CreateSocketPair(dataSocket, controlSocket, localAddress)) {
 #endif
 
-#if PTLIB_VER >= 2130
       ((H323UDPSocket*)dataSocket)->GetLocalAddress(localAddress, localDataPort);
       ((H323UDPSocket*)controlSocket)->GetLocalAddress(localAddress, localControlPort);
       PString name = meth->GetMethodName(); 
-#else
-      dataSocket->GetLocalAddress(localAddress, localDataPort);
-      controlSocket->GetLocalAddress(localAddress, localControlPort);
-      PString name = meth->GetName();
-#endif
+
       PTRACE(4, "RTP\tNAT Method " << name << " created NAT ports " << localDataPort << " " << localControlPort);
     }
     else
@@ -1644,12 +1639,18 @@ PBoolean RTP_UDP::PseudoRead(int & selectStatus)
     if (!controlSocket || !dataSocket)
         return true;
 
-#if PTLIB_VER >= 2130
-    return (((H323UDPSocket*)controlSocket)->DoPseudoRead(selectStatus) || 
-            ((H323UDPSocket*)dataSocket)->DoPseudoRead(selectStatus));
-#elif PTLIB_VER >= 290
-    return (controlSocket->DoPseudoRead(selectStatus) || 
-            dataSocket->DoPseudoRead(selectStatus));
+#if PTLIB_VER >= 290
+    bool muxSockets = false;
+    do {
+        muxSockets = (((H323UDPSocket*)controlSocket)->DoPseudoRead(selectStatus) &&
+                      ((H323UDPSocket*)dataSocket)->DoPseudoRead(selectStatus));
+
+        if (muxSockets && selectStatus == 0)
+            PThread::Sleep(2);
+
+    } while (!shutdownRead && muxSockets && selectStatus == 0);
+        
+    return muxSockets;
 #else
     return false;
 #endif
@@ -1662,7 +1663,6 @@ PBoolean RTP_UDP::ReadData(RTP_DataFrame & frame, PBoolean loop)
     PTime start;
 #endif
     int selectStatus = 0;
-
     if (!PseudoRead(selectStatus))
        selectStatus = PSocket::Select(*dataSocket, *controlSocket, reportTimer);
 #ifdef H323_RTP_AGGREGATE

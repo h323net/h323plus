@@ -1010,31 +1010,38 @@ void H46019UDPSocket::SetMultiplexID(unsigned id, PBoolean isAck)
 PBoolean H46019UDPSocket::WriteMultiplexBuffer(const void * buf, PINDEX len, const Address & addr, WORD port)
 {
 
-    if (rtpSocket && len == 12) {  /// Filter out RTP keepAlive Packets
+    if (rtpSocket && len <= RTP_DataFrame::MinHeaderSize) {
 #ifdef H323_H46024B
-        if (m_h46024b && addr == m_altAddr /*&& port == m_altPort*/) {
-            PTRACE(4, "H46024B\ts:" << m_Session << (rtpSocket ? " RTP " : " RTCP ")  
-                << "Switching to " << addr << ":" << port << " from " << m_remAddr << ":" << m_remPort);
-            m_detAddr = addr;  m_detPort = port;
-            SetProbeState(e_direct);
-            Keep.Stop();  // Stop the keepAlive Packets
-            m_h46024b = false;
-        }
+        if (len == RTP_DataFrame::MinHeaderSize) {  /// Filter out RTP keepAlive Packets
+            if (m_h46024b && addr == m_altAddr /*&& port == m_altPort*/) {
+                PTRACE(4, "H46024B\ts:" << m_Session << (rtpSocket ? " RTP " : " RTCP ")
+                    << "Switching to " << addr << ":" << port << " from " << m_remAddr << ":" << m_remPort);
+                m_detAddr = addr;  m_detPort = port;
+                SetProbeState(e_direct);
+                Keep.Stop();  // Stop the keepAlive Packets
+                m_h46024b = false;
+            }
+        } else
 #endif
+        {
+            PTRACE(4, "H46019\ts:" << m_Session << (rtpSocket ? " RTP " : " RTCP ") << " Received data packet too small : " << len << " bytes.");
+        }
         return true;
     }
 
     H46019MultiPacket packet;
-        packet.fromAddr = addr;
-        packet.fromPort = port;
-        packet.frame.SetSize(len);
-        memcpy(packet.frame.GetPointer(), buf, len);
+    packet.fromAddr = addr;
+    packet.fromPort = port;
+    packet.frame.SetSize(len);
+    memcpy(packet.frame.GetPointer(), buf, len);
 
     m_multiMutex.Wait();
       m_multQueue.push(packet);
-      m_multiBuffer++;
     m_multiMutex.Signal();
+    m_multiBuffer++;
 
+    PTRACE(6, "H46019\tWrite s:" << m_Session << (rtpSocket ? " RTP " : " RTCP ") 
+                            << " from " << addr << ":" << port << " " << len << " bytes.");
 
     return true;
 }
@@ -1051,14 +1058,16 @@ PBoolean H46019UDPSocket::ReadMultiplexBuffer(void * buf, PINDEX & len, Address 
 
     m_multiMutex.Wait();
      H46019MultiPacket & packet = m_multQueue.front();
-
-      addr = packet.fromAddr;
-      port = packet.fromPort;
-      len = packet.frame.GetSize();
-      memcpy(buf, packet.frame.GetPointer(), len);
-      m_multQueue.pop();
-      m_multiBuffer--;
+        addr = packet.fromAddr;
+        port = packet.fromPort;
+        len = packet.frame.GetSize();
+        memcpy(buf, packet.frame.GetPointer(), len);
+        m_multQueue.pop();
     m_multiMutex.Signal();
+    m_multiBuffer--;
+
+    PTRACE(6, "H46019\tRead s:" << m_Session << " " << (rtpSocket ? "RTP" : "RTCP") 
+                            << " from " << addr << ":" << port << " " << len << " bytes.");
 
     return true;
 }
@@ -1087,7 +1096,7 @@ PBoolean H46019UDPSocket::DoPseudoRead(int & selectStatus)
    else
        selectStatus += ((m_multiBuffer > 0) ? (rtpSocket ? -1 : -2) : 0);
 
-   return rtpSocket;
+   return true;
 }
 
 

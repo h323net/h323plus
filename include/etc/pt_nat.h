@@ -19,12 +19,6 @@
 
 #pragma once
 
-#if PTLIB_VER < 2130
-
-#define H323UDPSocket PUDPSocket
-
-#else
-
 class H323UDPSocket : public PUDPSocket
 {
     PCLASSINFO(H323UDPSocket, PUDPSocket);
@@ -68,9 +62,6 @@ public:
 private:
     Type m_type;
 };
-
-#endif // H323UDPSocket
-
 
 
 #if PTLIB_VER < 2130
