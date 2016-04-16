@@ -29,7 +29,7 @@ class H323_MediaManager : public PObject
         H323_MediaManager();
 
         virtual PBoolean SetColourFormat(unsigned id, const PString & colourFormat);
-        virtual const PString & GetColourFormat(unsigned id);
+        virtual void     GetColourFormat(unsigned id, PString & colourFormat);
 
         virtual PBoolean GetFrameSize(unsigned id, unsigned & width, unsigned & height);
 
@@ -84,6 +84,8 @@ protected:
     unsigned           m_szBufferSize;
     unsigned           m_finalHeight;
     unsigned           m_finalWidth;
+    PString            m_finalFormat;
+
 };
 
 PPLUGIN_STATIC_LOAD(External, PVideoOutputDevice);

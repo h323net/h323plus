@@ -34,9 +34,9 @@ PBoolean H323_MediaManager::SetColourFormat(unsigned id, const PString & colourF
     return false;
 }
 
-const PString & H323_MediaManager::GetColourFormat(unsigned id)
+void H323_MediaManager::GetColourFormat(unsigned id, PString & colourFormat)
 {
-    return "";
+    colourFormat = "YUV420P";
 }
 
 PBoolean H323_MediaManager::GetFrameSize(unsigned id, unsigned & width, unsigned & height)
@@ -61,7 +61,7 @@ PCREATE_VIDOUTPUT_PLUGIN(External);
 PVideoOutputDevice_External::PVideoOutputDevice_External()
 : m_streamID(-1), m_manager(NULL), m_videoFrameSize(0),
   m_szConverter(NULL), m_szFrameBuffer(0), m_szBufferSize(0), 
-  m_finalHeight(0), m_finalWidth(0)
+  m_finalHeight(0), m_finalWidth(0), m_finalFormat("YUV420P")
 {
     PVideoOutputDevice::SetColourFormat("YUV420P");
 }
@@ -78,16 +78,19 @@ bool PVideoOutputDevice_External::AttachManager(unsigned streamID, H323_MediaMan
     m_manager = manager;
     m_streamID = streamID;
 
-    PString finalFormat = m_manager->GetColourFormat(m_streamID);
+    if (!manager)
+        return true;
+
+    m_manager->GetColourFormat(m_streamID, m_finalFormat);
     if (!m_manager->GetFrameSize(m_streamID, m_finalWidth, m_finalHeight))
-        return SetColourFormat(finalFormat);
+        return SetColourFormat(m_finalFormat);
 
     PVideoFrameInfo xsrc(m_finalWidth, m_finalWidth, colourFormat, 25);
-    PVideoFrameInfo xdst(m_finalWidth, m_finalHeight, finalFormat, 25);
+    PVideoFrameInfo xdst(m_finalWidth, m_finalHeight, m_finalFormat, 25);
     m_szConverter = PColourConverter::Create(xsrc, xdst);
-    m_szBufferSize = CalculateFrameBytes(m_finalWidth, m_finalHeight, finalFormat);
+    m_szBufferSize = CalculateFrameBytes(m_finalWidth, m_finalHeight, m_finalFormat);
     m_szFrameBuffer.SetSize(m_szBufferSize);
-
+    return true;
 }
 
 
@@ -100,6 +103,8 @@ PBoolean PVideoOutputDevice_External::SetColourFormat(const PString & newFormat)
 {
     if (colourFormat *= "YUV420P")
         return PVideoOutputDevice::SetColourFormat(colourFormat);
+
+    return false;
 }
 
 
