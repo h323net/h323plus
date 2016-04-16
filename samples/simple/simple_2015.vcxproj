@@ -97,7 +97,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='No Trace|Win32'">
     <OutDir>$(SolutionDir)bin\$(ProjectName)\$(Platform)\$(PlatformToolset)\</OutDir>
-    <IntDir>$(OutDir)\$(Configuration)\</IntDir>
+    <IntDir>$(OutDir)$(Configuration)\</IntDir>
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(ProjectDir)..\..\..\ptlib\include;$(ProjectDir)..\..\..\ptlib\lib\$(Platform)\include;$(ProjectDir)..\..\include;$(ProjectDir)..\..\lib\$(Platform)\include;$(IncludePath)</IncludePath>
     <LibraryPath>..\..\..\ptlib\lib;..\..\lib\$(Platform)\$(PlatformToolset);$(LibraryPath)</LibraryPath>
@@ -107,7 +107,7 @@
     <IncludePath>$(ProjectDir)..\..\..\ptlib\include;$(ProjectDir)..\..\..\ptlib\lib\$(Platform)\include;$(ProjectDir)..\..\include;$(ProjectDir)..\..\lib\$(Platform)\include;$(IncludePath)</IncludePath>
     <LibraryPath>..\..\..\ptlib\lib;..\..\lib\$(Platform)\$(PlatformToolset);$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)bin\$(ProjectName)\$(Platform)\$(PlatformToolset)\</OutDir>
-    <IntDir>$(OutDir)\$(Configuration)\</IntDir>
+    <IntDir>$(OutDir)$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)bin\$(ProjectName)\$(Platform)\$(PlatformToolset)\</OutDir>
@@ -121,7 +121,7 @@
     <IncludePath>$(ProjectDir)..\..\..\ptlib\include;$(ProjectDir)..\..\..\ptlib\lib\$(Platform)\include;$(ProjectDir)..\..\include;$(ProjectDir)..\..\lib\$(Platform)\include;$(IncludePath)</IncludePath>
     <LibraryPath>..\..\..\ptlib\lib;..\..\lib\$(Platform)\$(PlatformToolset);$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)bin\$(ProjectName)\$(Platform)\$(PlatformToolset)\</OutDir>
-    <IntDir>$(OutDir)\$(Configuration)\</IntDir>
+    <IntDir>$(OutDir)$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(SolutionDir)bin\$(ProjectName)\$(Platform)\$(PlatformToolset)\</OutDir>
@@ -136,7 +136,7 @@
     <IncludePath>$(ProjectDir)..\..\..\ptlib\include;$(ProjectDir)..\..\..\ptlib\lib\$(Platform)\include;$(ProjectDir)..\..\include;$(ProjectDir)..\..\lib\$(Platform)\include;$(IncludePath)</IncludePath>
     <LibraryPath>..\..\..\ptlib\lib;..\..\lib\$(Platform)\$(PlatformToolset);$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)bin\$(ProjectName)\$(Platform)\$(PlatformToolset)\</OutDir>
-    <IntDir>$(OutDir)\$(Configuration)\</IntDir>
+    <IntDir>$(OutDir)$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)d</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='No Trace|Win32'">
