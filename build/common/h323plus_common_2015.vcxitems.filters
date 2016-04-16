@@ -332,6 +332,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\h323rtpmux.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\etc\pt_extdevices.h">
+      <Filter>Header Files\etc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="ASN Files">
@@ -826,6 +829,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h323rtpmux.cxx">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\etc\pt_extdevices.cxx">
+      <Filter>Source Files\etc</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

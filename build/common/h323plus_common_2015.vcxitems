@@ -22,6 +22,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\etc\h323datastore.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\etc\h323resampler.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\etc\pt_colour.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\etc\pt_extdevices.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\etc\pt_nat.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\etc\pt_stl.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\include\etc\pt_wasapi.h" />
@@ -191,6 +192,7 @@
       <Optimization>Disabled</Optimization>
       <BrowseInformation>true</BrowseInformation>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\etc\pt_extdevices.cxx" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\etc\pt_wasapi.cxx">
       <ExcludedFromBuild>false</ExcludedFromBuild>
       <Optimization>Disabled</Optimization>

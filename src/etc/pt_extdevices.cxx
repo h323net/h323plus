@@ -2,7 +2,7 @@
 /*
 * pt_extdevices.h
 *
-* Copyright (c) 2015 Spranto International Pte Ltd. All Rights Reserved.
+* Copyright (c) 2016 Spranto International Pte Ltd. All Rights Reserved.
 *
 * This Source Code Form is subject to the terms of the Mozilla Public
 * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -22,384 +22,172 @@
 
 #include "etc/pt_extdevices.h"
 
-PCREATE_SOUND_PLUGIN(IOSSound2, PSoundChannel_External)
+///////////////////////////////////////////////////////////////////////////////////////////
 
-PSoundChannel_External::PSoundChannel_External()
-    : m_loaded(false), m_running(false), lastReadCount(0)
+H323_MediaManager::H323_MediaManager()
 {
 
 }
 
-
-PSoundChannel_External::PSoundChannel_External(const PString &device,
-    Directions dir,
-    unsigned numChannels,
-    unsigned sampleRate,
-    unsigned bitsPerSample)
+PBoolean H323_MediaManager::SetColourFormat(unsigned id, const PString & colourFormat)
 {
-    Open(device, dir, numChannels, sampleRate, bitsPerSample);
+    return false;
+}
+
+const PString & H323_MediaManager::GetColourFormat(unsigned id)
+{
+    return "";
+}
+
+PBoolean H323_MediaManager::GetFrameSize(unsigned id, unsigned & width, unsigned & height)
+{
+    return false;
+}
+
+bool H323_MediaManager::Write(unsigned id, void * data, unsigned size, unsigned width, unsigned height)
+{
+    return false;
+}
+
+bool H323_MediaManager::Read(unsigned id, bool toBlock, void * data, unsigned & size, unsigned & width, unsigned & height)
+{
+    return false;
+}
+
+//////////////////////////////////////////////////////////////////////////////
+
+PCREATE_VIDOUTPUT_PLUGIN(External);
+
+PVideoOutputDevice_External::PVideoOutputDevice_External()
+: m_streamID(-1), m_manager(NULL), m_videoFrameSize(0),
+  m_szConverter(NULL), m_szFrameBuffer(0), m_szBufferSize(0), 
+  m_finalHeight(0), m_finalWidth(0)
+{
+    PVideoOutputDevice::SetColourFormat("YUV420P");
 }
 
 
-PSoundChannel_External::~PSoundChannel_External()
+PVideoOutputDevice_External::~PVideoOutputDevice_External()
 {
     Close();
 }
 
-PStringArray PSoundChannel_External::GetDeviceNames(PSoundChannel::Directions _dir)
+
+bool PVideoOutputDevice_External::AttachManager(unsigned streamID, H323_MediaManager * manager)
 {
+    m_manager = manager;
+    m_streamID = streamID;
 
-    PStringArray names;
-    names.SetSize(1);
+    PString finalFormat = m_manager->GetColourFormat(m_streamID);
+    if (!m_manager->GetFrameSize(m_streamID, m_finalWidth, m_finalHeight))
+        return SetColourFormat(finalFormat);
 
-    if (_dir == Player) {
-        names[0] = "iPhoneSpeaker";
-    }
-    else {
-        names[0] = "iPhoneMicrophone";
-    }
-
-    return names;
-
+    PVideoFrameInfo xsrc(m_finalWidth, m_finalWidth, colourFormat, 25);
+    PVideoFrameInfo xdst(m_finalWidth, m_finalHeight, finalFormat, 25);
+    m_szConverter = PColourConverter::Create(xsrc, xdst);
+    m_szBufferSize = CalculateFrameBytes(m_finalWidth, m_finalHeight, finalFormat);
+    m_szFrameBuffer.SetSize(m_szBufferSize);
 
 }
 
-#ifdef ANDROID
-int tempPacketCount = 0;
-int maxPacketCount = 63;
-#endif
-PBoolean PSoundChannel_External::Open(const PString & /*_device*/,
-    Directions _dir,
-    unsigned _numChannels,
-    unsigned _sampleRate,
-    unsigned _bitsPerSample)
+
+PBoolean PVideoOutputDevice_External::Open(const PString & /*deviceName*/, PBoolean /*startImmediate*/)
 {
-    m_dir = _dir;
-
-    Close();
-    SetFormat(_numChannels, _sampleRate, _bitsPerSample);
-
-
-    PTRACE(4, "In PSoundChannel_External::Open() for _dir: " << _dir << " with _numChannels: " << _numChannels << " _sampleRate: " << _sampleRate << " _bitsPerSample: " << _bitsPerSample);
-
-    m_dir = _dir;
-    // Start the _device in the _dir (Player or Recorder)
-    if (m_mediaCallback) {
-        if (_dir == Player) {
-  //          OpenH323ProxyAudioConsumerCallback(m_mediaCallback->GetH323ProxyAudioConsumerCallback(), _numChannels, _bitsPerSample, _sampleRate);
-  //          StartH323ProxyAudioConsumerCallback(m_mediaCallback->GetH323ProxyAudioConsumerCallback());
-
-        }
-        else {
-  //          OpenH323ProxyAudioProducerCallback(m_mediaCallback->GetH323ProxyAudioProducerCallback(), _numChannels, _bitsPerSample, _sampleRate);
-  //          StartH323ProxyAudioProducerCallback(m_mediaCallback->GetH323ProxyAudioProducerCallback());
-        }
-        m_loaded = true;
-        m_running = true;
-
-#ifdef ANDROID
-        tempPacketCount = 0;
-#endif
-
-        PTRACE(4, "PSoundIOS\t" << ((_dir == Player) ? "Playback" : "Recording") << " Opened!");
-
-        return true;
-    }
-
     return false;
 }
 
-PString PSoundChannel_External::GetName() const
+PBoolean PVideoOutputDevice_External::SetColourFormat(const PString & newFormat)
 {
-    // This name is set from Open()
-    return "MacIOSSound2";
+    if (colourFormat *= "YUV420P")
+        return PVideoOutputDevice::SetColourFormat(colourFormat);
 }
 
 
-PBoolean PSoundChannel_External::IsOpen() const
+PBoolean PVideoOutputDevice_External::IsOpen()
 {
-    PTRACE(4, "In PSoundDevice_IOS::IsOpen()");
-
-    /*
-    if(m_mediaCallback) {
-    if(!m_mediaCallback->IsCallInProgress())
-    return false;
-    }
-    */
-
-    // bool whether the system is capturing
-    return m_loaded;
-
+    return true;
 }
 
-PBoolean PSoundChannel_External::Abort()
+
+PBoolean PVideoOutputDevice_External::Close()
 {
-    // Not implemented
-    return false;
+    delete m_szConverter;
+    return true;
 }
 
-PBoolean PSoundChannel_External::Close()
+
+PBoolean PVideoOutputDevice_External::Start()
 {
-    PTRACE(4, "IN PSoundChannel_External::Close Before IsOpen for m_dir: " << m_dir);
-    if (!IsOpen())
+    return true;
+}
+
+PBoolean PVideoOutputDevice_External::Stop()
+{
+    return true;
+}
+
+
+PStringList PVideoOutputDevice_External::GetOutputDeviceNames()
+{
+    return PStringList("External");
+}
+
+PStringArray PVideoOutputDevice_External::GetDeviceNames() const
+{
+    return GetOutputDeviceNames();
+}
+
+
+PBoolean PVideoOutputDevice_External::SetFrameSize(unsigned width, unsigned height)
+{
+    if ((width == 0 || height == 0) ||
+        (width == frameWidth && height == frameHeight))
+            return true;
+
+    if (!PVideoOutputDevice::SetFrameSize(width, height))
         return false;
 
-    PTRACE(4, "IN PSoundChannel_External::Close CLOSING DEVICE for m_dir: " << m_dir);
-    // Close the sound device
-    if (m_mediaCallback && m_running) {
-        if (m_dir == Player) {
-      //      StopH323ProxyAudioConsumerCallback(m_mediaCallback->GetH323ProxyAudioConsumerCallback());
-     //       CloseH323ProxyAudioConsumerCallback(m_mediaCallback->GetH323ProxyAudioConsumerCallback());
-        }
-        else {
-    //        StopH323ProxyAudioProducerCallback(m_mediaCallback->GetH323ProxyAudioProducerCallback());
-   //         CloseH323ProxyAudioProducerCallback(m_mediaCallback->GetH323ProxyAudioProducerCallback());
-        }
-        m_loaded = false;
-        m_running = false;
+    if (m_szConverter) {
+        delete converter;
+        PVideoFrameInfo xsrc(frameWidth, frameHeight, colourFormat, 25);
+        PVideoFrameInfo xdst(m_finalWidth, m_finalHeight, colourFormat, 25);
+        converter = PColourConverter::Create(xsrc, xdst);
+        m_videoFrameSize = CalculateFrameBytes(m_finalWidth, m_finalHeight, colourFormat);
+    } else {
+        m_videoFrameSize = CalculateFrameBytes(frameWidth, frameHeight, colourFormat);
     }
-    return true;
+  
+    return frameStore.SetSize(m_videoFrameSize);
 }
 
 
-PBoolean PSoundChannel_External::SetFormat(unsigned /*numChannels*/,
-    unsigned /*sampleRate*/,
-    unsigned /*bitsPerSample*/)
+PINDEX PVideoOutputDevice_External::GetMaxFrameBytes()
 {
-    // Nothing to do here. Values are set directly via call to OpenH323ProxyAudioConsumerCallback
-
-    // Set the audio format
-    //  numChannels always 1
-    //  sampleRate ms of time usually 20ms
-    //  Bits per sample usually 8 but can be 16
-    return true;
+    return GetMaxFrameBytesConverted(CalculateFrameBytes(frameWidth, frameHeight, preferredColourFormat));
 }
 
-unsigned PSoundChannel_External::GetChannels() const
-{
-    if (m_mediaCallback) {
-        return 0; // GetChannelsH323ProxyAudioProducerCallback(m_mediaCallback->GetH323ProxyAudioProducerCallback());
-    }
-    return 1; // Should ideally never be called
-}
 
-unsigned PSoundChannel_External::GetSampleRate() const
+PBoolean PVideoOutputDevice_External::SetFrameData(unsigned x, unsigned y,
+    unsigned width, unsigned height, const BYTE * data, PBoolean endFrame)
 {
-    if (m_mediaCallback) {
-        return 0; //GetSampleRateH323ProxyAudioProducerCallback(m_mediaCallback->GetH323ProxyAudioProducerCallback());
+
+    if (width > frameWidth || height > frameHeight)
+        return false;
+
+    if (x == 0 && width == frameWidth && y == 0 && height == frameHeight) {
+        if (converter != NULL)
+            converter->Convert(data, frameStore.GetPointer());
+        else
+            memcpy(frameStore.GetPointer(), data, m_videoFrameSize);
     }
 
-    return 16000; // Should ideally never be called
-}
-
-unsigned PSoundChannel_External::GetSampleSize() const
-{
-    if (m_mediaCallback) {
-        return 0; //GetSampleSizeH323ProxyAudioProducerCallback(m_mediaCallback->GetH323ProxyAudioProducerCallback());
-    }
-
-    return 8;  // Should ideally never be called
-}
-
-PBoolean PSoundChannel_External::SetBuffers(PINDEX /*size*/, PINDEX /*count*/)
-{
-    // Set the sound buffers by default it is 3
-
-    return true;
-}
-
-
-PBoolean PSoundChannel_External::GetBuffers(PINDEX & /*size*/, PINDEX & /*count*/)
-{
-    // Get the sound buffers (not used in h323plus)
-
-    PTRACE(4, "IN PSoundChannel_External::GetBuffers for _dir: " << m_dir);
-    return true;
-}
-
-
-PBoolean PSoundChannel_External::Write(const void* buf, PINDEX len)
-{
-
-    PTRACE(4, "IN PSoundChannel_External::Write Processing Buffer with len:" << len);
-
-#ifdef ANDROID
-    if (tempPacketCount < maxPacketCount) {
-        sendwait.Delay(kDefaultPTime);
-        ++tempPacketCount;
-        return true;
-    }
-#endif
-
-    if (m_mediaCallback) {
-        //PTRACE(4, "IN PSoundChannel_External::Write value of callInProgress is: " << m_mediaCallback->IsCallInProgress());
-        if (!m_mediaCallback->IsCallInProgress())
+    if (!m_szConverter)
+        return (m_manager && m_manager->Write(m_streamID, frameStore.GetPointer(), m_videoFrameSize, width, height));
+    else {
+        if (m_szConverter->Convert(frameStore.GetPointer(), m_szFrameBuffer.GetPointer()))
+            return (m_manager && m_manager->Write(m_streamID, m_szFrameBuffer.GetPointer(), m_videoFrameSize, m_finalWidth, m_finalHeight));
+        else
             return false;
-
-#if AUDIO_CONSUMER_DEBUG
-        audioConsumerCaptureFile->write((char*)buf, len);
-#endif
-
-        if (m_mediaCallback->IsCallInProgress())
-           // ConsumeFrameWithH323ProxyAudioConsumerCallback(m_mediaCallback->GetH323ProxyAudioConsumerCallback(), buf, (unsigned)len);
-
-        sendwait.Delay(kDefaultPTime);
     }
-    return true;
 }
 
-PINDEX PSoundChannel_External::GetLastReadCount() const {
-    return lastReadCount;
-}
-
-PBoolean PSoundChannel_External::Read(void * buffer, PINDEX bytesReturned)
-{
-    //PTRACE(4, "IN PSoundChannel_External::Read Processing Buffer");
-
-    if (m_mediaCallback) {
-        //PTRACE(4, "IN PSoundChannel_External::Read value of callInProgress is: " << m_mediaCallback->IsCallInProgress());
-        if (!m_mediaCallback->IsCallInProgress())
-            return false;
-
-        if (!buffer) {
-            //PTRACE(4, "IN PSoundChannel_External::Read buffer pointer is NULL");
-        }
-        else {
-            PINDEX length = 0;
-            while (m_running && length == 0) {
-                length = m_mediaCallback->GetAudioInputBytesAvailableForCapture();
-                PThread::Sleep(1);
-            }
-
-            if (!m_running)
-                return false;
-
-            // TODO: Get here and length is always > 0			 
-            PTRACE(4, "IN PSoundChannel_External::Read length: " << length << " bytesReturned: " << bytesReturned);
-
-            // TODO: Only mutex the grabbing of the buffer.
-            m_mediaCallback->audioInputMutex.Wait();
-
-            // PINDEX bufferSize = length; 
-            PINDEX bufferSize = bytesReturned;
-
-            if (!memcpy(buffer, m_mediaCallback->GetAudioInputCaptureBuffer(), bufferSize)) {
-                PTRACE(4, "IN PSoundChannel_External::Read memcpy failed");
-                return false;
-            }
-#if AUDIO_PRODUCER_DEBUG
-            audioProducerCaptureFile->write((char*)m_mediaCallback->GetAudioInputCaptureBuffer(), bufferSize);
-#endif
-            lastReadCount = bytesReturned;
-            m_mediaCallback->SetAudioInputBytesAvailableForCapture(0);
-
-            m_mediaCallback->audioInputMutex.Signal();
-        }
-    }
-
-    return true;
-}
-
-PBoolean PSoundChannel_External::PlaySound(const PSound & /*sound*/, PBoolean /*wait*/)
-{
-    // Not implemented
-    return true;
-}
-
-
-PBoolean PSoundChannel_External::PlayFile(const PFilePath & /*filename*/, PBoolean /*wait*/)
-{
-    // Not implemented
-    return true;
-}
-
-
-PBoolean PSoundChannel_External::IsPlayBufferFree()
-{
-    // Not implemented
-    return true;
-}
-
-
-PBoolean PSoundChannel_External::WaitForPlayBufferFree()
-{
-    // Not implemented
-    return true;
-}
-
-
-PBoolean PSoundChannel_External::HasPlayCompleted()
-{
-    // Not implemented
-    return true;
-}
-
-
-PBoolean PSoundChannel_External::WaitForPlayCompletion()
-{
-    // Not implemented
-    return true;
-}
-
-
-PBoolean PSoundChannel_External::RecordSound(PSound & /*sound*/)
-{
-    // Not implemented
-    return PFalse;
-}
-
-
-PBoolean PSoundChannel_External::RecordFile(const PFilePath & /*filename*/)
-{
-    // Not implemented
-    return PFalse;
-}
-
-
-PBoolean PSoundChannel_External::StartRecording()
-{
-    // Start Recording to file
-    return true;
-}
-
-
-PBoolean PSoundChannel_External::IsRecordBufferFull()
-{
-    // Not implemented
-    return true;
-}
-
-
-PBoolean PSoundChannel_External::AreAllRecordBuffersFull()
-{
-    // Not Implemented
-    return true;
-}
-
-
-PBoolean PSoundChannel_External::WaitForRecordBufferFull()
-{
-    // Not implemented
-    return true;
-}
-
-
-PBoolean PSoundChannel_External::WaitForAllRecordBuffersFull()
-{
-    // Not implemented
-    return PFalse;
-}
-
-
-PBoolean PSoundChannel_External::SetVolume(unsigned /*newVal*/)
-{
-    // Set the current volume
-    return false;
-}
-
-
-PBoolean PSoundChannel_External::GetVolume(unsigned & /*devVol*/)
-{
-    // Get the current volume
-    return false;
-}
