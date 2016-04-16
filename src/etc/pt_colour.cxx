@@ -22,6 +22,9 @@
 
 #include "etc/pt_colour.h"
 
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define H323_COLOUR_CONVERTER(from,to) \
   PCOLOUR_CONVERTER2(P_##from##_##to,H323ColourConverter,#from,#to)
 
@@ -43,6 +46,23 @@ H323ColourConverter::H323ColourConverter(const PVideoFrameInfo & src, const PVid
 { 
 
 }
+
+
+PStringArray H323ColourConverter::GetColourConverterList(const PString & fmt, bool src)
+{
+    PStringArray fulllist = PColourConverterRegistration::GetColourConvertersList();
+
+    PStringArray list;
+    for (PINDEX i = 0; i < fulllist.GetSize(); ++i) {
+        PStringArray info = fulllist[i].Tokenise('\t');
+        if (src && (info[0] == fmt))
+            list.AppendString(info[1]);
+        else if (!src && (info[1] == fmt))
+            list.AppendString(info[0]);
+    }
+    return list;
+}
+
 
 bool H323ColourConverter::YUV420PtoNV21(const BYTE * srcFrameBuffer, BYTE * dstFrameBuffer, PINDEX * bytesReturned)
 {
@@ -96,6 +116,7 @@ bool H323ColourConverter::YUV420PtoNV21(const BYTE * srcFrameBuffer, BYTE * dstF
 
     return true;
 }
+
 
 bool H323ColourConverter::NV21toYUV420P(const BYTE * srcFrameBuffer, BYTE * dstFrameBuffer, PINDEX * bytesReturned)
 {

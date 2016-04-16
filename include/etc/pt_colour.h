@@ -21,6 +21,7 @@
 
 #include <ptlib/vconvert.h>
 
+
 class H323ColourConverter : public PColourConverter 
 {
     PCLASSINFO(H323ColourConverter, PColourConverter);
@@ -31,6 +32,8 @@ public:
         const PVideoFrameInfo & src,
         const PVideoFrameInfo & dst
         );
+
+    static PStringArray GetColourConverterList(const PString & fmt, bool src);
 
     bool YUV420PtoNV21(const BYTE * srcFrameBuffer,
         BYTE * dstFrameBuffer,
