@@ -96,7 +96,7 @@ bool PVideoOutputDevice_External::AttachManager(unsigned streamID, H323_MediaMan
 
 PBoolean PVideoOutputDevice_External::Open(const PString & /*deviceName*/, PBoolean /*startImmediate*/)
 {
-    return false;
+    return true;
 }
 
 PBoolean PVideoOutputDevice_External::SetColourFormat(const PString & newFormat)
