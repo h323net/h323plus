@@ -2941,10 +2941,6 @@ class H323Connection : public PObject
     );
 
 #ifdef H323_NAT
-    /** Multiplex Connection handler
-      */
-    H323MultiplexConnection * m_muxConnection;
-
     /** Build NAT session info
     */
     PObject * BuildNATSessionInformation(unsigned sessionid) const;
@@ -3559,9 +3555,7 @@ class H323Connection : public PObject
 #endif
 
 #ifdef H323_NAT
-//   PMutex NATSocketMutex;
-//    std::map<unsigned,NAT_Sockets> m_NATSockets;
-//    H323_MultiplexHandler * m_muxHandler;
+    H323MultiplexConnection * m_muxConnection;
 #endif
 
     H323TransportSecurity m_transportSecurity;
