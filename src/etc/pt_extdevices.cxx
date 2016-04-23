@@ -145,8 +145,7 @@ PStringArray PVideoOutputDevice_External::GetDeviceNames() const
 
 PBoolean PVideoOutputDevice_External::SetFrameSize(unsigned width, unsigned height)
 {
-    if ((width == 0 || height == 0) ||
-        (width == frameWidth && height == frameHeight))
+    if (width == 0 || height == 0)
             return true;
 
     if (!PVideoOutputDevice::SetFrameSize(width, height))
@@ -190,7 +189,7 @@ PBoolean PVideoOutputDevice_External::SetFrameData(unsigned x, unsigned y,
         return (m_manager && m_manager->Write(m_streamID, frameStore.GetPointer(), m_videoFrameSize, width, height));
     else {
         if (m_szConverter->Convert(frameStore.GetPointer(), m_szFrameBuffer.GetPointer()))
-            return (m_manager && m_manager->Write(m_streamID, m_szFrameBuffer.GetPointer(), m_videoFrameSize, m_finalWidth, m_finalHeight));
+            return (m_manager && m_manager->Write(m_streamID, m_szFrameBuffer.GetPointer(), m_szBufferSize, m_finalWidth, m_finalHeight));
         else
             return false;
     }
