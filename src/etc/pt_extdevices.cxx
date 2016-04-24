@@ -61,7 +61,7 @@ PCREATE_VIDOUTPUT_PLUGIN(External);
 PVideoOutputDevice_External::PVideoOutputDevice_External()
 : m_streamID(-1), m_manager(NULL), m_videoFrameSize(0),
   m_szConverter(NULL), m_szFrameBuffer(0), m_szBufferSize(0), 
-  m_finalHeight(0), m_finalWidth(0), m_finalFormat("YUV420P")
+  m_finalHeight(frameWidth), m_finalWidth(frameHeight), m_finalFormat("YUV420P")
 {
     PVideoOutputDevice::SetColourFormat("YUV420P");
 }
@@ -85,11 +85,13 @@ bool PVideoOutputDevice_External::AttachManager(unsigned streamID, H323_MediaMan
     if (!m_manager->GetFrameSize(m_streamID, m_finalWidth, m_finalHeight))
         return SetColourFormat(m_finalFormat);
 
-    PVideoFrameInfo xsrc(m_finalWidth, m_finalWidth, colourFormat, 25);
-    PVideoFrameInfo xdst(m_finalWidth, m_finalHeight, m_finalFormat, 25);
-    m_szConverter = PColourConverter::Create(xsrc, xdst);
-    m_szBufferSize = CalculateFrameBytes(m_finalWidth, m_finalHeight, m_finalFormat);
-    m_szFrameBuffer.SetSize(m_szBufferSize);
+    if (m_finalWidth > 0 && m_finalHeight > 0) {
+        PVideoFrameInfo xsrc(m_finalWidth, m_finalWidth, colourFormat, 25);
+        PVideoFrameInfo xdst(m_finalWidth, m_finalHeight, m_finalFormat, 25);
+        m_szConverter = PColourConverter::Create(xsrc, xdst);
+        m_szBufferSize = CalculateFrameBytes(m_finalWidth, m_finalHeight, m_finalFormat);
+        m_szFrameBuffer.SetSize(m_szBufferSize);
+    }
     return true;
 }
 
