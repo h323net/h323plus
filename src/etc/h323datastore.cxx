@@ -440,6 +440,7 @@ PBoolean H323DataStore::ExecuteQuery(const PString & query, const QueryVar & var
 
     char *errMsg = NULL;
     PString queryStmt = QueryStatement(query, vars);
+    PTRACE(7, "H323DB\tQuery " << queryStmt);
     if (SQLITE_OK != sqlite3_exec(m_connection, queryStmt, sqlite_callback, &resultRows, &errMsg)) {
         PTRACE(2, "H323DataStore\tError executing " << query
             << " (sqlite3_exec failed):");
