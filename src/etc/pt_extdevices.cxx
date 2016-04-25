@@ -60,10 +60,11 @@ PCREATE_VIDOUTPUT_PLUGIN(External);
 
 PVideoOutputDevice_External::PVideoOutputDevice_External()
 : m_streamID(-1), m_manager(NULL), m_videoFrameSize(0),
-  m_szConverter(NULL), m_szFrameBuffer(0), m_szBufferSize(0), 
-  m_finalHeight(frameWidth), m_finalWidth(frameHeight), m_finalFormat("YUV420P")
+  m_finalConverter(NULL), m_finalFrameBuffer(0), m_finalBufferSize(0),
+  m_finalHeight(0), m_finalWidth(0), m_finalFormat(colourFormat)
 {
-    PVideoOutputDevice::SetColourFormat("YUV420P");
+    m_videoFrameSize = CalculateFrameBytes(frameWidth, frameHeight, colourFormat);
+    frameStore.SetSize(m_videoFrameSize);
 }
 
 
@@ -85,13 +86,29 @@ bool PVideoOutputDevice_External::AttachManager(unsigned streamID, H323_MediaMan
     if (!m_manager->GetFrameSize(m_streamID, m_finalWidth, m_finalHeight))
         return SetColourFormat(m_finalFormat);
 
-    if (m_finalWidth > 0 && m_finalHeight > 0) {
-        PVideoFrameInfo xsrc(m_finalWidth, m_finalWidth, colourFormat, 25);
-        PVideoFrameInfo xdst(m_finalWidth, m_finalHeight, m_finalFormat, 25);
-        m_szConverter = PColourConverter::Create(xsrc, xdst);
-        m_szBufferSize = CalculateFrameBytes(m_finalWidth, m_finalHeight, m_finalFormat);
-        m_szFrameBuffer.SetSize(m_szBufferSize);
+    if (!m_finalWidth || !m_finalHeight)
+        return true;
+
+    // size converter;
+    if (frameWidth != m_finalWidth || frameHeight != m_finalHeight) {
+        delete converter;
+        PVideoFrameInfo src(frameWidth, frameHeight, colourFormat, 25);
+        PVideoFrameInfo dst(m_finalWidth, m_finalHeight, colourFormat, 25);
+        converter = PColourConverter::Create(src, dst);
+        m_videoFrameSize = CalculateFrameBytes(m_finalWidth, m_finalHeight, colourFormat);
+        frameStore.SetSize(m_videoFrameSize);
     }
+
+    // colour converter
+    if ((colourFormat != m_finalFormat)) {
+        delete m_finalConverter;
+        PVideoFrameInfo xsrc(m_finalWidth, m_finalHeight, colourFormat, 25);
+        PVideoFrameInfo xdst(m_finalWidth, m_finalHeight, m_finalFormat, 25);
+        m_finalConverter = PColourConverter::Create(xsrc, xdst);
+        m_finalBufferSize = CalculateFrameBytes(m_finalWidth, m_finalHeight, m_finalFormat);
+        m_finalFrameBuffer.SetSize(m_finalBufferSize);
+    }
+
     return true;
 }
 
@@ -103,9 +120,14 @@ PBoolean PVideoOutputDevice_External::Open(const PString & /*deviceName*/, PBool
 
 PBoolean PVideoOutputDevice_External::SetColourFormat(const PString & newFormat)
 {
-    if (colourFormat *= "YUV420P")
-        return PVideoOutputDevice::SetColourFormat(colourFormat);
-
+    if ((!m_finalWidth || !m_finalHeight) && (newFormat != colourFormat)) {
+        delete converter;
+        PVideoFrameInfo src(frameWidth, frameHeight, colourFormat, 25);
+        PVideoFrameInfo dst(frameWidth, frameHeight, newFormat, 25);
+        converter = PColourConverter::Create(src, dst);
+        m_videoFrameSize = CalculateFrameBytes(frameWidth, frameHeight, newFormat);
+        return frameStore.SetSize(m_videoFrameSize);
+    }
     return false;
 }
 
@@ -118,7 +140,7 @@ PBoolean PVideoOutputDevice_External::IsOpen()
 
 PBoolean PVideoOutputDevice_External::Close()
 {
-    delete m_szConverter;
+    delete m_finalConverter;
     return true;
 }
 
@@ -148,16 +170,27 @@ PStringArray PVideoOutputDevice_External::GetDeviceNames() const
 PBoolean PVideoOutputDevice_External::SetFrameSize(unsigned width, unsigned height)
 {
     if (width == 0 || height == 0)
-            return true;
+        return true;
+
+    if (width == frameWidth && height == frameHeight)
+        return true;
 
     if (!PVideoOutputDevice::SetFrameSize(width, height))
         return false;
 
-    if (m_szConverter) {
+    if (!m_finalWidth && !m_finalHeight) {
+        if (colourFormat != m_finalFormat) {
+            delete converter;
+            PVideoFrameInfo src(frameWidth, frameHeight, colourFormat, 25);
+            PVideoFrameInfo dst(frameWidth, frameHeight, m_finalFormat, 25);
+            converter = PColourConverter::Create(src, dst);
+            m_videoFrameSize = CalculateFrameBytes(frameWidth, frameHeight, m_finalFormat);
+        }
+    } else if (frameWidth != m_finalWidth || frameHeight != m_finalHeight) {
         delete converter;
-        PVideoFrameInfo xsrc(frameWidth, frameHeight, colourFormat, 25);
-        PVideoFrameInfo xdst(m_finalWidth, m_finalHeight, colourFormat, 25);
-        converter = PColourConverter::Create(xsrc, xdst);
+        PVideoFrameInfo fsrc(frameWidth, frameHeight, colourFormat, 25);
+        PVideoFrameInfo fdst(m_finalWidth, m_finalHeight, colourFormat, 25);
+        converter = PColourConverter::Create(fsrc, fdst);
         m_videoFrameSize = CalculateFrameBytes(m_finalWidth, m_finalHeight, colourFormat);
     } else {
         m_videoFrameSize = CalculateFrameBytes(frameWidth, frameHeight, colourFormat);
@@ -176,24 +209,22 @@ PINDEX PVideoOutputDevice_External::GetMaxFrameBytes()
 PBoolean PVideoOutputDevice_External::SetFrameData(unsigned x, unsigned y,
     unsigned width, unsigned height, const BYTE * data, PBoolean endFrame)
 {
-
-    if (width > frameWidth || height > frameHeight)
+    if (x != 0 || y != 0 || width != frameWidth || height != frameHeight || data == NULL || !endFrame)
         return false;
 
-    if (x == 0 && width == frameWidth && y == 0 && height == frameHeight) {
-        if (converter != NULL)
-            converter->Convert(data, frameStore.GetPointer());
-        else
-            memcpy(frameStore.GetPointer(), data, m_videoFrameSize);
-    }
+    if (converter != NULL) {
+        converter->Convert(data, frameStore.GetPointer());
+    } else
+        memcpy(frameStore.GetPointer(), data, m_videoFrameSize);
 
-    if (!m_szConverter)
+    if (!m_finalConverter) {
         return (m_manager && m_manager->Write(m_streamID, frameStore.GetPointer(), m_videoFrameSize, width, height));
-    else {
-        if (m_szConverter->Convert(frameStore.GetPointer(), m_szFrameBuffer.GetPointer()))
-            return (m_manager && m_manager->Write(m_streamID, m_szFrameBuffer.GetPointer(), m_szBufferSize, m_finalWidth, m_finalHeight));
-        else
+    } else {
+        if (m_finalConverter->Convert(frameStore.GetPointer(), m_finalFrameBuffer.GetPointer())) {
+            return (m_manager && m_manager->Write(m_streamID, m_finalFrameBuffer.GetPointer(), m_finalBufferSize, m_finalWidth, m_finalHeight));
+        } else {
             return false;
+        }
     }
 }
 

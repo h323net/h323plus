@@ -79,9 +79,9 @@ protected:
 
     unsigned           m_videoFrameSize;
 
-    PColourConverter * m_szConverter;
-    PBYTEArray         m_szFrameBuffer;
-    unsigned           m_szBufferSize;
+    PColourConverter * m_finalConverter;
+    PBYTEArray         m_finalFrameBuffer;
+    unsigned           m_finalBufferSize;
     unsigned           m_finalHeight;
     unsigned           m_finalWidth;
     PString            m_finalFormat;
