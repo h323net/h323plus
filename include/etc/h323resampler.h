@@ -32,24 +32,20 @@ public:
 
     ~H323AudioResampler();
 
-    void Initialise(uint32_t frame_duration,
-            int8_t i_channels,
-            int8_t o_channels
-            );
-
     void Open(int32_t in_bytes_per_sample,
             int32_t out_bytes_per_sample,
             uint32_t in_freq,
             uint32_t out_freq,
             size_t frame_duration,
             int8_t i_channels,
-            int8_t o_channels,
-            uint32_t quality
+            int8_t o_channels
             );
 
     size_t Process(const uint16_t* in_data,
                 size_t input_size
                 );
+
+    uint8_t* GetOutBuffer();
 
     void Close();
 
@@ -59,7 +55,7 @@ private:
     H323ResamplerSettings * m_resampler;
     bool                    m_configured;
 
-    PMutex     m_mutex;
+    PMutex                  m_mutex;
 
 };
 

@@ -21,10 +21,21 @@
 #include <h323.h>
 
 #include "etc/pt_extdevices.h"
+#include "etc/h323resampler.h"
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 H323_MediaManager::H323_MediaManager()
+{
+
+}
+
+PBoolean H323_MediaManager::SetAudioFormat(unsigned id, unsigned sampleRate, unsigned bytesPerSample, unsigned noChannels, unsigned sampleTime)
+{
+    return false;
+}
+
+void H323_MediaManager::GetAudioFormat(unsigned id, unsigned & sampleRate, unsigned & bytesPerSample, unsigned & noChannels, unsigned & sampleTime)
 {
 
 }
@@ -49,10 +60,306 @@ bool H323_MediaManager::Write(unsigned id, void * data, unsigned size, unsigned 
     return false;
 }
 
+bool H323_MediaManager::Read(unsigned id, bool toBlock, void * data, unsigned size)
+{
+    return false;
+}
+
 bool H323_MediaManager::Read(unsigned id, bool toBlock, void * data, unsigned & size, unsigned & width, unsigned & height)
 {
     return false;
 }
+
+//////////////////////////////////////////////////////////////////////////////
+
+PCREATE_SOUND_PLUGIN(External, PSoundChannel_External)
+
+PSoundChannel_External::PSoundChannel_External()
+    :  m_streamID(0), m_manager(NULL),
+       m_sampleRate(0), m_channels(1), 
+       m_bytesPerSample(2), m_sampleTime(0), m_bufferSize(0), m_intBuffer(0)
+#ifdef H323_RESAMPLE
+       ,m_resampler(NULL),
+        m_buffer(new H323AudioBuffer())
+#endif
+{
+
+}
+
+PSoundChannel_External::~PSoundChannel_External()
+{
+    Close();
+}
+
+bool PSoundChannel_External::AttachManager(unsigned streamID, H323_MediaManager * manager)
+{
+    m_manager = manager;
+    m_streamID = streamID;
+
+    if (!manager)
+        return false;
+
+    m_manager->GetAudioFormat(m_streamID, m_sampleRate, m_bytesPerSample, m_channels, m_sampleTime);
+
+    if (activeDirection == PSoundChannel::Player) {
+        m_bufferSize = (m_sampleRate * m_sampleTime * m_bytesPerSample) / 1000;
+        m_intBuffer.SetSize(m_bufferSize);
+    }
+
+    return true;
+}
+
+PStringArray PSoundChannel_External::GetDeviceNames(PSoundChannel::Directions dir)
+{
+    if (dir == Player)
+        return PStringArray("ExternalPlayer");
+    else 
+        return PStringArray("ExternalRecorder");
+}
+
+bool PSoundChannel_External::Open(const Params & params)
+{
+    activeDirection = params.m_direction;
+    return SetFormat(params.m_channels, params.m_sampleRate, params.m_bitsPerSample);
+}
+
+PString PSoundChannel_External::GetName() const
+{
+    return "External";
+}
+
+PBoolean PSoundChannel_External::Close()
+{
+    m_sampleRate = 0;
+
+#ifdef H323_RESAMPLE
+    if (m_resampler) {
+        m_resampler->Close();
+        delete m_resampler;
+    }
+
+    if (m_buffer)
+        delete m_buffer;
+#endif
+    return true;
+}
+
+PBoolean PSoundChannel_External::IsOpen() const
+{
+    return m_sampleRate > 0;
+}
+
+PBoolean PSoundChannel_External::Write(const void * buf, PINDEX len)
+{
+    if (m_sampleRate <= 0)
+        return false;
+
+#ifdef H323_RESAMPLE
+    unsigned ret = m_resampler->Process((const uint16_t *)buf, len);
+    if (ret) {
+        m_buffer->write(m_resampler->GetOutBuffer() , ret);
+
+        if (m_buffer->read((uint16_t *)m_intBuffer.GetPointer(), m_intBuffer.GetSize()) > 0)
+            m_manager->Write(m_streamID, m_intBuffer.GetPointer(), m_intBuffer.GetSize());
+    }
+#endif
+
+    lastWriteCount = len;
+    m_Pacing.Delay(1000 * len / m_sampleRate / m_channels / m_bytesPerSample);
+    return true;
+}
+
+PBoolean PSoundChannel_External::Read(void * buf, PINDEX len)
+{
+    if (m_sampleRate <= 0)
+        return false;
+
+    bool success = false;
+#ifdef H323_RESAMPLE
+    if (m_manager->Read(m_streamID, false, m_intBuffer.GetPointer(), m_intBuffer.GetSize())) {
+        unsigned ret = m_resampler->Process((uint16_t *)m_intBuffer.GetPointer(), m_intBuffer.GetSize());
+        if (ret) {
+            m_buffer->write(m_resampler->GetOutBuffer(), ret);
+            success = (m_buffer->read(buf, len) > 0);
+        }
+    }
+#endif
+
+    if (!success) {
+        PTRACE(4, "H323EXT\tReading Empty Audio Frame");
+        memset(buf, 0, len);
+    }
+ 
+    lastReadCount = len;
+    m_Pacing.Delay(1000 * len / m_sampleRate / m_channels / m_bytesPerSample);
+    return true;
+}
+
+PBoolean PSoundChannel_External::SetFormat(unsigned numChannels, unsigned sampleRate, unsigned bitsPerSample)
+{
+    if (bitsPerSample % 8 != 0) {
+        PTRACE(1, "ExtAudio\tBits per sample must even bytes.");
+        return false;
+    }
+
+    unsigned bytesPerSample = bitsPerSample / 8;
+
+#ifdef H323_RESAMPLE
+    if (m_resampler)
+        delete m_resampler;
+
+    m_resampler = new H323AudioResampler();
+
+    if (activeDirection == PSoundChannel::Player) {
+        m_resampler->Open(m_bytesPerSample, bytesPerSample, m_sampleRate, sampleRate, m_sampleTime, m_channels, numChannels);
+    } else {
+        m_bufferSize = (sampleRate * m_sampleTime * bytesPerSample) / 1000;
+        m_intBuffer.SetSize(m_bufferSize);
+        m_resampler->Open(bytesPerSample, m_bytesPerSample, sampleRate, m_sampleRate, m_sampleTime, numChannels, m_channels);
+    }
+#endif
+    return true;
+}
+
+unsigned PSoundChannel_External::GetChannels() const
+{
+    return m_channels;
+}
+
+unsigned PSoundChannel_External::GetSampleRate() const
+{
+    return m_sampleRate;
+}
+
+unsigned PSoundChannel_External::GetSampleSize() const
+{
+    return m_bytesPerSample * 2;
+}
+
+PBoolean PSoundChannel_External::SetBuffers(PINDEX size, PINDEX)
+{
+    m_bufferSize = size;
+    return true;
+}
+
+PBoolean PSoundChannel_External::GetBuffers(PINDEX & size, PINDEX & count)
+{
+    size = m_bufferSize;
+    count = 1;
+    return true;
+}
+
+//////////////////////////////////////////////////////////////////////////////
+
+PCREATE_VIDINPUT_PLUGIN(External);
+
+PVideoInputDevice_External::PVideoInputDevice_External()
+: m_streamID(0), m_manager(0)
+{
+    SetColourFormat("YUV420P");
+}
+
+
+PVideoInputDevice_External::~PVideoInputDevice_External()
+{
+    Close();
+}
+
+
+bool PVideoInputDevice_External::AttachManager(unsigned streamID, H323_MediaManager * manager)
+{
+    m_manager = manager;
+    m_streamID = streamID;
+
+    if (!manager)
+        return false;
+
+    return true;
+}
+
+
+PBoolean PVideoInputDevice_External::Open(const PString & devName, PBoolean /*startImmediate*/)
+{
+    return true;
+}
+
+
+PBoolean PVideoInputDevice_External::IsOpen()
+{
+    return true;
+}
+
+
+PBoolean PVideoInputDevice_External::Close()
+{
+    return true;
+}
+
+
+PBoolean PVideoInputDevice_External::Start()
+{
+    return true;
+}
+
+
+PBoolean PVideoInputDevice_External::Stop()
+{
+    return true;
+}
+
+
+PBoolean PVideoInputDevice_External::IsCapturing()
+{
+    return IsOpen();
+}
+
+
+PStringArray PVideoInputDevice_External::GetInputDeviceNames()
+{
+    return PStringArray("External");
+}
+
+
+PBoolean PVideoInputDevice_External::SetVideoFormat(VideoFormat newFormat)
+{
+    return PVideoDevice::SetVideoFormat(newFormat);
+}
+
+
+PBoolean PVideoInputDevice_External::SetColourFormat(const PString & newFormat)
+{
+    return (colourFormat *= newFormat);
+}
+
+
+PBoolean PVideoInputDevice_External::SetFrameRate(unsigned rate)
+{
+    return true;
+}
+
+
+PBoolean PVideoInputDevice_External::SetFrameSize(unsigned width, unsigned height)
+{
+    return true;
+}
+
+
+PINDEX PVideoInputDevice_External::GetMaxFrameBytes()
+{
+    return GetMaxFrameBytesConverted(CalculateFrameBytes(frameWidth, frameHeight, preferredColourFormat));
+}
+
+
+PBoolean PVideoInputDevice_External::GetFrameData(BYTE * buffer, PINDEX * bytesReturned)
+{
+    return true;
+}
+
+PBoolean PVideoInputDevice_External::GetFrameDataNoDelay(BYTE * frame, PINDEX * bytesReturned)
+{
+    return true;
+}
+
 
 //////////////////////////////////////////////////////////////////////////////
 
@@ -80,7 +387,7 @@ bool PVideoOutputDevice_External::AttachManager(unsigned streamID, H323_MediaMan
     m_streamID = streamID;
 
     if (!manager)
-        return true;
+        return false;
 
     m_manager->GetColourFormat(m_streamID, m_finalFormat);
     if (!m_manager->GetFrameSize(m_streamID, m_finalWidth, m_finalHeight))

@@ -31,6 +31,13 @@ extern "C" {
 #define SPEEX_resampler_MAX_QUALITY 10
 
 struct H323ResamplerSettings {
+    H323ResamplerSettings()
+    : in_bytes_per_sample(0), out_bytes_per_sample(0), in_size(0), out_size(0), 
+      frame_duration(0), out_buffer(NULL), in_channels(1), out_channels(1), state(NULL)
+    {
+
+    }
+
     size_t in_bytes_per_sample;
     size_t out_bytes_per_sample;
     size_t in_size;
@@ -48,37 +55,22 @@ struct H323ResamplerSettings {
     SpeexResamplerState *state;
 };
 
+
 H323AudioResampler::H323AudioResampler()
-    : m_resampler(NULL), m_configured(false)
+    : m_resampler(new H323ResamplerSettings()), m_configured(false)
 {
     
 }
+
 
 H323AudioResampler::~H323AudioResampler()
 {
     Close();
 }
 
-void H323AudioResampler::Initialise(uint32_t frame_duration, int8_t i_channels, int8_t o_channels ) 
-{
-
-    if (!(m_resampler = (H323ResamplerSettings*)realloc(m_resampler, sizeof(H323ResamplerSettings)))) {
-        PTRACE(2, "H323RSP\t Error Failed to allocate new audioResampler");
-    } else {
-        m_resampler->frame_duration = frame_duration;
-        m_resampler->state = NULL;
-        m_resampler->in_channels = i_channels;
-        m_resampler->out_channels = o_channels;
-        m_resampler->in_size = 0;
-        m_resampler->out_size = 0;
-        m_resampler->out_buffer = 0;
-        m_configured = false;
-    }
-
-}
 
 void H323AudioResampler::Open(int32_t in_bytes_per_sample, int32_t out_bytes_per_sample,
-    uint32_t in_freq, uint32_t out_freq, size_t frame_duration, int8_t i_channels, int8_t o_channels, uint32_t quality)
+    uint32_t in_freq, uint32_t out_freq, size_t frame_duration, int8_t i_channels, int8_t o_channels)
 {
 
     PWaitAndSignal m(m_mutex);
@@ -90,10 +82,10 @@ void H323AudioResampler::Open(int32_t in_bytes_per_sample, int32_t out_bytes_per
         << in_freq << " out_freq: " << out_freq << " frame_duration: " << frame_duration 
         << " in_bytes_per_sample: " << in_bytes_per_sample << " out_bytes_per_sample: " 
         << out_bytes_per_sample << " in channels: " << i_channels << " out channels: " 
-        << o_channels << " quality: " << quality);
+        << o_channels);
 
     int ret = 0;
-    if (!(m_resampler->state = speex_resampler_init(i_channels, in_freq, out_freq, quality>10 ? SPEEX_resampler_MAX_QUALITY : quality, &ret))) {
+    if (!(m_resampler->state = speex_resampler_init(i_channels, in_freq, out_freq, SPEEX_resampler_MAX_QUALITY, &ret))) {
         PTRACE(2, "H323RSP\tH323AudioResampler::Open - Error speexm_resampler_init() returned %d", ret);
         return;
     }
@@ -127,6 +119,7 @@ void H323AudioResampler::Open(int32_t in_bytes_per_sample, int32_t out_bytes_per
 
     return;
 }
+
 
 size_t H323AudioResampler::Process(const uint16_t* in_data, size_t input_size)
 {
@@ -193,6 +186,13 @@ size_t H323AudioResampler::Process(const uint16_t* in_data, size_t input_size)
     return 0;
 }
 
+
+uint8_t* H323AudioResampler::GetOutBuffer()
+{
+    return m_resampler->out_buffer;
+}
+
+
 void H323AudioResampler::Close()
 {
     PWaitAndSignal m(m_mutex);
@@ -218,6 +218,7 @@ void H323AudioResampler::Close()
 
     }
 }
+
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 
