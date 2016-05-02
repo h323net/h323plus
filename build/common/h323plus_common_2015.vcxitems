@@ -192,7 +192,10 @@
       <Optimization>Disabled</Optimization>
       <BrowseInformation>true</BrowseInformation>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\etc\pt_extdevices.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\etc\pt_extdevices.cxx">
+      <Optimization>Disabled</Optimization>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\etc\pt_wasapi.cxx">
       <ExcludedFromBuild>false</ExcludedFromBuild>
       <Optimization>Disabled</Optimization>
@@ -356,7 +359,10 @@
       <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
       <BrowseInformation>true</BrowseInformation>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h323rtpmux.cxx" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h323rtpmux.cxx">
+      <Optimization>Disabled</Optimization>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\src\h323neg.cxx">
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
