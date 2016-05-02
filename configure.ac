@@ -65,16 +65,16 @@ dnl ########################################################################
 dnl look for ptlib, use a preference order of explicit PTLIBDIR, directory
 dnl at same level, home directory, /usr/local or /usr, pkgconfig.
 
-if test "${PTLIBDIR:-unset}" != "unset" ; then 	 
-  AC_CHECK_HEADER(${PTLIBDIR}/version.h, HAS_PTLIB=1) 	 
+if test "${PTLIBDIR:-unset}" != "unset" ; then   
+  AC_CHECK_HEADER(${PTLIBDIR}/version.h, HAS_PTLIB=1)    
 fi
 
 if test "${HAS_PTLIB:-unset}" = "unset" ; then
-  AC_CHECK_HEADER(${OPENH323DIR}/../ptlib/version.h, HAS_PTLIB=1) 	 
+  AC_CHECK_HEADER(${OPENH323DIR}/../ptlib/version.h, HAS_PTLIB=1)    
   if test "${HAS_PTLIB:-unset}" != "unset" ; then
     PTLIBDIR="${OPENH323DIR}/../ptlib"
   else
-    AC_CHECK_HEADER(${HOME}/ptlib/version.h, HAS_PTLIB=1) 	 
+    AC_CHECK_HEADER(${HOME}/ptlib/version.h, HAS_PTLIB=1)    
     if test "${HAS_PTLIB:-unset}" != "unset" ; then
       PTLIBDIR="${HOME}/ptlib"
     else
@@ -150,8 +150,8 @@ fi
 
 
 AC_ARG_ENABLE(versioncheck,
-		[  --disable-versioncheck  disable PTLib version check],
-		PTLIB_VERSION_CHECK=$enableval)
+        [  --disable-versioncheck  disable PTLib version check],
+        PTLIB_VERSION_CHECK=$enableval)
 
 AC_MSG_CHECKING(Checking PTLib version ${PTVERSION})
 if test "${PTLIB_VERSION_CHECK}x" = "nox" ; then
@@ -165,7 +165,7 @@ else
     if test $PT_MINOR_VERSION -lt $REQUIRED_PTLIB_MINOR ; then
       AC_MSG_RESULT(Minor version less than required $REQUIRED_PTLIB_MINOR)
       exit 1
-  	fi
+    fi
   fi
   if test $PT_MAJOR_VERSION -eq $REQUIRED_PTLIB_MAJOR ; then
     if test $PT_MINOR_VERSION -eq $REQUIRED_PTLIB_MINOR ; then
@@ -222,6 +222,7 @@ default_t140=no
 default_gnugk=yes
 default_file=yes
 default_aec=no
+default_sqlcipher=no
 default_tls=yes
 
 if test "${enable_minsize}x" = "yesx" ; then
@@ -256,6 +257,7 @@ if test "${enable_minsize}x" = "yesx" ; then
   default_gnugk=no
   default_file=no
   default_aec=no
+  default_sqlcipher=no
   default_tls=no
 fi
 
@@ -919,14 +921,16 @@ dnl look for Speex AEC
 dnl MSWIN_DISPLAY    aec,AEC (Acoustic Echo Cancellation)
 dnl MSWIN_CHECK_FILE aec,include\speex\speex_echo.h,H323_AEC=1
 dnl MSWIN_DIR_SYMBOL aec,AEC_DIR
+dnl MSWIN_CHECK_DIR  aec,c:\speex\
+dnl MSWIN_CHECK_DIR  aec,c:\h323net\support\speex\
 dnl MSWIN_CHECK_DIR  aec,c:\speex-1.2rc1\
 
 AC_ARG_ENABLE([aec],
-	      AS_HELP_STRING([--enable-aec],[enable Acoustic Echo Cancellation]),
-	      [enable_aec=$enableval],
-	      [enable_aec=$default_aec]
-	     )
-		 
+          AS_HELP_STRING([--enable-aec],[enable Acoustic Echo Cancellation]),
+          [enable_aec=$enableval],
+          [enable_aec=$default_aec]
+         )
+         
 if test "$enable_aec" = "no" ; then
   AC_MSG_NOTICE(AEC disabled)
 else
@@ -937,6 +941,32 @@ else
   fi
 fi
 AC_SUBST(H323_AEC)
+
+dnl ########################################################################
+dnl look for SQLCipher
+
+dnl MSWIN_DISPLAY    sqlcipher,SQLCipher
+dnl MSWIN_CHECK_FILE sqlcipher,StaticLib\inc\sqlite3.h,H323_SQLCIPHER=1
+dnl MSWIN_DIR_SYMBOL sqlcipher,SQLCIPHER_DIR
+dnl MSWIN_CHECK_DIR  sqlcipher,c:\sqlcipher\
+dnl MSWIN_CHECK_DIR  sqlcipher,c:\h323net\support\sqlcipher\
+
+AC_ARG_ENABLE([sqlcipher],
+          AS_HELP_STRING([--enable-sqlcipher],[enable SQLCipher]),
+          [enable_sqlcipher=$enableval],
+          [enable_sqlcipher=$default_sqlcipher]
+         )
+         
+if test "$enable_sqlcipher" = "no" ; then
+  AC_MSG_NOTICE(SQLCipher disabled)
+else
+  if test "x${H323_SQLCIPHER}" = "x1" ; then
+    AC_DEFINE(H323_SQLCIPHER, 1, "SQLCipher found")
+    STDCCFLAGS="$STDCCFLAGS $AEC_CFLAGS"
+    ENDLDLIBS="$ENDLDLIBS $AEC_LIBS"
+  fi
+fi
+AC_SUBST(H323_SQLCIPHER)
 
 dnl ########################################################################
 dnl check for disabling TLS support

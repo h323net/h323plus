@@ -185,11 +185,19 @@
 #pragma include_alias(<speex/speex_echo.h>,            <@AEC_DIR@/include/speex/speex_echo.h>      )
 #pragma include_alias(<speex/speex_preprocess.h>,      <@AEC_DIR@/include/speex/speex_preprocess.h>)
 #pragma include_alias(<speex/speex_types.h>,           <@AEC_DIR@/include/speex/speex_types.h>     )
-#pragma include_alias(<speex/speexm_resampler.h>,       <@AEC_DIR@/include/speex/speexm_resampler.h> )
+#pragma include_alias(<speex/speex_resampler.h>,       <@AEC_DIR@/include/speex/speex_resampler.h> )
 #ifdef _WIN64
-    #define H323_AEC_LIB "@AEC_DIR@/lib/libspeexdsp64.lib"
+    #ifdef _DEBUG
+        #define H323_AEC_LIB "@AEC_DIR@/lib/libspeexdsp64d.lib"
+    #else
+        #define H323_AEC_LIB "@AEC_DIR@/lib/libspeexdsp64.lib"
+    #endif
 #else
-    #define H323_AEC_LIB "@AEC_DIR@/lib/libspeexdsp.lib"
+    #ifdef _DEBUG
+        #define H323_AEC_LIB "@AEC_DIR@/lib/libspeexdspd.lib"
+    #else
+        #define H323_AEC_LIB "@AEC_DIR@/lib/libspeexdsp.lib"
+    #endif
 #endif
 #endif
 #endif
@@ -222,12 +230,20 @@
 #undef H323_SQLCIPHER
 #if defined(H323_SQLCIPHER) && defined(H323_SSL)
 #define H323_DATASTORE  1
-#pragma include_alias(<sqlcipher/sqlite3.h>,            <@CIPHER_DIR@/StaticLib/inc/sqlite3.h>      )
+#pragma include_alias(<sqlcipher/sqlite3.h>,            <@SQLCIPHER_DIR@/StaticLib/inc/sqlite3.h>      )
 #ifdef _WIN32
     #ifdef _WIN64
-        #define H323_DATASTORE_LIB "@CIPHER_DIR@/build/lib/sqlcipher64.lib"
+        #ifdef _DEBUG
+            #define H323_DATASTORE_LIB "@SQLCIPHER_DIR@/lib/sqlcipher64d.lib"
+        #else
+            #define H323_DATASTORE_LIB "@SQLCIPHER_DIR@/lib/sqlcipher64.lib"
+        #endif
     #else
-        #define H323_DATASTORE_LIB "@CIPHER_DIR@/build/lib/sqlcipher32.lib"
+        #ifdef _DEBUG
+            #define H323_DATASTORE_LIB "@SQLCIPHER_DIR@/lib/sqlcipher32d.lib"
+        #else
+            #define H323_DATASTORE_LIB "@SQLCIPHER_DIR@/lib/sqlcipher32.lib"
+        #endif
     #endif
 #endif
 
