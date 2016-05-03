@@ -142,6 +142,19 @@ protected:
     unsigned           m_streamID;
     H323_MediaManager* m_manager;
 
+    unsigned           m_videoFrameSize;
+
+    PColourConverter * m_initialConverter;
+    PBYTEArray         m_readFrameBuffer;
+    unsigned           m_readBufferSize;
+    PBYTEArray         m_initialFrameBuffer;
+    unsigned           m_initialBufferSize;
+    unsigned           m_initialHeight;
+    unsigned           m_initialWidth;
+    PString            m_initialFormat;
+
+    bool               m_shutdown;
+
 };
 
 PPLUGIN_STATIC_LOAD(External, PVideoInputDevice);
