@@ -55,6 +55,21 @@ PBoolean H323_MediaManager::GetFrameSize(unsigned id, unsigned & width, unsigned
     return false;
 }
 
+PBoolean H323_MediaManager::Start(unsigned id)
+{
+    return false;
+}
+
+PBoolean H323_MediaManager::Stop(unsigned id)
+{
+    return false;
+}
+
+PBoolean H323_MediaManager::IsRunning(unsigned id)
+{
+    return false;
+}
+
 bool H323_MediaManager::Write(unsigned id, void * data, unsigned size, unsigned width, unsigned height)
 {
     return false;
@@ -132,6 +147,9 @@ PBoolean PSoundChannel_External::Close()
 {
     m_sampleRate = 0;
 
+    if (m_manager)
+        m_manager->Stop(m_streamID);
+
 #ifdef H323_RESAMPLE
     if (m_resampler) {
         m_resampler->Close();
@@ -146,7 +164,15 @@ PBoolean PSoundChannel_External::Close()
 
 PBoolean PSoundChannel_External::IsOpen() const
 {
-    return m_sampleRate > 0;
+    return (m_manager && m_manager->IsRunning(m_streamID));
+}
+
+PBoolean PSoundChannel_External::StartRecording()
+{
+    if (!IsOpen())
+       return m_manager->Start(m_streamID);
+
+    return true;
 }
 
 PBoolean PSoundChannel_External::Write(const void * buf, PINDEX len)
@@ -172,6 +198,9 @@ PBoolean PSoundChannel_External::Write(const void * buf, PINDEX len)
 PBoolean PSoundChannel_External::Read(void * buf, PINDEX len)
 {
     if (m_sampleRate <= 0)
+        return false;
+
+    if (!StartRecording())
         return false;
 
     bool success = false;
@@ -320,7 +349,7 @@ PBoolean PVideoInputDevice_External::Open(const PString & devName, PBoolean /*st
 
 PBoolean PVideoInputDevice_External::IsOpen()
 {
-    return true;
+    return (m_manager && m_manager->IsRunning(m_streamID));
 }
 
 
@@ -332,14 +361,14 @@ PBoolean PVideoInputDevice_External::Close()
 
 PBoolean PVideoInputDevice_External::Start()
 {
-    return true;
+    return (m_manager && m_manager->Start(m_streamID));
 }
 
 
 PBoolean PVideoInputDevice_External::Stop()
 {
     m_shutdown = true;
-    return true;
+    return (m_manager && m_manager->Stop(m_streamID));
 }
 
 
@@ -518,7 +547,7 @@ PBoolean PVideoOutputDevice_External::SetColourFormat(const PString & newFormat)
 
 PBoolean PVideoOutputDevice_External::IsOpen()
 {
-    return true;
+    return (m_manager && m_manager->IsRunning(m_streamID));
 }
 
 
@@ -531,12 +560,12 @@ PBoolean PVideoOutputDevice_External::Close()
 
 PBoolean PVideoOutputDevice_External::Start()
 {
-    return true;
+    return (m_manager && m_manager->Start(m_streamID));
 }
 
 PBoolean PVideoOutputDevice_External::Stop()
 {
-    return true;
+    return (m_manager && m_manager->Stop(m_streamID));
 }
 
 

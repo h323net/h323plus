@@ -36,6 +36,10 @@ class H323_MediaManager : public PObject
 
         virtual PBoolean GetFrameSize(unsigned id, unsigned & width, unsigned & height);
 
+        virtual PBoolean Start(unsigned id);
+        virtual PBoolean Stop(unsigned id);
+        virtual PBoolean IsRunning(unsigned id);
+
         virtual bool Write(unsigned id, void * data, unsigned size, unsigned width=0, unsigned height=0);
 
         virtual bool Read(unsigned id, bool toBlock, void * data, unsigned size);
@@ -64,8 +68,9 @@ public:
     virtual PString GetName() const;
     PBoolean Close();
     PBoolean IsOpen() const;
-    PBoolean Write(const void *, PINDEX len);
-    PBoolean Read(void * buf, PINDEX len);
+    virtual PBoolean StartRecording();
+    virtual PBoolean Write(const void *, PINDEX len);
+    virtual PBoolean Read(void * buf, PINDEX len);
     PBoolean SetFormat(unsigned numChannels, unsigned sampleRate, unsigned bitsPerSample);
     unsigned GetChannels() const;
     unsigned GetSampleRate() const;
