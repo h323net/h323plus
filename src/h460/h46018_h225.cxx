@@ -751,11 +751,13 @@ H46019UDPSocket::H46019UDPSocket(H46018Handler & _handler, PObject * info, bool 
 #endif
   rtpSocket(_rtpSocket)
 {
+#ifdef H323_H46019M
     if (m_recvMultiplexID) {
         PUDPSocket * & muxSocket = m_connection->GetMultiplexSocket(rtpSocket ? H323UDPSocket::rtp : H323UDPSocket::rtcp);
         if (muxSocket)
             muxSocket->GetLocalAddress(m_muxLocalAddress);
     }
+#endif
 }
 
 H46019UDPSocket::~H46019UDPSocket()
