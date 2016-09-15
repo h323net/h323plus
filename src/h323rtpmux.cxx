@@ -101,10 +101,11 @@ bool H323_MultiplexReceive::ReadFromSocketList(PSocket::SelectList & readers,
             return true;
 
         switch (param.m_errorCode) {
+#if PTLIB_VER > 2130
         case PChannel::Unavailable:
             PTRACE(3, "RTPMUX\tUDP Port on remote not ready.");
             break;
-
+#endif
         case PChannel::BufferTooSmall:
             PTRACE(2, "RTPMUX\tRead UDP packet too large for buffer of " << param.m_length << " bytes.");
             break;
@@ -220,15 +221,19 @@ H323_MultiplexHandler::~H323_MultiplexHandler()
 bool H323_MultiplexHandler::Start()
 {
     if (!m_isRunning) {
+#if PTLIB_VER > 2130
         m_pool.SetMaxWorkers(2);
+#endif
         m_workers.push_back(new H323_MultiplexReceive(*this));
         if (m_muxSend)
             m_workers.push_back(new H323_MultiplexSend(*this));
 
+#if PTLIB_VER > 2130
         std::list<H323_MultiplexThread*>::iterator i;
         for (i = m_workers.begin(); i != m_workers.end(); ++i) {
             m_pool.AddWork(*i);
         }
+#endif
 
         m_isRunning = true;
     }
@@ -244,8 +249,13 @@ bool H323_MultiplexHandler::Stop()
 
         std::list<H323_MultiplexThread*>::iterator i;
         for (i = m_workers.begin(); i != m_workers.end(); ++i) {
+#if PTLIB_VER > 2130
             m_pool.RemoveWork(*i);
+#else
+            delete *i;
+#endif
         }
+        m_workers.clear();
         m_isRunning = false;
     }
     return true;

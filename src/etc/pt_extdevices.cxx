@@ -132,11 +132,20 @@ PStringArray PSoundChannel_External::GetDeviceNames(PSoundChannel::Directions di
         return PStringArray("ExternalRecorder");
 }
 
+#if PTLIB_VER > 2130
 bool PSoundChannel_External::Open(const Params & params)
 {
     activeDirection = params.m_direction;
     return SetFormat(params.m_channels, params.m_sampleRate, params.m_bitsPerSample);
 }
+#endif
+
+bool PSoundChannel_External::Open(const PString & device, Directions dir, unsigned numChannels, unsigned sampleRate, unsigned bitsPerSample)
+{
+    activeDirection = dir;
+    return PSoundChannel::Open(device, dir, numChannels, sampleRate, bitsPerSample);
+}
+
 
 PString PSoundChannel_External::GetName() const
 {

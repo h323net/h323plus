@@ -334,8 +334,9 @@ private:
 
     std::list<H323_MultiplexThread*>          m_workers;  ///< Workers
 
-
+#if PTLIB_VER > 2130
     PQueuedThreadPool<H323_MultiplexThread>  m_pool;  ///< Send/Receive Thread Pool
+#endif
 
 };
 

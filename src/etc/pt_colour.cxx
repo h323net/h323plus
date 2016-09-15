@@ -50,6 +50,7 @@ H323ColourConverter::H323ColourConverter(const PVideoFrameInfo & src, const PVid
 
 PStringArray H323ColourConverter::GetColourConverterList(const PString & fmt, bool src)
 {
+#if PTLIB_VER > 2140
     PStringArray fulllist = PColourConverterRegistration::GetColourConvertersList();
 
     PStringArray list;
@@ -61,6 +62,9 @@ PStringArray H323ColourConverter::GetColourConverterList(const PString & fmt, bo
             list.AppendString(info[0]);
     }
     return list;
+#else
+    return PStringArray();
+#endif
 }
 
 

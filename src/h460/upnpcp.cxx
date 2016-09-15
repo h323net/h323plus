@@ -1109,7 +1109,14 @@ PBoolean PNatMethod_UPnP::CreateSocketPair(PUDPSocket * & socket1,
             rtcp = new UPnPUDPSocket(this);
 
             unsigned basePort = muxhandler->GetMultiplexPort(H323UDPSocket::rtp);
-            PortInfo muxPortInfo(basePort, basePort+100);
+#if PTLIB > 2130
+            PortInfo muxPortInfo(basePort, basePort + 100);
+#else
+            PortInfo muxPortInfo;
+            muxPortInfo.basePort = basePort;
+            muxPortInfo.currentPort = muxPortInfo.basePort - 1;
+            muxPortInfo.maxPort = basePort + 100;
+#endif
 
             if ((!OpenSocket(*rtp, muxPortInfo, binding)) ||
                 (!OpenSocket(*rtcp, muxPortInfo, binding)) ||

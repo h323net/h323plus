@@ -561,8 +561,15 @@ PBoolean PNatMethod_H46019::CreateSocketPair(PUDPSocket * & socket1,
             rtp = new H46019MultiplexSocket(true);
             rtcp = new H46019MultiplexSocket(false);
 
+#if PTLIB > 2130
             PortInfo muxPortInfo(muxhandler->GetMultiplexPort(false), 
                                  muxhandler->GetMultiplexPort(true));
+#else
+            PortInfo muxPortInfo;
+            muxPortInfo.basePort = muxhandler->GetMultiplexPort(false);
+            muxPortInfo.currentPort = muxPortInfo.basePort-1;
+            muxPortInfo.maxPort = muxhandler->GetMultiplexPort(true);
+#endif
 
             if ((!OpenSocket(*rtp, muxPortInfo, binding)) ||
                 (!OpenSocket(*rtcp, muxPortInfo, binding)) ||

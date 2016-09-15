@@ -1505,7 +1505,12 @@ PBoolean RTP_UDP::Open(PIPSocket::Address _localAddress,
 
       ((H323UDPSocket*)dataSocket)->GetLocalAddress(localAddress, localDataPort);
       ((H323UDPSocket*)controlSocket)->GetLocalAddress(localAddress, localControlPort);
+
+#if PTLIB_VER >= 2130
       PString name = meth->GetMethodName(); 
+#else
+      PString name = meth->GetName();
+#endif
 
       PTRACE(4, "RTP\tNAT Method " << name << " created NAT ports " << localDataPort << " " << localControlPort);
     }
