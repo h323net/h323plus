@@ -28,10 +28,6 @@
 
 #ifdef H323_H224
 
-#ifdef __GNUC__
-#pragma implementation "h323h224.h"
-#endif
-
 #ifdef _MSC_VER
 #pragma warning(disable : 4244)
 #endif
