@@ -250,8 +250,8 @@ PBoolean PNatMethod_H46024::CreateSocketPair(PUDPSocket * & socket1,
 {
     PWaitAndSignal m(portMute);
 
-    H323MultiplexConnection::SessionInformation * info = (H323MultiplexConnection::SessionInformation *)userData;
 #ifdef H323_H46019M
+    H323MultiplexConnection::SessionInformation * info = (H323MultiplexConnection::SessionInformation *)userData;
     if (info->GetRecvMultiplexID() > 0) {
 
         PNatMethod_H46019 * handler =
