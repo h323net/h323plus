@@ -25,6 +25,9 @@ class H323UDPSocket : public PUDPSocket
 
 public:
     H323UDPSocket() : m_type(unknown) {}
+#if P_QOS
+    H323UDPSocket(PQoS * qos) : PUDPSocket(qos) , m_type(unknown) {}
+#endif
     virtual PBoolean IsAlternateAddress(const Address & /*address*/, WORD /*port*/) { return false; }
     virtual PBoolean DoPseudoRead(int & /*selectStatus*/) { return false; }
 
