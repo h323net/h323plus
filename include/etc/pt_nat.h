@@ -41,6 +41,7 @@ public:
         );
 #else
     enum Type {
+        unknown,  ///< Unknown socket
         rtp,      ///< RTP mux socket
         rtcp,     ///< RTCP mux socket
         sctp      ///< SCTP mux socket (Not implemented)
