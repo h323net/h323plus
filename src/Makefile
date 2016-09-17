@@ -52,12 +52,15 @@ TARGET	=	$(LIBDIR)/$(OH323_FILE)
 VERSION_FILE =	$(OPENH323DIR)/version.h
 
 ########################################
-
+## Precompiled Headers
 
 PCH_FILES =	$(OH323_INCDIR)/h323.h
 CLEAN_FILES  += $(PCH_FILES)
 
 precompile: $(PCH_FILES)
+
+########################################
+## Source files
 
 SOURCES		+= \
 		   $(OH323_SRCDIR)/h225_1.cxx \
