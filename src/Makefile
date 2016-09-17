@@ -63,7 +63,8 @@ SOURCES		+= \
 HEADER_FILES	+= $(OH323_INCDIR)/etc/pt_nat.h $(OH323_INCDIR)/etc/pt_stl.h
 HEADER_FILES	+= $(OH323_INCDIR)/etc/pt_colour.h 
 COMMON_SOURCES	+= $(OH323_SRCDIR)/etc/pt_colour.cxx
-
+HEADER_FILES	+= $(OH323_INCDIR)/etc/pt_extdevices.h 
+COMMON_SOURCES	+= $(OH323_SRCDIR)/etc/pt_extdevices.cxx
 HEADER_FILES	+= $(OH323_INCDIR)/etc/h323buffer.h 
 COMMON_SOURCES	+= $(OH323_SRCDIR)/etc/h323buffer.cxx
 
@@ -87,6 +88,8 @@ HEADER_FILES	+= $(OH323_INCDIR)/transports.h
 COMMON_SOURCES	+= $(OH323_SRCDIR)/transports.cxx
 HEADER_FILES	+= $(OH323_INCDIR)/rtp.h
 COMMON_SOURCES	+= $(OH323_SRCDIR)/rtp.cxx
+HEADER_FILES	+= $(OH323_INCDIR)/h323rtpmux.h
+COMMON_SOURCES	+= $(OH323_SRCDIR)/h323rtpmux.cxx
 HEADER_FILES	+= $(OH323_INCDIR)/gkclient.h
 COMMON_SOURCES	+= $(OH323_SRCDIR)/gkclient.cxx
 HEADER_FILES	+= $(OH323_INCDIR)/gkserver.h
@@ -156,11 +159,6 @@ endif
 
 ifndef OH323_SUPPRESS_H235
 SOURCES		+= $(OH323_SRCDIR)/h235.cxx 
-endif
-
-ifdef H323_NAT
-HEADER_FILES    += $(OH323_INCDIR)/h323rtpmux.h 
-COMMON_SOURCES  += $(OH323_SRCDIR)/h323rtpmux.cxx 
 endif
 
 ifdef HAS_OPENSSL
