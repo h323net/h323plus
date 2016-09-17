@@ -53,6 +53,12 @@ VERSION_FILE =	$(OPENH323DIR)/version.h
 
 ########################################
 
+
+PCH_FILES =	$(OH323_INCDIR)/h323.h
+CLEAN_FILES  += $(PCH_FILES)
+
+precompile: $(PCH_FILES)
+
 SOURCES		+= \
 		   $(OH323_SRCDIR)/h225_1.cxx \
 		   $(OH323_SRCDIR)/h225_2.cxx \
@@ -68,7 +74,6 @@ COMMON_SOURCES	+= $(OH323_SRCDIR)/etc/pt_extdevices.cxx
 HEADER_FILES	+= $(OH323_INCDIR)/etc/h323buffer.h 
 COMMON_SOURCES	+= $(OH323_SRCDIR)/etc/h323buffer.cxx
 
-HEADER_FILES	+= $(OH323_INCDIR)/h323.h
 COMMON_SOURCES	+= $(OH323_SRCDIR)/h323.cxx $(OH323_SRCDIR)/h323ep.cxx
 HEADER_FILES	+= $(OH323_INCDIR)/h323neg.h
 COMMON_SOURCES	+= $(OH323_SRCDIR)/h323neg.cxx
