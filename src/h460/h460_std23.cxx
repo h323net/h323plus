@@ -920,13 +920,17 @@ void H460_FeatureStd24::HandleNATInstruction(NatInstruct _config)
             case H460_FeatureStd24::e_localMaster:
                 PTRACE(4,"H46024\tLocal NAT Support: H.460.24 ENABLED");
                 CON->SetRemoteNAT(true);
+#ifdef H323_H46019M
                 CON->H46019SetOffload();
+#endif
                 SetNATMethods(e_enable);
                 break;
 
             case H460_FeatureStd24::e_remoteMaster:
                 PTRACE(4,"H46024\tRemote NAT Support: ALL NAT DISABLED");
+#ifdef H323_H46019M
                 CON->H46019SetOffload();
+#endif
                 if (IsNatSendAvailable()) {  // If we can use STUN do it!
                     CON->SetRemoteNAT(false);
                     SetNATMethods(e_enable);
@@ -1043,9 +1047,11 @@ void H460_FeatureStd24::SetNATMethods(H46024NAT state)
                     natlist[i].Activate(false);
                 break;
             case H460_FeatureStd24::e_disable:
+#ifdef H323_H46019M
                 if (name == "H46019" && CON->IsH46019Multiplexed())
                     natlist[i].Activate(true);
                 else
+#endif
                     natlist[i].Activate(false);
                 break;
             default:

@@ -369,12 +369,14 @@ protected:
 
 };
 
+#ifdef H323_H46018
 #ifndef _WIN32_WCE
     #if PTLIB_VER > 260
        PPLUGIN_STATIC_LOAD(H46019,PNatMethod);
     #else
        PWLIB_STATIC_LOAD_PLUGIN(H46019, PNatMethod);
     #endif
+#endif
 #endif
 
 #ifdef H323_H46019M

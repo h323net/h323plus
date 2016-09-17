@@ -337,7 +337,7 @@ H323UDPSocket * H323_MultiplexHandler::DetectSourceAddress(H323UDPSocket::Type t
 
 H323UDPSocket * H323_MultiplexHandler::ResolveSession(unsigned id, H323UDPSocket::Type type, const PIPSocket::Address & addr, WORD port)
 {
-
+#ifdef H323_H46019M
     H323_MultiplexHandler::SocketMap::iterator it;
     for (it = m_socketReadMap.begin(); it != m_socketReadMap.end(); ++it) {
         H323_MultiplexHandler::SocketBundle::iterator its = it->second.find(type);
@@ -350,6 +350,7 @@ H323UDPSocket * H323_MultiplexHandler::ResolveSession(unsigned id, H323UDPSocket
             return (H323UDPSocket *)socket;
         }
     }
+#endif
     return DetectSourceAddress(type, addr, port);
 }
 
@@ -791,9 +792,12 @@ bool H460_MultiplexHandler::OnDataArrival(H323UDPSocket::Type type, const ReadPa
     PUDPSocket * socket = GetSocket(id, type, param.m_addr, param.m_port);
     if (!socket)
         return false;
-        
-    return ((H46019UDPSocket *)socket)->WriteMultiplexBuffer((BYTE *)param.m_buffer + H460_MUX_HEADER_SIZE, param.m_lastCount - H460_MUX_HEADER_SIZE, param.m_addr, param.m_port);
 
+#ifdef H323_H46019M   
+    return ((H46019UDPSocket *)socket)->WriteMultiplexBuffer((BYTE *)param.m_buffer + H460_MUX_HEADER_SIZE, param.m_lastCount - H460_MUX_HEADER_SIZE, param.m_addr, param.m_port);
+#else
+    return false;
+#endif
 }
 
 
