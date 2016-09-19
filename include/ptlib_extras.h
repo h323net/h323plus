@@ -30,7 +30,9 @@
 #include <etc/h323buffer.h>         // Added Frame Buffer and sequencer
 
 // Extra devices
+#ifdef _WIN32
 #include <etc/pt_wasapi.h>          // Added Audio driver for Win7+ devices
+#endif
 #include <etc/pt_extdevices.h>      // Added External Input/Output devices
 
 // Datastore

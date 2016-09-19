@@ -138,14 +138,13 @@ bool PSoundChannel_External::Open(const Params & params)
     activeDirection = params.m_direction;
     return SetFormat(params.m_channels, params.m_sampleRate, params.m_bitsPerSample);
 }
-#endif
-
+#else
 bool PSoundChannel_External::Open(const PString & device, Directions dir, unsigned numChannels, unsigned sampleRate, unsigned bitsPerSample)
 {
     activeDirection = dir;
     return PSoundChannel::Open(device, dir, numChannels, sampleRate, bitsPerSample);
 }
-
+#endif
 
 PString PSoundChannel_External::GetName() const
 {
@@ -240,9 +239,9 @@ PBoolean PSoundChannel_External::SetFormat(unsigned numChannels, unsigned sample
         return false;
     }
 
+#ifdef H323_RESAMPLE
     unsigned bytesPerSample = bitsPerSample / 8;
 
-#ifdef H323_RESAMPLE
     if (m_resampler)
         delete m_resampler;
 

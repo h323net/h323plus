@@ -66,9 +66,9 @@ public:
 
 #if PTLIB_VER > 2130
     virtual bool Open(const Params & params);
-#endif
-
+#else
     virtual PBoolean Open(const PString & device, Directions dir, unsigned numChannels = 1, unsigned sampleRate = 8000, unsigned bitsPerSample = 16);
+#endif
 
     virtual PString GetName() const;
     PBoolean Close();
