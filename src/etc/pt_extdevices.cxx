@@ -138,14 +138,13 @@ bool PSoundChannel_External::Open(const Params & params)
     activeDirection = params.m_direction;
     return SetFormat(params.m_channels, params.m_sampleRate, params.m_bitsPerSample);
 }
-#endif
-
+#else
 bool PSoundChannel_External::Open(const PString & device, Directions dir, unsigned numChannels, unsigned sampleRate, unsigned bitsPerSample)
 {
     activeDirection = dir;
     return PSoundChannel::Open(device, dir, numChannels, sampleRate, bitsPerSample);
 }
-
+#endif
 
 PString PSoundChannel_External::GetName() const
 {
