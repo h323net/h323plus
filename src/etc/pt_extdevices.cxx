@@ -240,9 +240,9 @@ PBoolean PSoundChannel_External::SetFormat(unsigned numChannels, unsigned sample
         return false;
     }
 
+#ifdef H323_RESAMPLE
     unsigned bytesPerSample = bitsPerSample / 8;
 
-#ifdef H323_RESAMPLE
     if (m_resampler)
         delete m_resampler;
 
