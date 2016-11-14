@@ -54,7 +54,9 @@ Word32 L_mult (Word16 var1, Word16 var2); /* Long mult,           1   */
 Word16 negate (Word16 var1);              /* Short negate,        1   */
 Word16 extract_h (Word32 L_var1);         /* Extract high,        1   */
 Word16 extract_l (Word32 L_var1);         /* Extract low,         1   */
+#if _MSC_VER < 1900
 Word16 round (Word32 L_var1);             /* Round,               1   */
+#endif
 Word32 L_mac (Word32 L_var3, Word16 var1, Word16 var2);   /* Mac,  1  */
 Word32 L_msu (Word32 L_var3, Word16 var1, Word16 var2);   /* Msu,  1  */
 Word32 L_macNs (Word32 L_var3, Word16 var1, Word16 var2); /* Mac without
