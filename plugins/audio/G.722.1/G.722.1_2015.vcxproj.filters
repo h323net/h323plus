@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="G.722.1 Files">
+      <UniqueIdentifier>{97ad7611-7238-45c0-b3cc-6ff1fab9738b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="G7221Codec.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="G722-1\basop32.c">
+      <Filter>G.722.1 Files</Filter>
+    </ClCompile>
+    <ClCompile Include="G722-1\coef2sam.c">
+      <Filter>G.722.1 Files</Filter>
+    </ClCompile>
+    <ClCompile Include="G722-1\common.c">
+      <Filter>G.722.1 Files</Filter>
+    </ClCompile>
+    <ClCompile Include="G722-1\count.c">
+      <Filter>G.722.1 Files</Filter>
+    </ClCompile>
+    <ClCompile Include="G722-1\dct4_a.c">
+      <Filter>G.722.1 Files</Filter>
+    </ClCompile>
+    <ClCompile Include="G722-1\dct4_s.c">
+      <Filter>G.722.1 Files</Filter>
+    </ClCompile>
+    <ClCompile Include="G722-1\decoder.c">
+      <Filter>G.722.1 Files</Filter>
+    </ClCompile>
+    <ClCompile Include="G722-1\encoder.c">
+      <Filter>G.722.1 Files</Filter>
+    </ClCompile>
+    <ClCompile Include="G722-1\huff_tab.c">
+      <Filter>G.722.1 Files</Filter>
+    </ClCompile>
+    <ClCompile Include="G722-1\sam2coef.c">
+      <Filter>G.722.1 Files</Filter>
+    </ClCompile>
+    <ClCompile Include="G722-1\tables.c">
+      <Filter>G.722.1 Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

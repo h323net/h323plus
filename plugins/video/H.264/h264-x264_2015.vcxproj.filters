@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{c6add519-d2c6-424c-a679-f806f1895182}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="header">
+      <UniqueIdentifier>{3812ea67-045a-4f6b-ada1-cb2f68b8d433}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shared">
+      <UniqueIdentifier>{e037b8bf-7b57-4bca-bca9-b80fe9994f01}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="common">
+      <UniqueIdentifier>{9194afb0-3a78-42cf-8694-1444442dac0f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="h264-x264.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="h264pipe_win32.cxx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="shared\h264frame.cxx">
+      <Filter>shared</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\dyna.cxx">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\trace.cxx">
+      <Filter>common</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\common\dyna.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="h264-x264.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="h264pipe_win32.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="shared\h264frame.h">
+      <Filter>shared</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
