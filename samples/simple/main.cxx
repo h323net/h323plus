@@ -1064,7 +1064,7 @@ void SimpleH323EndPoint::OnMediaEncryption(unsigned session, H323Channel::Direct
 void SimpleH323EndPoint::OnSecureSignallingChannel(bool isSecured) 
 {
 	// at this point an endpoint could refuse a call with non-secured signalling connection
-    cout << "TLS " << (isSecured ? "" : "NOT") << " enabled for call." << endl;
+    cout << "TLS " << (isSecured ? "" : "NOT ") << "enabled for call." << endl;
 }
 #endif
 ///////////////////////////////////////////////////////////////

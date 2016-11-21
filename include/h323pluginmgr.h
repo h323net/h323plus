@@ -96,7 +96,7 @@ class H323PluginCodecManager : public PPluginModuleManager
     
 };
 
-#if (PTLIB_VAR < 2140) || defined(_FACTORY_LOAD)
+#ifdef _FACTORY_LOAD
 static PFactory<PPluginModuleManager>::Worker<H323PluginCodecManager> h323PluginCodecManagerFactory("h323PluginCodecManager", true);
 #endif
 
