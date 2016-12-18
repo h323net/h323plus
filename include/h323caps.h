@@ -2352,7 +2352,8 @@ class H323Capabilities : public PObject
     H323Capability * FindCapability(
       H323Capability::MainTypes mainType, ///< Main type to find
       const PASN_Choice & subTypePDU,     ///< Sub-type info
-      const unsigned * translationTable   ///< Translation table sub-type tags
+      const unsigned * translationTable,  ///< Translation table sub-type tags
+      unsigned tableElements = 0          ///< Number of elements in translation table
     ) const;
 
     /**Find the capability given the type codecs.
