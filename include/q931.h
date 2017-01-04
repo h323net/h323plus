@@ -104,6 +104,7 @@ class Q931 : public PObject
     static unsigned GenerateCallReference();
     unsigned GetCallReference() const { return callReference; }
     PBoolean IsFromDestination() const { return fromDestination; }
+    void SetFromDestination(PBoolean fromDest) { fromDestination = fromDest; }
     MsgTypes GetMessageType() const { return messageType; }
 
     enum InformationElementCodes {
