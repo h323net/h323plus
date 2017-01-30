@@ -1263,7 +1263,7 @@ static PFactory<H235Authenticator>::Worker<H2351_Authenticator> factoryH2351_Aut
 
 /////////////////////////////////////////////////////////////////////////////
 
-#if PTLIB_VER >= 2110 && defined(H323_SSL)
+#if PTLIB_VER >= 2110
 H235SECURITY(TSS);
 #else
 static PFactory<H235Authenticator>::Worker<H235AuthenticatorTSS> factoryH235AuthTSS("TimeSync");
