@@ -34,11 +34,6 @@
 
 #include "h235auth.h"
 
-#ifdef _MSC_VER
-#pragma comment(lib, P_SSL_LIB1)
-#pragma comment(lib, P_SSL_LIB2)
-#endif
-
 
 #define REPLY_BUFFER_SIZE 1024
 
@@ -177,7 +172,7 @@ static void SHA1(const unsigned char * data, unsigned len, unsigned char * hash)
 
 #if PTLIB_VER >= 2110
 typedef H2351_Authenticator H235AuthenticatorStd1;
-PPLUGIN_STATIC_LOAD(Std1, H235Authenticator);
+PPLUGIN_STATIC_LOAD(Std1,H235Authenticator);
 H235SECURITY(Std1);
 #endif
 
