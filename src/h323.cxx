@@ -2098,6 +2098,7 @@ void H323Connection::OnReceivedReleaseComplete(const H323SignalPDU & pdu)
 
   if (pdu.m_h323_uu_pdu.m_h323_message_body.GetTag() != H225_H323_UU_PDU_h323_message_body::e_releaseComplete)
     return;
+
   const H225_ReleaseComplete_UUIE & rc = pdu.m_h323_uu_pdu.m_h323_message_body;
 
   switch (connectionState) {
